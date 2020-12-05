@@ -27,7 +27,7 @@ namespace API
                 catch (Exception ex)
                 {
                     var logger = services.GetRequiredService<ILogger<Program>>();
-                    logger.LogError(ex, "Error occured during migration.");
+                    logger.LogError(ex, "Error occured during Facebuk db migration.");
                 }
             };
 
