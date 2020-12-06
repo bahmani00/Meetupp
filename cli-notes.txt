@@ -1,4 +1,8 @@
 
+--Added React------------------------------------------------------------------------------
+FaceBuk> npx create-react-app client-app --use-npm --typescript
+FaceBuk> cd client-app
+FaceBuk> npm start
 
 --SeedData------------------------------------------------------------------------------
 FaceBuk> dotnet build
