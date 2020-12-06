@@ -1,13 +1,17 @@
+--Added semantic-ui------------------------------------------------------------------------
+FaceBuk\client-app> npm install semantic-ui-react
 
 --Added React------------------------------------------------------------------------------
 FaceBuk> npx create-react-app client-app --use-npm --typescript 
 FaceBuk> cd client-app
-FaceBuk> npm start
+FaceBuk\client-app> npm start
 
 added images.d.ts file next to tsconfig.json tos support image types in ts files
 declare module '*.svg'
 declare module '*.png'
 declare module '*.jpg'
+
+FaceBuk\client-app> npm install axios 
 
 
 --SeedData------------------------------------------------------------------------------

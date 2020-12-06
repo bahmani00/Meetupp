@@ -37,11 +37,11 @@ namespace API
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
             });
 
-            services.AddCors();
-            //services.AddCors(options =>
-            //    options.AddPolicy("MyCORSPolicy", builder =>
-            //        builder.SetIsOriginAllowed(origin => new Uri(origin).Host == "localhost")
-            //    ));
+            services.AddCors(options =>
+                options.AddPolicy("CORSPolicy_React", policyBuilder =>
+                    policyBuilder.AllowAnyHeader().AllowAnyMethod().AllowCredentials()
+                    .WithOrigins("http://localhost:3000")
+                ));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,12 +53,7 @@ namespace API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
 
-                // global cors policy
-                app.UseCors(x => x
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .SetIsOriginAllowed(origin => true) // allow any origin
-                    .AllowCredentials()); // allow credentials            
+                app.UseCors("CORSPolicy_React");            
             }
             else {
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.

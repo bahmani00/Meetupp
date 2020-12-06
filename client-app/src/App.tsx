@@ -9,7 +9,7 @@ class App extends Component {
   };
 
   componentDidMount() {
-    axios.get('http://localhost:5000/WeatherForecast').then(response => {
+    axios.get('http://localhost:5000/api/WeatherForecast').then(response => {
       this.setState({
         weatherForecasts: response.data
       });
