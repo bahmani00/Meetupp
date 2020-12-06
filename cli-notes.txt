@@ -1,0 +1,72 @@
+
+
+--SeedData------------------------------------------------------------------------------
+FaceBuk> dotnet build
+FaceBuk\Persistence> dotnet add package Microsoft.EntityFrameworkCore.Design
+FaceBuk\API> dotnet add package Microsoft.EntityFrameworkCore.Design
+FaceBuk> dotnet ef migrations add SeedValues -p Persistence/ -s API/
+
+--Drafting FaceBuk------------------------------------------------------------------------------
+Severity	Code	Description	Project	File	Line	Suppression State
+Error	MSB3644	The reference assemblies for .NETFramework,Version=v5.0 were not found. To resolve this, install the Developer Pack (SDK/Targeting Pack) for this framework version or retarget your application. You can download .NET Framework Developer Packs at https://aka.ms/msbuild/developerpacks	MyMicroserviceActio.Services.Identity.Tests	C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets	1177	
+
+sr: 130-150
+
+md FaceBuk
+cd FaceBuk
+
+(.net CLI commands)
+dotnet new sln  
+
+dotnet new classlib -n Domain
+dotnet new classlib -n Application
+dotnet new classlib -n Persistence
+dotnet new webapi -n API
+
+PS D:\Development\Repos\FaceBuk> dotnet sln add .\Domain\
+Project `Domain\Domain.csproj` added to the solution.
+PS D:\Development\Repos\FaceBuk> dotnet sln add .\API\   
+Project `API\API.csproj` added to the solution.
+PS D:\Development\Repos\FaceBuk> dotnet sln add .\Application\
+Project `Application\Application.csproj` added to the solution.
+PS D:\Development\Repos\FaceBuk> dotnet sln add .\Persistence\
+Project `Persistence\Persistence.csproj` added to the solution.
+
+
+FaceBuk\Application> dotnet add reference ..\Domain\
+FaceBuk\Application> dotnet add reference ..\Persistence\
+
+FaceBuk\API> dotnet add reference ..\Domain\
+FaceBuk\API> dotnet add reference ..\Application\
+
+FaceBuk\Persistence> dotnet add reference ..\Domain\
+
+\FaceBuk> code .
+
+FaceBuk\api> dotnet add package ..\Persistence
+FaceBuk\Persistence> dotnet add package ..\Domain\
+
+install ef tool:
+FaceBuk> dotnet tool install --global dotnet-ef
+
+Create default db:
+PS D:\Development\Repos\FaceBuk> dotnet ef migrations add InitialCreate -p .\Persistence\ -s API
+Build started...
+Build succeeded.
+Done. To undo this action, use 'ef migrations remove'
+
+
+PS D:\Development\Repos\FaceBuk\API> dotnet watch run
+watch : Started
+Building...
+info: Microsoft.Hosting.Lifetime[0]
+      Now listening on: https://localhost:5001
+info: Microsoft.Hosting.Lifetime[0]
+      Now listening on: http://localhost:5000
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Development
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: D:\Development\Repos\FaceBuk\API
+-----------------------------------------------------------------
