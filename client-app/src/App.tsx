@@ -9,11 +9,12 @@ class App extends Component {
   };
 
   componentDidMount() {
-    axios.get('http://localhost:5000/api/WeatherForecast').then(response => {
-      this.setState({
-        weatherForecasts: response.data
+    axios.get('http://localhost:5000/api/WeatherForecast')
+      .then(response => {
+        this.setState({
+          weatherForecasts: response.data
+        });
       });
-    });
   }
 
   render() {
@@ -24,8 +25,9 @@ class App extends Component {
           <Header.Content>Facebuk</Header.Content>
         </Header>
         <List>
-          {this.state.weatherForecasts.map((value: any) => (
-            <List.Item key={value.id}>{value.summary} - temperature: {value.temperatureC}</List.Item>
+          {
+            this.state.weatherForecasts.map((value: any) => (
+              <List.Item key={value.id}>{value.summary} - temperature: {value.temperatureC}</List.Item>
           ))}
         </List>
       </div>
