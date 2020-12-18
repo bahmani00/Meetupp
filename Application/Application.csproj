@@ -3,7 +3,6 @@
   <ItemGroup>
     <Compile Remove="Activities\Create.cs" />
     <Compile Remove="Activities\Delete.cs" />
-    <Compile Remove="Activities\Details.cs" />
     <Compile Remove="Activities\Edit.cs" />
   </ItemGroup>
 
