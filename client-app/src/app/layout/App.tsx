@@ -3,6 +3,7 @@ import { Container, Header, Icon, List } from 'semantic-ui-react';
 import axios from 'axios';
 import { IActivity } from 'app/models/activity';
 import NavBar from 'features/nav/NavBar';
+import ActivityDashboard from 'features/activities/ActivityDashboard';
 
 
 const App = () => { //using arrow functions(Lymbda)
@@ -19,12 +20,7 @@ const App = () => { //using arrow functions(Lymbda)
     <Fragment> {/* A return allways single component */}
       <NavBar/>
       <Container style={{marginTop: '7em'}} >
-        <List>
-          {
-            activities.map((activity) => (
-              <List.Item key={activity.id}>{activity.title}:&nbsp;&nbsp;{activity.description}</List.Item>
-          ))}
-        </List>
+        <ActivityDashboard activities={activities}/>
       </Container>      
     </Fragment>
   );
