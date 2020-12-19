@@ -94,6 +94,9 @@ const ActivityForm: React.FC<IProps> = ({
           placeholder='Venue'
           value={activity.venue}
         />
+        <Button as="label" htmlFor="file" type="button" content="Upload Activity image"/>
+        <input type="file" id="file" style={{ display: "none" }} />
+
         <Button floated='right' positive type='submit' content='Submit' />
         <Button
           onClick={() => setEditMode(false)}
