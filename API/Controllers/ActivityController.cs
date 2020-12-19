@@ -11,11 +11,11 @@ namespace API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ActivityContoller : ControllerBase
+    public class ActivityController : ControllerBase
     {
         private readonly IMediator mediator;
 
-        public ActivityContoller(IMediator mediator)
+        public ActivityController(IMediator mediator)
         {
             this.mediator = mediator;
         }
@@ -31,6 +31,23 @@ namespace API.Controllers
         {
             return await mediator.Send(new Details.Query{Id = id});
         }
+
+        [HttpPost]
+        public async Task<ActionResult<Guid>> Create(Create.Command command){
+            return await mediator.Send(command);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<Unit>> Edit(Guid id, Edit.Command cmd){
+            cmd.Id = id;
+            return await mediator.Send(cmd);
+        }
+
+        [HttpDelete]
+        public async Task<ActionResult<Unit>> Delete([FromHeader]Guid id){
+            return await mediator.Send(new Delete.Command{Id = id});
+        }
+
 
 
 

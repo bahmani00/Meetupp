@@ -1,5 +1,8 @@
 --Added semantic-ui------------------------------------------------------------------------
 FaceBuk\client-app> npm install semantic-ui-react
+FaceBuk\client-app> npm start
+
+[crs].[OfdCourseEnrollmentGetBySearchCriteria] 
 
 --Added React------------------------------------------------------------------------------
 FaceBuk> npx create-react-app client-app --use-npm --typescript 

@@ -1,7 +1,6 @@
 using Application.Activities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +11,7 @@ using MediatR;
 
 namespace API
 {
-   public class Startup
+    public class Startup
     {
         public Startup(IConfiguration configuration)
         {
@@ -30,8 +29,11 @@ namespace API
 
             services.AddControllers();
             services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
-            });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "FaceBuk API", Version = "v1" });
+                //c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+                // UseFullTypeNameInSchemaIds replacement for .NET Core
+                c.CustomSchemaIds(x => x.FullName);
+           });
 
             services.AddCors(options =>
                 options.AddPolicy("CORSPolicy_React", policyBuilder =>
@@ -39,7 +41,7 @@ namespace API
                     .WithOrigins("http://localhost:3000")
                 ));
 
-            services.AddMediatR(typeof(List.Handler).Assembly);
+            services.AddMediatR(typeof(List.Query).Assembly);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -49,7 +51,7 @@ namespace API
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("v1/swagger.json", "API v1"));
 
                 app.UseCors("CORSPolicy_React");            
             }
