@@ -1,3 +1,19 @@
+----------------------------------------------------------
+----------------------------------------------------------
+----------------------------------------------------------
+enforce strong-typing for react components 
+type script: inteface vs class
+	interface has no extra code generation(dont appear in build/compile) but class has
+	class is object factory
+	interface is for type checking
+28be4a16f97b840f1bf403285d393e585ccdfee6
+-----------------------------------------------
+	
+----------------------------------------------------------
+dont need to use [FromBody] in action controllers when endpoint it's decorated by [ApiController]
+
+
+
 --Added semantic-ui------------------------------------------------------------------------
 FaceBuk\client-app> npm install semantic-ui-react
 FaceBuk\client-app> npm start
