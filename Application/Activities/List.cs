@@ -6,7 +6,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace Application.Activities
 {
