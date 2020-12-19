@@ -1,5 +1,14 @@
 ----------------------------------------------------------
-----------------------------------------------------------
+----refactor to React Hooks------------------------------------------------------
+replace class component with react hooks
+goal: allows us to have State and react lifecycle methods(no need of componentDidMount)
+	  useEffect has one lifecycle method(3 lifecycle methods merged in one)
+	  think of useEffect Hook as componentDidMount, componentDidUpdate, and componentWillUnmount combined.
+	  no need for a new class
+	  simple and clean
+https://reactjs.org/docs/hooks-effect.html
+	  
+	  
 ----------------------------------------------------------
 enforce strong-typing for react components 
 type script: inteface vs class
