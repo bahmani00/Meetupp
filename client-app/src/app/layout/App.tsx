@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
 import { Header, Icon, List } from 'semantic-ui-react';
 import axios from 'axios';
+import { IActivity } from 'app/models/activity';
 
-class App extends Component {
-  state = {
-    weatherForecasts: []
+interface IState {
+  activities: IActivity[]
+}
+class App extends Component<{}, IState> {
+  readonly state: IState = {
+    activities: []
   };
 
   componentDidMount() {
-    axios.get('http://localhost:5000/api/WeatherForecast')
+    axios.get<IActivity[]>('http://localhost:5000/api/activities')
       .then(response => {
         this.setState({
-          weatherForecasts: response.data
+          activities: response.data
         });
       });
   }
@@ -21,12 +25,12 @@ class App extends Component {
       <div>
         <Header as='h2'>
           <Icon name='users' />
-          <Header.Content>Facebuk</Header.Content>
+          <Header.Content>FaceBuk</Header.Content>
         </Header>
         <List>
           {
-            this.state.weatherForecasts.map((value: any) => (
-              <List.Item key={value.id}>{value.summary} - temperature: {value.temperatureC}</List.Item>
+            this.state.activities.map((activity) => (
+              <List.Item key={activity.id}>{activity.title} - description: {activity.description}</List.Item>
           ))}
         </List>
       </div>
