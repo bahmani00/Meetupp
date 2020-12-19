@@ -9,7 +9,7 @@ namespace Application.Activities
 {
     public class Create
     {
-        public class Command : IRequest
+        public class Command : IRequest<Guid>
         {
             public Guid Id { get; set; }
             public string Title { get; set; }
@@ -20,7 +20,7 @@ namespace Application.Activities
             public string Venue { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command>
+        public class Handler : IRequestHandler<Command, Guid>
         {
             private readonly FacebukDbContext _context;
             public Handler(FacebukDbContext context)
@@ -28,7 +28,7 @@ namespace Application.Activities
                 _context = context;
             }
 
-            public async Task<Unit> Handle(Command request, CancellationToken cancellationToken)
+            public async Task<Guid> Handle(Command request, CancellationToken cancellationToken)
             {
                 var activity = new Activity
                 {
@@ -40,13 +40,14 @@ namespace Application.Activities
                     City = request.City,
                     Venue = request.Venue
                 };
-
+                
+                //Dont use AddSync
                 _context.Activities.Add(activity);
                 var success = await _context.SaveChangesAsync() > 0;
 
-                if (success) return Unit.Value;
+                if (success) return activity.Id;
 
-                throw new Exception("Problem saving changes");
+                throw new Exception("Problem Adding changes");
             }
         }
     }

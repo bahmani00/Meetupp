@@ -34,7 +34,7 @@ namespace Application.Activities
 
                 if (success) return Unit.Value;
 
-                throw new Exception("Problem saving changes");
+                throw new Exception("Problem Deleting activity");
             }
         }
     }
