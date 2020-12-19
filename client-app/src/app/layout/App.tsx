@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Header, Icon, List } from 'semantic-ui-react';
+import React, { useState, useEffect, Fragment } from 'react';
+import { Container, Header, Icon, List } from 'semantic-ui-react';
 import axios from 'axios';
 import { IActivity } from 'app/models/activity';
+import NavBar from 'features/nav/NavBar';
 
 
 const App = () => { //using arrow functions(Lymbda)
@@ -15,18 +16,17 @@ const App = () => { //using arrow functions(Lymbda)
   }, []); // provide empty array [] to prevent this method gets called repeatedly
 
   return (
-    <div>
-      <Header as='h2'>
-        <Icon name='users' />
-        <Header.Content>FaceBuk</Header.Content>
-      </Header>
-      <List>
-        {
-          activities.map((activity) => (
-            <List.Item key={activity.id}>{activity.title}: {activity.description}</List.Item>
-        ))}
-      </List>
-    </div>
+    <Fragment> {/* A return allways single component */}
+      <NavBar/>
+      <Container style={{marginTop: '7em'}} >
+        <List>
+          {
+            activities.map((activity) => (
+              <List.Item key={activity.id}>{activity.title}:&nbsp;&nbsp;{activity.description}</List.Item>
+          ))}
+        </List>
+      </Container>      
+    </Fragment>
   );
 }
 
