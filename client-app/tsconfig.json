@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
-	"baseUrl": "./src",
+    "experimentalDecorators": true,
+	  "baseUrl": "./src",
     "target": "es5",
     "lib": [
       "dom",
@@ -19,7 +20,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
   },
   "include": [
     "src"
