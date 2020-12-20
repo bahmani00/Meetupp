@@ -38,7 +38,7 @@ const ActivityForm: React.FC<IProps> = ({
     if (activity.id.length === 0) {
       let newActivity = {
         ...activity,
-        id: uuid()
+        id: uuid() //create Guid for activity.Id
       };
       createActivity(newActivity);
     } else {
