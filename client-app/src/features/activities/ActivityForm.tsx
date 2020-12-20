@@ -8,13 +8,15 @@ interface IProps {
   activity: IActivity;
   createActivity: (activity: IActivity) => void;
   editActivity: (activity: IActivity) => void;
+  submitting: boolean;
 }
 
 const ActivityForm: React.FC<IProps> = ({
   setEditMode,
   activity: initialFormState,
   editActivity,
-  createActivity
+  createActivity,
+  submitting
 }) => {
   const initializeForm = () => {
     if (initialFormState) {
@@ -97,7 +99,7 @@ const ActivityForm: React.FC<IProps> = ({
         <Button as="label" htmlFor="file" type="button" content="Upload Activity image"/>
         <input type="file" id="file" style={{ display: "none" }} />
 
-        <Button floated='right' positive type='submit' content='Submit' />
+        <Button loading={submitting} floated='right' positive type='submit' content='Submit' />
         <Button
           onClick={() => setEditMode(false)}
           floated='right'
