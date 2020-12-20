@@ -1,4 +1,9 @@
+create Guid for activity.Id by installing 'uuid' package
+
+
 ----------------------------------------------------------
+added navbar
+
 ----refactor to React Hooks------------------------------------------------------
 replace class component with react hooks
 goal: allows us to have State and react lifecycle methods(no need of componentDidMount)
