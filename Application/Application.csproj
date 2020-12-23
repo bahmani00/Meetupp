@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
+    <PackageReference Include="FLuentValidation.AspNetCore" Version="9.3.0" />
     <PackageReference Include="MediatR" Version="9.0.0" />
   </ItemGroup>
 

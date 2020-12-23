@@ -3,7 +3,6 @@ import { Item, Label } from 'semantic-ui-react';
 import { observer } from 'mobx-react-lite';
 import ActivityStore from '../../../app/stores/activityStore';
 import ActivityListItem from './ActivityListItem';
-import { IActivity } from '../../../app/models/activity';
 
 const ActivityList: React.FC = () => {
   const activityStore = useContext(ActivityStore);
@@ -16,7 +15,7 @@ const ActivityList: React.FC = () => {
             {group}
           </Label>
           <Item.Group divided>
-            {activities.map((activity: IActivity) => (
+            {activities.map(activity => (
               <ActivityListItem key={activity.id} activity={activity} />
             ))}
           </Item.Group>
