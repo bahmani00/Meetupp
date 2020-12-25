@@ -1,0 +1,298 @@
+{
+	"info": {
+		"_postman_id": "2d8e9ca3-c7b0-4a5a-b8f3-bc6ffffac3fd",
+		"name": "FaceBuk",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Activity",
+			"item": [
+				{
+					"name": "Get Activities",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/activity",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"activity"
+							]
+						},
+						"description": "CancellationToken activated: try to click on Cancel Request"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Activity",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/activity/4429bf05-dc57-418c-82d5-49018da39fbc",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"activity",
+								"4429bf05-dc57-418c-82d5-49018da39fbc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get non-existing Activity",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "id",
+								"type": "text",
+								"value": "66b6d1ac-77b8-4a59-93d6-ad55d8fa5852"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/activity/88cb81f8-1111-1111-97f1-111111111111",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"activity",
+								"88cb81f8-1111-1111-97f1-111111111111"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get invalid Activity",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/activity/11111111-1111-11",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"activity",
+								"11111111-1111-11"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Activity",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "id",
+								"value": "66b6d1ac-77b8-4a59-93d6-ad55d8fa5852",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/activity/88cb81f8-5849-44f8-97f1-138dbe4618c9",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"activity",
+								"88cb81f8-5849-44f8-97f1-138dbe4618c9"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete non-existing Activity",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "id",
+								"type": "text",
+								"value": "66b6d1ac-77b8-4a59-93d6-ad55d8fa5852"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/activity/88cb81f8-1111-1111-97f1-111111111111",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"activity",
+								"88cb81f8-1111-1111-97f1-111111111111"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Activity",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var moment = require(\"moment\");\r",
+									"pm.environment.set('activityDate', moment().add(14, 'days').toISOString());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"{{$guid}}\",\r\n  \"title\": \"night party222\",\r\n  \"description\": \"Let's have fun tonight\",\r\n  \"category\": \"Culture\",\r\n  \"date\": \"{{activityDate}}\",\r\n  \"city\": \"Montreal\",\r\n  \"venue\": \"Mont-Royal\"\r\n}"
+						},
+						"url": {
+							"raw": "{{url}}/activity",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"activity"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Empty Activity",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var moment = require(\"moment\");\r",
+									"pm.environment.set('activityDate', moment().add(14, 'days').toISOString());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n}"
+						},
+						"url": {
+							"raw": "{{url}}/activity",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"activity"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Activity",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var moment = require(\"moment\");\r",
+									"pm.environment.set('activityDate', moment().add(14, 'days').toISOString());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Thursday Night party\",\r\n  \"description\": \"Let's have fun tonight\",\r\n  \"category\": \"coding\",\r\n  \"date\": \"{{activityDate}}\",\r\n  \"city\": \"Montreal\",\r\n  \"venue\": \"Cresent\"\r\n}"
+						},
+						"url": {
+							"raw": "{{url}}/activity/080ca069-4222-4047-8dc4-cfad7f5adc87",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"activity",
+								"080ca069-4222-4047-8dc4-cfad7f5adc87"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit Activity Partial",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var moment = require(\"moment\");\r",
+									"pm.environment.set('activityDate', moment().add(14, 'days').toISOString());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"category\": \"fun\r\n}"
+						},
+						"url": {
+							"raw": "{{url}}/activity/4429bf05-dc57-418c-82d5-49018da39fbc",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"activity",
+								"4429bf05-dc57-418c-82d5-49018da39fbc"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
