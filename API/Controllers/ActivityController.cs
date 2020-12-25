@@ -43,6 +43,12 @@ namespace API.Controllers
             return await mediator.Send(cmd);
         }
 
+        [HttpPatch("{id}")]
+        public async Task<ActionResult<Unit>> EditPartial(Guid id, EditPartial.Command cmd){
+            cmd.Id = id;
+            return await mediator.Send(cmd);
+        }
+        
         [HttpDelete("{id}")]
         public async Task<ActionResult<Unit>> Delete(Guid id){
             return await mediator.Send(new Delete.Command{Id = id});
