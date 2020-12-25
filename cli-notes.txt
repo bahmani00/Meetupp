@@ -1,4 +1,6 @@
 
+npm install --save revalidate
+-----------------------------------------
 FaceBuk\client-app> npm install react-toastify
 -----------------------------------------------------------
 create Guid for activity.Id by installing 'uuid' package
