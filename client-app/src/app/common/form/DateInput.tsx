@@ -20,6 +20,7 @@ const DateInput: React.FC<IProps> = ({
   }) => {
     return (
         <Form.Field error={touched && !!error} width={width}>
+          {/* onChange, onBlur, onKeyDown are added to raise validation  */}
         <DateTimePicker 
             placeholder={placeholder}
             value={input.value || null}
