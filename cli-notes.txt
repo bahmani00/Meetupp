@@ -1,3 +1,6 @@
+pass react stores to each others
+
+--------------------------------------
 FaceBuk> dotnet user-secrets list -p API/
 output:	TokenKey = super secret key
 
