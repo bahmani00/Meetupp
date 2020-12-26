@@ -23,6 +23,7 @@ export default class UserStore {
         this.user = user;
         console.log(user);
       });    
+      history.push('/activities');
     } catch (error) {
       console.log(error);
       throw error;
