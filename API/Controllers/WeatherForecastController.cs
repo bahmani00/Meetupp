@@ -14,10 +14,10 @@ namespace API.Controllers
         {
             "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
         };
-        private readonly FacebukDbContext dbContext;
+        private readonly Persistence.DataContext dbContext;
         private readonly ILogger<WeatherForecastController> logger;
 
-        public WeatherForecastController(FacebukDbContext dbContext, ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(Persistence.DataContext dbContext, ILogger<WeatherForecastController> logger)
         {
             this.dbContext = dbContext;
             this.logger = logger;

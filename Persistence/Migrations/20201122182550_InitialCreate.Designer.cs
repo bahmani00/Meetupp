@@ -7,7 +7,7 @@ using Persistence;
 
 namespace Persistence.Migrations
 {
-    [DbContext(typeof(FacebukDbContext))]
+    [DbContext(typeof(DataContext))]
     [Migration("20201122182550_InitialCreate")]
     partial class InitialCreate
     {
