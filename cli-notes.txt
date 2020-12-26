@@ -1,4 +1,10 @@
+FaceBuk> dotnet user-secrets list -p API/
+output:	TokenKey = super secret key
 
+FaceBuk> dotnet user-secrets  set "TokenKey" "super secret key" -p API/
+FaceBuk> dotnet user-secrets
+
+---------------------------------------------
 FaceBuk> dotnet ef migrations add "addedIdentity" -p Persistence/ -s API/
 FaceBuk\Persistence> dotnet add package Microsoft.AspNetCore.Identity
 --------------------------------------

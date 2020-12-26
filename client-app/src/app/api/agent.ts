@@ -36,11 +36,11 @@ const requests = {
 };
 
 const Activities = {
-    list:    ():Promise<IActivity[]> => requests.get('/activity'),
-    details: (id: string) => requests.get(`/activity/${id}`), //note: template string(string interpolation)
-    create:  (activity: IActivity) => requests.post('/activity', activity),
-    update:  (activity: IActivity) => requests.put(`/activity/${activity.id}`, activity),
-    delete:  (id: string) => requests.del(`/activity/${id}`)
+    list:    ():Promise<IActivity[]> => requests.get('/activities'),
+    details: (id: string) => requests.get(`/activities/${id}`), //note: template string(string interpolation)
+    create:  (activity: IActivity) => requests.post('/activities', activity),
+    update:  (activity: IActivity) => requests.put(`/activities/${activity.id}`, activity),
+    delete:  (id: string) => requests.del(`/activities/${id}`)
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export

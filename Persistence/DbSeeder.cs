@@ -37,7 +37,7 @@ namespace Persistence
 
             foreach (var user in users) 
             {
-                    await userManager.CreateAsync(user, "Pa$$w0rd");
+                await userManager.CreateAsync(user, "Pa$$w0rd");
             }
         }
 
