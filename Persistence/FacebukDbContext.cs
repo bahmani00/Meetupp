@@ -1,12 +1,13 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Domain;
 
 namespace Persistence
 {
-    public class FacebukDbContext: DbContext
+    public class DataContext: IdentityDbContext<AppUser>
     {
-        public FacebukDbContext(DbContextOptions options): base(options){
+        public DataContext(DbContextOptions options): base(options){
 
         }
 
@@ -16,6 +17,8 @@ namespace Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             //whenever running migration scripts it adds the followings to db => seed db
             modelBuilder.Entity<WeatherForecast>()
                 .HasData(

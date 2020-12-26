@@ -1,6 +1,8 @@
 using System;
 using System.Threading.Tasks;
+using Domain;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,9 +19,10 @@ namespace API
          using (var scope = host.Services.CreateScope()) {
             var services = scope.ServiceProvider;
             try {
-               var context = services.GetRequiredService<FacebukDbContext>();
+               var context = services.GetRequiredService<Persistence.DataContext>();
+                    var userManager = services.GetRequiredService<UserManager<AppUser>>();
                await context.Database.MigrateAsync();
-               await DbSeeder.SeedAsync(context);
+               await DbSeeder.SeedAsync(context, userManager);
 
             } catch (Exception ex) {
                var logger = services.GetRequiredService<ILogger<Program>>();

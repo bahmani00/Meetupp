@@ -37,8 +37,8 @@ namespace Application.Activities
 
         public class Handler : IRequestHandler<Command, Guid>
         {
-            private readonly FacebukDbContext _context;
-            public Handler(FacebukDbContext context)
+            private readonly DataContext _context;
+            public Handler(DataContext context)
             {
                 _context = context;
             }

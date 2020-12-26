@@ -8,7 +8,7 @@ using Persistence;
 
 namespace Persistence.Migrations
 {
-    [DbContext(typeof(FacebukDbContext))]
+    [DbContext(typeof(DataContext))]
     [Migration("20201205203120_SeedWeatherForcasts")]
     partial class SeedWeatherForcasts
     {

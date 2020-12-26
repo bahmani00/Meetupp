@@ -17,9 +17,9 @@ namespace Application.Activities
 
         public class Handler : IRequestHandler<Query, List<Activity>>
         {
-            private readonly FacebukDbContext _context;
+            private readonly Persistence.DataContext _context;
             private readonly ILogger<List> _logger;
-            public Handler(FacebukDbContext context, ILogger<List> logger)
+            public Handler(Persistence.DataContext context, ILogger<List> logger)
             {
                 _context = context;
                 _logger = logger;
