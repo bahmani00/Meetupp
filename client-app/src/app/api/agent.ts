@@ -48,6 +48,13 @@ const requests = {
     post: (url: string, body: {}) => axios.post(url, body).then(sleep(sleepInMs)).then(responseBody),
     put:  (url: string, body: {}) => axios.put(url, body).then(sleep(sleepInMs)).then(responseBody),
     del:  (url: string) => axios.delete(url).then(sleep(sleepInMs)).then(responseBody),
+    postForm: (url: string, file: Blob) => {
+        let formData = new FormData();
+        formData.append('File', file);
+        return axios.post(url, formData, {
+            headers: {'Content-type': 'multipart/form-data'}
+        }).then(responseBody)
+    }
 };
 
 const Activities = {

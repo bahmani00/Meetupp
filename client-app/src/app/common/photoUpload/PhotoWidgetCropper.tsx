@@ -2,30 +2,36 @@ import React, { useRef } from 'react';
 import Cropper from 'react-cropper';
 import 'cropperjs/dist/cropper.css';
 
-const PhotoWidgetCropper: React.FC = () => {
-  const cropper = useRef<Cropper>(null);
+interface IProps {
+  setImage: (file: Blob) => void;
+  imagePreview: string;
+}
+
+const PhotoWidgetCropper: React.FC<IProps> = ({ setImage, imagePreview }) => {
+  const cropper = useRef<Cropper | null>(null);
 
   const cropImage = () => {
     if (
-      cropper.current &&
-      typeof cropper.current.getCroppedCanvas() === 'undefined'
+      cropper.current && cropper.current.cropper &&
+      typeof cropper.current.cropper.getCroppedCanvas === 'undefined'
     ) {
       return;
     }
     cropper &&
       cropper.current &&
-      cropper.current.getCroppedCanvas().toBlob((blob: any) => {
-        //setImage(blob);
+      cropper.current.cropper.getCroppedCanvas().toBlob((blob: any) => {
+        setImage(blob);
       }, 'image/jpeg');
   };
 
   return (
     <Cropper
-      src="https://raw.githubusercontent.com/roadmanfong/react-cropper/master/example/img/child.jpg"
+      ref={cropper}
+      src={imagePreview}
       style={{ height: 200, width: '100%' }}
       // Cropper.js options
-      initialAspectRatio={16 / 9}
-      preview='.img-preview' 
+      aspectRatio={1 / 1}
+      preview='.img-preview'
       guides={false}
       viewMode={1}
       dragMode='move'
