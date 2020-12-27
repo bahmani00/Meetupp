@@ -38,6 +38,7 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<DataContext>(opt => {
+                opt.UseLazyLoadingProxies();
                 opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
                 opt.UseLoggerFactory(LoggerFactory.Create(builder => { builder.AddConsole(); }));
             });
