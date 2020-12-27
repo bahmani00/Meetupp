@@ -54,8 +54,10 @@ const Activities = {
     details: (id: string) => requests.get(`/activities/${id}`), //note: template string(string interpolation)
     create:  (activity: IActivity) => requests.post('/activities', activity),
     update:  (activity: IActivity) => requests.put(`/activities/${activity.id}`, activity),
-    delete:  (id: string) => requests.del(`/activities/${id}`)
-};
+    delete: (id: string) => requests.del(`/activities/${id}`),
+    attend: (id: string) => requests.post(`/activities/${id}/attend`, {}),
+    unattend: (id: string) => requests.del(`/activities/${id}/attend`)
+}
 
 const User = {
     current: (): Promise<IUser> => requests.get('/user'),

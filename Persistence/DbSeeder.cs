@@ -53,7 +53,7 @@ namespace Persistence
                     Title = "Past Activity 1",
                     Date = DateTime.Now.AddMonths(-2),
                     Description = "Activity 2 months ago",
-                    Category = "rinks",
+                    Category = "drinks",
                     City = "London",
                     Venue = "Pub",
                     UserActivities = new List<UserActivity>
@@ -95,7 +95,7 @@ namespace Persistence
                     Title = "Future Activity 1",
                     Date = DateTime.Now.AddMonths(1),
                     Description = "Activity 1 month in future",
-                    Category = "Music",
+                    Category = "music",
                     City = "London",
                     Venue = "Wembly Stadium",
                     UserActivities = new List<UserActivity>
@@ -119,7 +119,7 @@ namespace Persistence
                     Title = "Future Activity 2",
                     Date = DateTime.Now.AddMonths(2),
                     Description = "Activity 2 months in future",
-                    Category = "Food",
+                    Category = "food",
                     City = "London",
                     Venue = "Jamies Italian",
                     UserActivities = new List<UserActivity>
@@ -143,7 +143,7 @@ namespace Persistence
                     Title = "Future Activity 3",
                     Date = DateTime.Now.AddMonths(3),
                     Description = "Activity 3 months in future",
-                    Category = "Drinks",
+                    Category = "drinks",
                     City = "NY",
                     Venue = "Pub",
                     UserActivities = new List<UserActivity>
@@ -167,7 +167,7 @@ namespace Persistence
                     Title = "Future Activity 4",
                     Date = DateTime.Now.AddMonths(4),
                     Description = "Activity 4 months in future",
-                    Category = "Culture",
+                    Category = "culture",
                     City = "Toronto",
                     Venue = "Canada Museum",
                     UserActivities = new List<UserActivity>
@@ -185,7 +185,7 @@ namespace Persistence
                     Title = "Future Activity 5",
                     Date = DateTime.Now.AddMonths(5),
                     Description = "Activity 5 months in future",
-                    Category = "Drinks",
+                    Category = "drinks",
                     City = "London",
                     Venue = "Punch and Judy",
                     UserActivities = new List<UserActivity>
@@ -209,7 +209,7 @@ namespace Persistence
                     Title = "Future Activity 6",
                     Date = DateTime.Now.AddMonths(6),
                     Description = "Activity 6 months in future",
-                    Category = "Music",
+                    Category = "music",
                     City = "London",
                     Venue = "O2 Arena",
                     UserActivities = new List<UserActivity>
@@ -233,7 +233,7 @@ namespace Persistence
                     Title = "Future Activity 7",
                     Date = DateTime.Now.AddMonths(7),
                     Description = "Activity 7 months in future",
-                    Category = "Travel",
+                    Category = "travel",
                     City = "Berlin",
                     Venue = "All",
                     UserActivities = new List<UserActivity>

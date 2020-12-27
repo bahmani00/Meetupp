@@ -51,10 +51,11 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({
   useEffect(() => {
     if (match.params.id) {
       setLoading(true);
-      loadActivity(match.params.id).then(
-        (activity) => setActivity(new ActivityFormValues(activity))
-      )
-      .finally(() => setLoading(false));
+      loadActivity(match.params.id)
+        .then(activity => {
+          setActivity(new ActivityFormValues(activity));
+        })
+        .finally(() => setLoading(false));
     }
   }, [loadActivity, match.params.id]);
 
@@ -64,8 +65,11 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({
     activity.date = dateAndTime;    
     //console.log(activity);
     if (!activity.id) {
-        let newActivity = {...activity, id: uuid() };
-        createActivity(newActivity);
+      let newActivity = {
+        ...activity,
+        id: uuid()
+      };
+      createActivity(newActivity);
     } else {
       editActivity(activity);
     }
@@ -81,76 +85,75 @@ const ActivityForm: React.FC<RouteComponentProps<DetailParams>> = ({
             onSubmit={handleFinalFormSubmit}
             render={({ handleSubmit, invalid, pristine }) => (
               <Form onSubmit={handleSubmit} loading={loading}>
-            <Field
-              name='title'
-              placeholder='Title'
-              value={activity.title}
-              component={TextInput}
-            />
-            <Field
-              name='description'
-              rows={3}
-              placeholder='Description'
-              value={activity.description}
-              component={TextAreaInput}
-            />
-            <Field
-              name='category'
-              placeholder='Category'
-              value={activity.category}
-              component={SelectInput}
-	            options={category}
-            />
+                <Field
+                  name='title'
+                  placeholder='Title'
+                  value={activity.title}
+                  component={TextInput}
+                />
+                <Field
+                  name='description'
+                  placeholder='Description'
+                  rows={3}
+                  value={activity.description}
+                  component={TextAreaInput}
+                />
+                <Field
+                  component={SelectInput}
+                  options={category}
+                  name='category'
+                  placeholder='Category'
+                  value={activity.category}
+                />
+                <Form.Group widths='equal'>
+                  <Field
+                    component={DateInput}
+                    name='date'
+                    date={true}
+                    placeholder='Date'
+                    value={activity.date}
+                  />
+                  <Field
+                    component={DateInput}
+                    name='time'
+                    time={true}
+                    placeholder='Time'
+                    value={activity.time}
+                  />
+                </Form.Group>
 
-            <Form.Group widths='equal'>
-              <Field
-                component={DateInput}
-                name='date'
-                date={true}
-                placeholder='Date'
-                value={activity.date}
-              />
-              <Field
-                component={DateInput}
-                name='time'
-                time={true}
-                placeholder='Time'
-                value={activity.time}
-              />
-            </Form.Group>
-
-            <Field
-              name='city'
-              placeholder='City'
-              value={activity.city}
-              component={TextInput} 
-            />
-            <Field
-              name='venue'
-              placeholder='Venue'
-              value={activity.venue}
-              component={TextInput}
-            />
-            <Button
-              loading={submitting}
+                <Field
+                  component={TextInput}
+                  name='city'
+                  placeholder='City'
+                  value={activity.city}
+                />
+                <Field
+                  component={TextInput}
+                  name='venue'
+                  placeholder='Venue'
+                  value={activity.venue}
+                />
+                <Button
+                  loading={submitting}
                   disabled={loading || invalid || pristine}
-              floated='right'
-              positive
-              type='submit'
-              content='Submit'
-            />
-            <Button
+                  floated='right'
+                  positive
+                  type='submit'
+                  content='Submit'
+                />
+                <Button
                   onClick={
                     activity.id
                       ? () => history.push(`/activities/${activity.id}`)
                       : () => history.push('/activities')
                   }
-              disabled={loading}
-              floated='right'
-              type='button'
-              content='Cancel'
-            />
-          </Form>
+                  disabled={loading}
+                  floated='right'
+                  type='button'
+                  content='Cancel'
+                />
+              </Form>
             )}
           />
         </Segment>
