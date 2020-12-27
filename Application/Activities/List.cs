@@ -6,26 +6,30 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Microsoft.Extensions.Logging;
+using AutoMapper;
 
 namespace Application.Activities
 {
     public class List
     {
-        public class Query : IRequest<List<Activity>> 
+        public class Query : IRequest<List<ActivityDto>> 
         { 
         }
 
-        public class Handler : IRequestHandler<Query, List<Activity>>
+        public class Handler : IRequestHandler<Query, List<ActivityDto>>
         {
-            private readonly Persistence.DataContext _context;
+            private readonly DataContext _context;
             private readonly ILogger<List> _logger;
-            public Handler(Persistence.DataContext context, ILogger<List> logger)
+			private readonly IMapper _mapper;
+
+            public Handler(DataContext context, IMapper mapper, ILogger<List> logger)
             {
+                _mapper = mapper;
                 _context = context;
                 _logger = logger;
             }
 
-            public async Task<List<Activity>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<List<ActivityDto>> Handle(Query request, CancellationToken cancellationToken)
             {
                 // try
                 // {
@@ -40,9 +44,12 @@ namespace Application.Activities
                 //     _logger.LogInformation("Task was cancelled.");
                 // }
 
-                var activities = await _context.Activities.ToListAsync(cancellationToken);
+                var activities = await _context.Activities
+                        .Include(x => x.UserActivities)
+                        .ThenInclude(x => x.AppUser)
+                        .ToListAsync(cancellationToken);
 
-                return activities;
+                return _mapper.Map<List<Activity>, List<ActivityDto>>(activities);
             }
         }
     }

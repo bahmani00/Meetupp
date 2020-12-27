@@ -1,4 +1,5 @@
 using Application.Activities;
+using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -56,6 +57,7 @@ namespace API
                 ));
 
             services.AddMediatR(typeof(List.Query).Assembly);
+            services.AddAutoMapper(typeof(List.Handler));
 
             services.AddMvc(opt =>
             {
