@@ -1,6 +1,10 @@
 import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Icon, Header } from 'semantic-ui-react'; 
+import { Icon, Header } from 'semantic-ui-react';
+
+interface IProps {
+  setFiles: (files: object[]) => void;
+}
 
 const dropzoneStyles = {
   border: 'dashed 3px',
@@ -15,11 +19,17 @@ const dropzoneActive = {
   borderColor: 'green'
 };
 
-const PhotoWidgetDropzone = () => {
+const PhotoWidgetDropzone: React.FC<IProps> = ({ setFiles }) => {
   //when a file dropped this even get raised
   const onDrop = useCallback(acceptedFiles => {
-    console.log(acceptedFiles);
-  }, []);
+    setFiles(
+      acceptedFiles.map((file: object) =>
+        Object.assign(file, {
+          preview: URL.createObjectURL(file)
+        })
+      )
+    );
+  }, [setFiles]);
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
