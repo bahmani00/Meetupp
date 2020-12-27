@@ -1,20 +1,21 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Domain;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 
 namespace Persistence
 {
-    public class DataContext: IdentityDbContext<AppUser>
+    public class DataContext : IdentityDbContext<AppUser>
     {
-        public DataContext(DbContextOptions options): base(options){
-
+        public DataContext(DbContextOptions options) : base(options)
+        {
         }
 
         //public DbSet<Value> Values { get;set;}
         public DbSet<WeatherForecast> WeatherForecasts { get;set;}
         public DbSet<Activity> Activities { get;set;}
         public DbSet<UserActivity> UserActivities { get; set; }
+        public DbSet<Photo> Photos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
