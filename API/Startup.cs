@@ -43,7 +43,7 @@ namespace API
 
             services.AddControllers();
             services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "FaceBuk API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "MeetUppy API", Version = "v1" });
                 //c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
                 // UseFullTypeNameInSchemaIds replacement for .NET Core
                 c.CustomSchemaIds(x => x.FullName);
