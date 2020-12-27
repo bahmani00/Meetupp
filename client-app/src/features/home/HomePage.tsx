@@ -1,8 +1,9 @@
 import React, { useContext, Fragment } from 'react';
-import { Container, Segment, Header, Button, Image } from 'semantic-ui-react';
+import { Container, Segment, Header, Button, Image, Label } from 'semantic-ui-react';
 import { Link } from 'react-router-dom';
 import { RootStoreContext } from '../../app/stores/rootStore';
 import LoginForm from '../user/LoginForm';
+import RegisterForm from '../user/RegisterForm';
 
 const HomePage = () => {
   const rootStore = useContext(RootStoreContext);
@@ -22,7 +23,12 @@ const HomePage = () => {
         </Header>
         {isLoggedIn && user ? (
           <Fragment>
-            <Header as='h2' inverted content={`Welcome back ${user.displayName}`} />
+            <Header as='h2' inverted>
+              <Header.Content>
+                Welcome back
+                <Label size='big' color='orange'>{user.displayName}</Label>
+              </Header.Content>
+            </Header>
             <Button as={Link} to='/activities' size='huge' inverted>
               Go to activities!
             </Button>
@@ -33,7 +39,7 @@ const HomePage = () => {
           <Button onClick={() => openModal(<LoginForm />)} size='huge' inverted>
             Login
           </Button>
-          <Button as={Link} to='/login' size='huge' inverted>
+          <Button onClick={() => openModal(<RegisterForm />)} size='huge' inverted>
             Register
           </Button>
         </Fragment>
