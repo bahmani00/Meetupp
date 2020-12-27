@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="facebuk.db" />
+    <None Remove="meetUppy.db" />
   </ItemGroup>
   
   <ItemGroup>

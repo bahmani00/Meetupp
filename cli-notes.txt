@@ -1,19 +1,19 @@
 pass react stores to each others
 
 --------------------------------------
-FaceBuk> dotnet user-secrets list -p API/
+MeetUppy> dotnet user-secrets list -p API/
 output:	TokenKey = super secret key
 
-FaceBuk> dotnet user-secrets  set "TokenKey" "super secret key" -p API/
-FaceBuk> dotnet user-secrets
+MeetUppy> dotnet user-secrets  set "TokenKey" "super secret key" -p API/
+MeetUppy> dotnet user-secrets
 
 ---------------------------------------------
-FaceBuk> dotnet ef migrations add "addedIdentity" -p Persistence/ -s API/
-FaceBuk\Persistence> dotnet add package Microsoft.AspNetCore.Identity
+MeetUppy> dotnet ef migrations add "addedIdentity" -p Persistence/ -s API/
+MeetUppy\Persistence> dotnet add package Microsoft.AspNetCore.Identity
 --------------------------------------
 npm install --save revalidate
 -----------------------------------------
-FaceBuk\client-app> npm install react-toastify
+MeetUppy\client-app> npm install react-toastify
 -----------------------------------------------------------
 create Guid for activity.Id by installing 'uuid' package
 
@@ -48,38 +48,38 @@ dont need to use [FromBody] in action controllers when endpoint it's decorated b
 
 
 --Added semantic-ui------------------------------------------------------------------------
-FaceBuk\client-app> npm install semantic-ui-react
-FaceBuk\client-app> npm start
+MeetUppy\client-app> npm install semantic-ui-react
+MeetUppy\client-app> npm start
 
 [crs].[OfdCourseEnrollmentGetBySearchCriteria] 
 
 --Added React------------------------------------------------------------------------------
-FaceBuk> npx create-react-app client-app --use-npm --typescript 
-FaceBuk> cd client-app
-FaceBuk\client-app> npm start
+MeetUppy> npx create-react-app client-app --use-npm --typescript 
+MeetUppy> cd client-app
+MeetUppy\client-app> npm start
 
 added images.d.ts file next to tsconfig.json tos support image types in ts files
 declare module '*.svg'
 declare module '*.png'
 declare module '*.jpg'
 
-FaceBuk\client-app> npm install axios 
+MeetUppy\client-app> npm install axios 
 
 
 --SeedData------------------------------------------------------------------------------
-FaceBuk> dotnet build
-FaceBuk\Persistence> dotnet add package Microsoft.EntityFrameworkCore.Design
-FaceBuk\API> dotnet add package Microsoft.EntityFrameworkCore.Design
-FaceBuk> dotnet ef migrations add SeedValues -p Persistence/ -s API/
+MeetUppy> dotnet build
+MeetUppy\Persistence> dotnet add package Microsoft.EntityFrameworkCore.Design
+MeetUppy\API> dotnet add package Microsoft.EntityFrameworkCore.Design
+MeetUppy> dotnet ef migrations add SeedValues -p Persistence/ -s API/
 
---Drafting FaceBuk------------------------------------------------------------------------------
+--Drafting MeetUppy------------------------------------------------------------------------------
 Severity	Code	Description	Project	File	Line	Suppression State
 Error	MSB3644	The reference assemblies for .NETFramework,Version=v5.0 were not found. To resolve this, install the Developer Pack (SDK/Targeting Pack) for this framework version or retarget your application. You can download .NET Framework Developer Packs at https://aka.ms/msbuild/developerpacks	MyMicroserviceActio.Services.Identity.Tests	C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Current\Bin\Microsoft.Common.CurrentVersion.targets	1177	
 
 sr: 130-150
 
-md FaceBuk
-cd FaceBuk
+md MeetUppy
+cd MeetUppy
 
 (.net CLI commands)
 dotnet new sln  
@@ -89,40 +89,40 @@ dotnet new classlib -n Application
 dotnet new classlib -n Persistence
 dotnet new webapi -n API
 
-PS D:\Development\Repos\FaceBuk> dotnet sln add .\Domain\
+PS D:\Development\Repos\MeetUppy> dotnet sln add .\Domain\
 Project `Domain\Domain.csproj` added to the solution.
-PS D:\Development\Repos\FaceBuk> dotnet sln add .\API\   
+PS D:\Development\Repos\MeetUppy> dotnet sln add .\API\   
 Project `API\API.csproj` added to the solution.
-PS D:\Development\Repos\FaceBuk> dotnet sln add .\Application\
+PS D:\Development\Repos\MeetUppy> dotnet sln add .\Application\
 Project `Application\Application.csproj` added to the solution.
-PS D:\Development\Repos\FaceBuk> dotnet sln add .\Persistence\
+PS D:\Development\Repos\MeetUppy> dotnet sln add .\Persistence\
 Project `Persistence\Persistence.csproj` added to the solution.
 
 
-FaceBuk\Application> dotnet add reference ..\Domain\
-FaceBuk\Application> dotnet add reference ..\Persistence\
+MeetUppy\Application> dotnet add reference ..\Domain\
+MeetUppy\Application> dotnet add reference ..\Persistence\
 
-FaceBuk\API> dotnet add reference ..\Domain\
-FaceBuk\API> dotnet add reference ..\Application\
+MeetUppy\API> dotnet add reference ..\Domain\
+MeetUppy\API> dotnet add reference ..\Application\
 
-FaceBuk\Persistence> dotnet add reference ..\Domain\
+MeetUppy\Persistence> dotnet add reference ..\Domain\
 
-\FaceBuk> code .
+\MeetUppy> code .
 
-FaceBuk\api> dotnet add package ..\Persistence
-FaceBuk\Persistence> dotnet add package ..\Domain\
+MeetUppy\api> dotnet add package ..\Persistence
+MeetUppy\Persistence> dotnet add package ..\Domain\
 
 install ef tool:
-FaceBuk> dotnet tool install --global dotnet-ef
+MeetUppy> dotnet tool install --global dotnet-ef
 
 Create default db:
-PS D:\Development\Repos\FaceBuk> dotnet ef migrations add InitialCreate -p .\Persistence\ -s API
+PS D:\Development\Repos\MeetUppy> dotnet ef migrations add InitialCreate -p .\Persistence\ -s API
 Build started...
 Build succeeded.
 Done. To undo this action, use 'ef migrations remove'
 
 
-PS D:\Development\Repos\FaceBuk\API> dotnet watch run
+PS D:\Development\Repos\MeetUppy\API> dotnet watch run
 watch : Started
 Building...
 info: Microsoft.Hosting.Lifetime[0]
@@ -134,5 +134,5 @@ info: Microsoft.Hosting.Lifetime[0]
 info: Microsoft.Hosting.Lifetime[0]
       Hosting environment: Development
 info: Microsoft.Hosting.Lifetime[0]
-      Content root path: D:\Development\Repos\FaceBuk\API
+      Content root path: D:\Development\Repos\MeetUppy\API
 -----------------------------------------------------------------
