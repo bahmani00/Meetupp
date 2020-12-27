@@ -12,6 +12,8 @@ namespace Domain
         public DateTime Date { get; set; }
         public string City { get; set; }
         public string Venue { get; set; }
-        public ICollection<UserActivity> UserActivities { get; set; }
+		
+		//use virtial to do efcore lazy loading rather eagerly
+        public virtual ICollection<UserActivity> UserActivities { get; set; }
     }
 }
