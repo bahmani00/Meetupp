@@ -25,6 +25,7 @@ using Microsoft.Extensions.Logging;
 using Application.Interfaces;
 using Infrastructure.Photos;
 using System.Threading.Tasks;
+using Application.Profiles;
 
 namespace API
 {
@@ -118,6 +119,7 @@ namespace API
             services.AddScoped<IUserAccessor, UserAccessor>();
 			
             services.AddScoped<IPhotoAccessor, PhotoAccessor>();
+            services.AddScoped<IProfileReader, ProfileReader>();
             services.Configure<CloudinarySettings>(Configuration.GetSection("Cloudinary"));
         }
 
