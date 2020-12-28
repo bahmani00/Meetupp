@@ -20,21 +20,24 @@ namespace Persistence
                     Id = "a",
                     DisplayName = "Bob",
                     UserName = "bob",
-                    Email = "bob@test.com"
+                    Email = "bob@test.com",
+                    Photos = new [] {new Photo {Id="1", IsMain = true , Url = "https://res.cloudinary.com/stankansas/image/upload/v1609119885/pcykcdlnyjbckrobnzwb.jpg"}}
                 },
                 new AppUser
                 {
                     Id = "b",
                     DisplayName = "Jane",
                     UserName = "jane",
-                    Email = "jane@test.com"
+                    Email = "jane@test.com",
+                    Photos = new [] {new Photo {Id="2", IsMain = true , Url = "https://res.cloudinary.com/stankansas/image/upload/v1609119965/yglovzkycojx7f0zafgh.jpg"}}
                 },
                 new AppUser
                 {
                     Id = "c",
                     DisplayName = "Tom",
                     UserName = "tom",
-                    Email = "tom@test.com"
+                    Email = "tom@test.com",
+                    Photos = new [] {new Photo {Id="3", IsMain = true , Url = "https://res.cloudinary.com/stankansas/image/upload/v1609120019/wdxbk5qjkettlxnvzmy5.jpg"}}
                 },
             };
 
@@ -119,18 +122,21 @@ namespace Persistence
                         {
                             Id = Guid.NewGuid(),
                             Body = "How artistic!",
+                            AuthorId = "a",
                             CreatedAt = DateTime.Now.AddMonths(-3).AddDays(2)
                         },
                         new Comment
                         {
                             Id = Guid.NewGuid(),
                             Body = "Awesome, lets do it",
+                            AuthorId = "c",
                             CreatedAt = DateTime.Now.AddMonths(-3).AddDays(4)
                         },
                         new Comment
                         {
                             Id = Guid.NewGuid(),
                             Body = "Very tempting, going",
+                            AuthorId = "b",
                             CreatedAt = DateTime.Now.AddMonths(-3).AddDays(3)
                         }
                     }

@@ -58,6 +58,7 @@ namespace API
                 options.AddPolicy("CORSPolicy_React", policyBuilder =>
                     policyBuilder.AllowAnyHeader().AllowAnyMethod().AllowCredentials()
                     .WithOrigins("http://localhost:3000")
+                    .AllowCredentials()//let signalR gets cridentials (by getting passed by websockets)
                 ));
 
             services.AddMediatR(typeof(List.Query).Assembly);
