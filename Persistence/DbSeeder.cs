@@ -92,26 +92,47 @@ namespace Persistence
                 },
                 new Activity
                 {
-                    Title = "Future Activity 1",
-                    Date = DateTime.Now.AddMonths(1),
-                    Description = "Activity 1 month in future",
+                    Title = "Lets Dance",
+                    Date = DateTime.Now.AddMonths(-3),
+                    Description = "Lets dance like nobody is watching us!",
                     Category = "music",
-                    City = "London",
-                    Venue = "Wembly Stadium",
+                    City = "Montreal",
+                    Venue = "Cresent",
                     UserActivities = new List<UserActivity>
                     {
                         new UserActivity
                         {
                             AppUserId = "b",
                             IsHost = true,
-                            DateJoined = DateTime.Now.AddMonths(1)
+                            DateJoined = DateTime.Now.AddMonths(-3)
                         },
                         new UserActivity
                         {
                             AppUserId = "a",
                             IsHost = false,
-                            DateJoined = DateTime.Now.AddMonths(1)
+                            DateJoined = DateTime.Now.AddMonths(-3).AddDays(1)
                         },
+                    },
+                    Comments = new List<Comment>
+                    {
+                        new Comment
+                        {
+                            Id = Guid.NewGuid(),
+                            Body = "How artistic!",
+                            CreatedAt = DateTime.Now.AddMonths(-3).AddDays(2)
+                        },
+                        new Comment
+                        {
+                            Id = Guid.NewGuid(),
+                            Body = "Awesome, lets do it",
+                            CreatedAt = DateTime.Now.AddMonths(-3).AddDays(4)
+                        },
+                        new Comment
+                        {
+                            Id = Guid.NewGuid(),
+                            Body = "Very tempting, going",
+                            CreatedAt = DateTime.Now.AddMonths(-3).AddDays(3)
+                        }
                     }
                 },
                 new Activity

@@ -15,5 +15,6 @@ namespace Domain
 		
 		//use virtial to do efcore lazy loading rather eagerly
         public virtual ICollection<UserActivity> UserActivities { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
     }
 }
