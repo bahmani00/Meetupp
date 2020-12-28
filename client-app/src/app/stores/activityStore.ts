@@ -41,10 +41,12 @@ export default class ActivityStore {
         this.activity!.comments.push(comment)
       })
     })
+    console.log('create HubConnection');
   };
 
   @action stopHubConnection = () => {
-    this.hubConnection!.stop()
+    this.hubConnection!.stop();
+    console.log('stop HubConnection');
   }
 
   @action addComment = async (values: any) => {
