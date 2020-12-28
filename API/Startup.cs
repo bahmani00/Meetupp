@@ -24,6 +24,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Logging;
 using Application.Interfaces;
 using Infrastructure.Photos;
+using System.Threading.Tasks;
 
 namespace API
 {
@@ -61,7 +62,7 @@ namespace API
 
             services.AddMediatR(typeof(List.Query).Assembly);
             services.AddAutoMapper(typeof(List.Handler));
-
+            services.AddSignalR();
             services.AddMvc(opt =>
             {
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
@@ -94,6 +95,22 @@ namespace API
                         ValidateAudience = false,
                         ValidateIssuer = false
                     };
+
+                    //add auth token to HubContext
+                    opt.Events = new JwtBearerEvents
+                    {
+                        OnMessageReceived = context =>  //MessageReceivedContext
+                        {
+                            var accessToken = context.Request.Query["access_token"];
+                            var path = context.HttpContext.Request.Path;
+                            if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/chat")))
+                            {
+                                context.Token = accessToken;
+                            }
+
+                            return Task.CompletedTask;
+                        }
+                    };
                 });
 
             services.AddScoped<IJwtGenerator, JwtGenerator>();
@@ -122,7 +139,6 @@ namespace API
                 app.UseHttpsRedirection();
             }
 
-
             app.UseRouting();
 
             app.UseAuthentication();
@@ -131,6 +147,7 @@ namespace API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<SignalR.ChatHub>("/chat");
             });
         }
     }
