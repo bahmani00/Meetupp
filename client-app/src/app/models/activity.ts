@@ -1,4 +1,8 @@
 import { runInAction } from "mobx";
+export interface IActivitiesEnvelope {
+  activities: IActivity[];
+  activityCount: number;
+}
 
 export interface IActivity {
     id: string;

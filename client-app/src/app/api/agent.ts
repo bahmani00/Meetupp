@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { IActivity } from '../models/activity';
+import { IActivity, IActivitiesEnvelope } from '../models/activity';
 import { history } from '../..';
 import { toast } from 'react-toastify';
 import { IUser, IUserFormValues } from '../models/user';
@@ -38,16 +38,18 @@ axios.interceptors.response.use(undefined, error => {
 })
 
 const responseBody = (response: AxiosResponse) => response.data;
-
-const sleep = (ms: number) => (response: AxiosResponse) => 
-    new Promise<AxiosResponse>(resolve => setTimeout(() => resolve(response), ms));
-const sleepInMs = 500;        
+const sleepInMs = 500; 
+const sleep = () => (response: AxiosResponse) =>
+  new Promise<AxiosResponse>(resolve =>
+    setTimeout(() => resolve(response), sleepInMs)
+  );
+  
 
 const requests = {
-    get:  (url: string) => axios.get(url).then(sleep(sleepInMs)).then(responseBody),
-    post: (url: string, body: {}) => axios.post(url, body).then(sleep(sleepInMs)).then(responseBody),
-    put:  (url: string, body: {}) => axios.put(url, body).then(sleep(sleepInMs)).then(responseBody),
-    del:  (url: string) => axios.delete(url).then(sleep(sleepInMs)).then(responseBody),
+    get:  (url: string) => axios.get(url).then(sleep()).then(responseBody),
+    post: (url: string, body: {}) => axios.post(url, body).then(sleep()).then(responseBody),
+    put:  (url: string, body: {}) => axios.put(url, body).then(sleep()).then(responseBody),
+    del:  (url: string) => axios.delete(url).then(sleep()).then(responseBody),
     postForm: (url: string, file: Blob) => {
         let formData = new FormData();
         formData.append('File', file);
@@ -58,14 +60,16 @@ const requests = {
 };
 
 const Activities = {
-    list:    ():Promise<IActivity[]> => requests.get('/activities'),
-    details: (id: string) => requests.get(`/activities/${id}`), //note: template string(string interpolation)
-    create:  (activity: IActivity) => requests.post('/activities', activity),
-    update:  (activity: IActivity) => requests.put(`/activities/${activity.id}`, activity),
-    delete: (id: string) => requests.del(`/activities/${id}`),
-    attend: (id: string) => requests.post(`/activities/${id}/attend`, {}),
-    unattend: (id: string) => requests.del(`/activities/${id}/attend`)
-}
+  list: (params: URLSearchParams): Promise<IActivitiesEnvelope> =>
+    axios.get('/activities', {params: params}).then(sleep()).then(responseBody),
+  details: (id: string) => requests.get(`/activities/${id}`),
+  create: (activity: IActivity) => requests.post('/activities', activity),
+  update: (activity: IActivity) =>
+    requests.put(`/activities/${activity.id}`, activity),
+  delete: (id: string) => requests.del(`/activities/${id}`),
+  attend: (id: string) => requests.post(`/activities/${id}/attend`, {}),
+  unattend: (id: string) => requests.del(`/activities/${id}/attend`)
+};
 
 const User = {
     current: (): Promise<IUser> => requests.get('/user'),
