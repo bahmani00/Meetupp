@@ -4,6 +4,7 @@ import { history } from '../..';
 import { toast } from 'react-toastify';
 import { IUser, IUserFormValues } from '../models/user';
 import { IProfile, IPhoto } from '../models/profile';
+import { Agent } from 'https';
 
 axios.defaults.baseURL = 'http://localhost:5000/api';
 
@@ -85,11 +86,15 @@ const Profiles = {
     updateProfile: (profile: Partial<IProfile>) => requests.put(`/profiles`, profile),
     follow: (username: string) => requests.post(`/profiles/${username}/follow`, {}),
     unfollow: (username: string) => requests.del(`/profiles/${username}/follow`),
-    listFollowings: (username: string, predicate: string) => requests.get(`/profiles/${username}/follow?predicate=${predicate}`)
+    listFollowings: (username: string, predicate: string) => requests.get(`/profiles/${username}/follow?predicate=${predicate}`),
+    listActivities: (username: string, predicate: string) =>
+       requests.get(`/profiles/${username}/activities?predicate=${predicate}`)
 }
 
-export default {
+//https://stackoverflow.com/questions/64729264/how-can-i-get-rid-of-the-warning-import-no-anonymous-default-export-in-react
+const agent = {
     Activities,
     User,
     Profiles
 }
+export default agent;
