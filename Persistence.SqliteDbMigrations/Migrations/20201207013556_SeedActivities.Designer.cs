@@ -6,17 +6,46 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
-namespace Persistence.Migrations
+namespace Persistence.SqliteDbMigrations.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20201205203120_SeedWeatherForcasts")]
-    partial class SeedWeatherForcasts
+    [Migration("20201207013556_SeedActivities")]
+    partial class SeedActivities
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "5.0.0");
+
+            modelBuilder.Entity("Domain.Activity", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Category")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("City")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Title")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Venue")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Activities");
+                });
 
             modelBuilder.Entity("Domain.WeatherForecast", b =>
                 {
@@ -41,49 +70,49 @@ namespace Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            Date = new DateTime(2020, 12, 5, 15, 31, 19, 334, DateTimeKind.Local).AddTicks(9275),
+                            Date = new DateTime(2020, 12, 6, 20, 35, 55, 671, DateTimeKind.Local).AddTicks(7578),
                             Summary = "Freezing",
                             TemperatureC = -15
                         },
                         new
                         {
                             Id = 2,
-                            Date = new DateTime(2020, 12, 6, 15, 31, 19, 338, DateTimeKind.Local).AddTicks(2934),
+                            Date = new DateTime(2020, 12, 7, 20, 35, 55, 677, DateTimeKind.Local).AddTicks(4269),
                             Summary = "Chilly",
                             TemperatureC = 16
                         },
                         new
                         {
                             Id = 3,
-                            Date = new DateTime(2020, 12, 7, 15, 31, 19, 338, DateTimeKind.Local).AddTicks(3024),
+                            Date = new DateTime(2020, 12, 8, 20, 35, 55, 677, DateTimeKind.Local).AddTicks(4444),
                             Summary = "Cool",
                             TemperatureC = 20
                         },
                         new
                         {
                             Id = 4,
-                            Date = new DateTime(2020, 12, 8, 15, 31, 19, 338, DateTimeKind.Local).AddTicks(3032),
+                            Date = new DateTime(2020, 12, 9, 20, 35, 55, 677, DateTimeKind.Local).AddTicks(4461),
                             Summary = "Mild",
                             TemperatureC = 25
                         },
                         new
                         {
                             Id = 5,
-                            Date = new DateTime(2020, 12, 9, 15, 31, 19, 338, DateTimeKind.Local).AddTicks(3036),
+                            Date = new DateTime(2020, 12, 10, 20, 35, 55, 677, DateTimeKind.Local).AddTicks(4470),
                             Summary = "Warm",
                             TemperatureC = 30
                         },
                         new
                         {
                             Id = 6,
-                            Date = new DateTime(2020, 12, 10, 15, 31, 19, 338, DateTimeKind.Local).AddTicks(3040),
+                            Date = new DateTime(2020, 12, 11, 20, 35, 55, 677, DateTimeKind.Local).AddTicks(4477),
                             Summary = "Hot",
                             TemperatureC = 40
                         },
                         new
                         {
                             Id = 7,
-                            Date = new DateTime(2020, 12, 11, 15, 31, 19, 338, DateTimeKind.Local).AddTicks(3044),
+                            Date = new DateTime(2020, 12, 12, 20, 35, 55, 677, DateTimeKind.Local).AddTicks(4484),
                             Summary = "Scorching",
                             TemperatureC = 45
                         });

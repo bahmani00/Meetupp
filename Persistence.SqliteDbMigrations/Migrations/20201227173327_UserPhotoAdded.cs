@@ -1,37 +1,101 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Persistence.Migrations
+namespace Persistence.SqliteDbMigrations.Migrations
 {
-    public partial class UserActivityAdded : Migration
+    public partial class UserPhotoAdded : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.AddColumn<string>(
+                name: "Bio",
+                table: "AspNetUsers",
+                type: "TEXT",
+                nullable: true);
+
             migrationBuilder.CreateTable(
-                name: "UserActivities",
+                name: "Photos",
                 columns: table => new
                 {
-                    AppUserId = table.Column<string>(type: "TEXT", nullable: false),
-                    ActivityId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    DateJoined = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    IsHost = table.Column<bool>(type: "INTEGER", nullable: false)
+                    Id = table.Column<string>(type: "TEXT", nullable: false),
+                    Url = table.Column<string>(type: "TEXT", nullable: true),
+                    IsMain = table.Column<bool>(type: "INTEGER", nullable: false),
+                    AppUserId = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserActivities", x => new { x.AppUserId, x.ActivityId });
+                    table.PrimaryKey("PK_Photos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UserActivities_Activities_ActivityId",
-                        column: x => x.ActivityId,
-                        principalTable: "Activities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserActivities_AspNetUsers_AppUserId",
+                        name: "FK_Photos_AspNetUsers_AppUserId",
                         column: x => x.AppUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
+
+            migrationBuilder.UpdateData(
+                table: "WeatherForecasts",
+                keyColumn: "Id",
+                keyValue: 1,
+                column: "Date",
+                value: new DateTime(2020, 12, 27, 12, 33, 26, 116, DateTimeKind.Local).AddTicks(6101));
+
+            migrationBuilder.UpdateData(
+                table: "WeatherForecasts",
+                keyColumn: "Id",
+                keyValue: 2,
+                column: "Date",
+                value: new DateTime(2020, 12, 28, 12, 33, 26, 122, DateTimeKind.Local).AddTicks(3706));
+
+            migrationBuilder.UpdateData(
+                table: "WeatherForecasts",
+                keyColumn: "Id",
+                keyValue: 3,
+                column: "Date",
+                value: new DateTime(2020, 12, 29, 12, 33, 26, 122, DateTimeKind.Local).AddTicks(3876));
+
+            migrationBuilder.UpdateData(
+                table: "WeatherForecasts",
+                keyColumn: "Id",
+                keyValue: 4,
+                column: "Date",
+                value: new DateTime(2020, 12, 30, 12, 33, 26, 122, DateTimeKind.Local).AddTicks(3891));
+
+            migrationBuilder.UpdateData(
+                table: "WeatherForecasts",
+                keyColumn: "Id",
+                keyValue: 5,
+                column: "Date",
+                value: new DateTime(2020, 12, 31, 12, 33, 26, 122, DateTimeKind.Local).AddTicks(3900));
+
+            migrationBuilder.UpdateData(
+                table: "WeatherForecasts",
+                keyColumn: "Id",
+                keyValue: 6,
+                column: "Date",
+                value: new DateTime(2021, 1, 1, 12, 33, 26, 122, DateTimeKind.Local).AddTicks(3908));
+
+            migrationBuilder.UpdateData(
+                table: "WeatherForecasts",
+                keyColumn: "Id",
+                keyValue: 7,
+                column: "Date",
+                value: new DateTime(2021, 1, 2, 12, 33, 26, 122, DateTimeKind.Local).AddTicks(3916));
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Photos_AppUserId",
+                table: "Photos",
+                column: "AppUserId");
+        }
+
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropTable(
+                name: "Photos");
+
+            migrationBuilder.DropColumn(
+                name: "Bio",
+                table: "AspNetUsers");
 
             migrationBuilder.UpdateData(
                 table: "WeatherForecasts",
@@ -81,66 +145,6 @@ namespace Persistence.Migrations
                 keyValue: 7,
                 column: "Date",
                 value: new DateTime(2021, 1, 1, 21, 4, 58, 796, DateTimeKind.Local).AddTicks(1111));
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserActivities_ActivityId",
-                table: "UserActivities",
-                column: "ActivityId");
-        }
-
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            migrationBuilder.DropTable(
-                name: "UserActivities");
-
-            migrationBuilder.UpdateData(
-                table: "WeatherForecasts",
-                keyColumn: "Id",
-                keyValue: 1,
-                column: "Date",
-                value: new DateTime(2020, 12, 25, 19, 59, 11, 853, DateTimeKind.Local).AddTicks(3757));
-
-            migrationBuilder.UpdateData(
-                table: "WeatherForecasts",
-                keyColumn: "Id",
-                keyValue: 2,
-                column: "Date",
-                value: new DateTime(2020, 12, 26, 19, 59, 11, 859, DateTimeKind.Local).AddTicks(5633));
-
-            migrationBuilder.UpdateData(
-                table: "WeatherForecasts",
-                keyColumn: "Id",
-                keyValue: 3,
-                column: "Date",
-                value: new DateTime(2020, 12, 27, 19, 59, 11, 859, DateTimeKind.Local).AddTicks(5786));
-
-            migrationBuilder.UpdateData(
-                table: "WeatherForecasts",
-                keyColumn: "Id",
-                keyValue: 4,
-                column: "Date",
-                value: new DateTime(2020, 12, 28, 19, 59, 11, 859, DateTimeKind.Local).AddTicks(5802));
-
-            migrationBuilder.UpdateData(
-                table: "WeatherForecasts",
-                keyColumn: "Id",
-                keyValue: 5,
-                column: "Date",
-                value: new DateTime(2020, 12, 29, 19, 59, 11, 859, DateTimeKind.Local).AddTicks(5809));
-
-            migrationBuilder.UpdateData(
-                table: "WeatherForecasts",
-                keyColumn: "Id",
-                keyValue: 6,
-                column: "Date",
-                value: new DateTime(2020, 12, 30, 19, 59, 11, 859, DateTimeKind.Local).AddTicks(5816));
-
-            migrationBuilder.UpdateData(
-                table: "WeatherForecasts",
-                keyColumn: "Id",
-                keyValue: 7,
-                column: "Date",
-                value: new DateTime(2020, 12, 31, 19, 59, 11, 859, DateTimeKind.Local).AddTicks(5827));
         }
     }
 }

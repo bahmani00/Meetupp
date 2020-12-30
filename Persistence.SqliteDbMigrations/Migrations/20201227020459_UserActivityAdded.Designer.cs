@@ -6,11 +6,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
-namespace Persistence.Migrations
+namespace Persistence.SqliteDbMigrations.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20201227173327_UserPhotoAdded")]
-    partial class UserPhotoAdded
+    [Migration("20201227020459_UserActivityAdded")]
+    partial class UserActivityAdded
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -54,9 +54,6 @@ namespace Persistence.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
-
-                    b.Property<string>("Bio")
-                        .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -117,27 +114,6 @@ namespace Persistence.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
-            modelBuilder.Entity("Domain.Photo", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsMain")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Url")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
-
-                    b.ToTable("Photos");
-                });
-
             modelBuilder.Entity("Domain.UserActivity", b =>
                 {
                     b.Property<string>("AppUserId")
@@ -182,49 +158,49 @@ namespace Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            Date = new DateTime(2020, 12, 27, 12, 33, 26, 116, DateTimeKind.Local).AddTicks(6101),
+                            Date = new DateTime(2020, 12, 26, 21, 4, 58, 792, DateTimeKind.Local).AddTicks(4120),
                             Summary = "Freezing",
                             TemperatureC = -15
                         },
                         new
                         {
                             Id = 2,
-                            Date = new DateTime(2020, 12, 28, 12, 33, 26, 122, DateTimeKind.Local).AddTicks(3706),
+                            Date = new DateTime(2020, 12, 27, 21, 4, 58, 796, DateTimeKind.Local).AddTicks(994),
                             Summary = "Chilly",
                             TemperatureC = 16
                         },
                         new
                         {
                             Id = 3,
-                            Date = new DateTime(2020, 12, 29, 12, 33, 26, 122, DateTimeKind.Local).AddTicks(3876),
+                            Date = new DateTime(2020, 12, 28, 21, 4, 58, 796, DateTimeKind.Local).AddTicks(1090),
                             Summary = "Cool",
                             TemperatureC = 20
                         },
                         new
                         {
                             Id = 4,
-                            Date = new DateTime(2020, 12, 30, 12, 33, 26, 122, DateTimeKind.Local).AddTicks(3891),
+                            Date = new DateTime(2020, 12, 29, 21, 4, 58, 796, DateTimeKind.Local).AddTicks(1099),
                             Summary = "Mild",
                             TemperatureC = 25
                         },
                         new
                         {
                             Id = 5,
-                            Date = new DateTime(2020, 12, 31, 12, 33, 26, 122, DateTimeKind.Local).AddTicks(3900),
+                            Date = new DateTime(2020, 12, 30, 21, 4, 58, 796, DateTimeKind.Local).AddTicks(1103),
                             Summary = "Warm",
                             TemperatureC = 30
                         },
                         new
                         {
                             Id = 6,
-                            Date = new DateTime(2021, 1, 1, 12, 33, 26, 122, DateTimeKind.Local).AddTicks(3908),
+                            Date = new DateTime(2020, 12, 31, 21, 4, 58, 796, DateTimeKind.Local).AddTicks(1107),
                             Summary = "Hot",
                             TemperatureC = 40
                         },
                         new
                         {
                             Id = 7,
-                            Date = new DateTime(2021, 1, 2, 12, 33, 26, 122, DateTimeKind.Local).AddTicks(3916),
+                            Date = new DateTime(2021, 1, 1, 21, 4, 58, 796, DateTimeKind.Local).AddTicks(1111),
                             Summary = "Scorching",
                             TemperatureC = 45
                         });
@@ -358,13 +334,6 @@ namespace Persistence.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Domain.Photo", b =>
-                {
-                    b.HasOne("Domain.AppUser", null)
-                        .WithMany("Photos")
-                        .HasForeignKey("AppUserId");
-                });
-
             modelBuilder.Entity("Domain.UserActivity", b =>
                 {
                     b.HasOne("Domain.Activity", "Activity")
@@ -442,8 +411,6 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.AppUser", b =>
                 {
-                    b.Navigation("Photos");
-
                     b.Navigation("UserActivities");
                 });
 #pragma warning restore 612, 618
