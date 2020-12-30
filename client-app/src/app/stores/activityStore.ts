@@ -1,4 +1,4 @@
-import { observable, action, computed, runInAction, reaction } from 'mobx';
+import { observable, action, computed, runInAction, reaction, toJS } from 'mobx';
 import { SyntheticEvent } from 'react';
 import { IActivity } from '../models/activity';
 import agent from '../api/agent';
@@ -151,11 +151,11 @@ export default class ActivityStore {
   };
 
   @action loadActivity = async (id: string) => {
-    let activity = this.getActivity(id);
+    let activity = this.getActivity(id); // checking cache
     if (activity) {
       this.activity = activity;
       // return the result to promise ASAP to avoid multiple async calls
-      return activity;
+      return toJS(activity);//observable object: so needs to be changed to a javascript object
     } else {
       this.loadingInitial = true;
       try {
@@ -166,7 +166,7 @@ export default class ActivityStore {
           this.activityRegistry.set(activity.id, activity);
           this.loadingInitial = false;
         });
-        return activity;
+        return activity; //javascript object
       } catch (error) {
         runInAction('get activity error', () => {
           this.loadingInitial = false;

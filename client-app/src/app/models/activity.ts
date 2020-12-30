@@ -1,4 +1,3 @@
-import { runInAction } from "mobx";
 export interface IActivitiesEnvelope {
   activities: IActivity[];
   activityCount: number;
@@ -44,13 +43,10 @@ export class ActivityFormValues implements IActivityFormValues {
 
     //init?: being able to use top default values
     constructor(init?: IActivityFormValues) {
-        runInAction('loading activities', () => {        
-            if (init && init.date) {
-                init.time = init.date;
-            }  
-            //copy values from init to current instance
-            Object.assign(this, init);
-        })
+      if (init && init.date) {
+        init.time = init.date;
+      }
+      Object.assign(this, init);
     }
 }
 
