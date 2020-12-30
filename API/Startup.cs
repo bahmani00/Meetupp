@@ -26,6 +26,7 @@ using Application.Interfaces;
 using Infrastructure.Photos;
 using System.Threading.Tasks;
 using Application.Profiles;
+using System;
 
 namespace API
 {
@@ -57,9 +58,12 @@ namespace API
 
             services.AddCors(options =>
                 options.AddPolicy("CORSPolicy_React", policyBuilder =>
-                    policyBuilder.AllowAnyHeader().AllowAnyMethod().AllowCredentials()
-                    .WithOrigins("http://localhost:3000")
-                    .AllowCredentials()//let signalR gets cridentials (by getting passed by websockets)
+                    policyBuilder
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .WithExposedHeaders("WWW-Authenticate")
+                        .WithOrigins("http://localhost:3000")
+                        .AllowCredentials()//let signalR gets cridentials (by getting passed by websockets)
                 ));
 
             services.AddMediatR(typeof(List.Query).Assembly);
@@ -95,7 +99,9 @@ namespace API
                         ValidateIssuerSigningKey = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"])),
                         ValidateAudience = false,
-                        ValidateIssuer = false
+                        ValidateIssuer = false,
+                        ValidateLifetime = true, //validate expired tokens: user get 401 unauthorized status
+                        ClockSkew = TimeSpan.Zero
                     };
 
                     //add auth token to HubContext
