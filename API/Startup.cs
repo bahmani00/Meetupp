@@ -150,6 +150,9 @@ namespace API
 
             app.UseRouting();
 
+            app.UseDefaultFiles();//enable index.html,default.htm,....
+            app.UseStaticFiles();//static files: js, css, img,..
+
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -157,6 +160,16 @@ namespace API
             {
                 endpoints.MapControllers();
                 endpoints.MapHub<SignalR.ChatHub>("/chat");
+            });
+			
+            app.UseMvc(routes => 
+            {
+				//when it's not /chat or api endpoints go to:
+                //Configures a route that is automatically bypassed if the requested URL appears to be for a static file
+                routes.MapSpaFallbackRoute(
+                    name: "spa-fallback",
+                    defaults: new {controller = "Fallback", action = "Index"}
+                );
             });
         }
     }
