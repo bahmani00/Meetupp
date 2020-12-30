@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
-namespace Persistence.Migrations
+namespace Persistence.SqliteDbMigrations.Migrations
 {
     [DbContext(typeof(DataContext))]
     [Migration("20201205184627_SeedValues")]

@@ -39,16 +39,38 @@ namespace API
 
         public IConfiguration Configuration { get; }
 
+        public void ConfigureDevelopmentServices(IServiceCollection services)
+        {
+            services.AddDbContext<DataContext>(opt =>
+            {
+                opt.UseLazyLoadingProxies();
+                opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"),
+                         x => x.MigrationsAssembly("Persistence.SqliteDbMigrations"));
+                //opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                //        x => x.MigrationsAssembly("Persistence.SqlServerDbMigrations"));
+                opt.UseLoggerFactory(LoggerFactory.Create(builder => { builder.AddConsole(); }));                
+            });
+
+            ConfigureServices(services);
+        }
+
+        public void ConfigureProductionServices(IServiceCollection services)
+        {
+            services.AddDbContext<DataContext>(opt =>
+            {
+                opt.UseLazyLoadingProxies();
+                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                        x => x.MigrationsAssembly("Persistence.SqlServerDbMigrations"));
+                opt.UseLoggerFactory(LoggerFactory.Create(builder => { builder.AddConsole(); }));                
+            });
+
+            ConfigureServices(services);
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DataContext>(opt => {
-                opt.UseLazyLoadingProxies();
-                opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
-                opt.UseLoggerFactory(LoggerFactory.Create(builder => { builder.AddConsole(); }));
-            });
-
-            services.AddControllers();
+            services.AddControllers(options => options.EnableEndpointRouting = false);
             services.AddSwaggerGen(c => {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "MeetUppy API", Version = "v1" });
                 //c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
@@ -71,6 +93,7 @@ namespace API
             services.AddSignalR();
             services.AddMvc(opt =>
             {
+                opt.EnableEndpointRouting = false;
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 opt.Filters.Add(new AuthorizeFilter(policy));
             })
@@ -166,6 +189,7 @@ namespace API
             {
 				//when it's not /chat or api endpoints go to:
                 //Configures a route that is automatically bypassed if the requested URL appears to be for a static file
+                //install package Microsoft.AspNetCore.SpaServices
                 routes.MapSpaFallbackRoute(
                     name: "spa-fallback",
                     defaults: new {controller = "Fallback", action = "Index"}

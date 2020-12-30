@@ -2,17 +2,15 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
-namespace Persistence.Migrations
+namespace Persistence.SqliteDbMigrations.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20201226005912_addedIdentity")]
-    partial class addedIdentity
+    partial class DataContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -54,6 +52,9 @@ namespace Persistence.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Bio")
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -114,6 +115,90 @@ namespace Persistence.Migrations
                     b.ToTable("AspNetUsers");
                 });
 
+            modelBuilder.Entity("Domain.Comment", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("ActivityId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AuthorId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Body")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActivityId");
+
+                    b.HasIndex("AuthorId");
+
+                    b.ToTable("Comments");
+                });
+
+            modelBuilder.Entity("Domain.Photo", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsMain")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AppUserId");
+
+                    b.ToTable("Photos");
+                });
+
+            modelBuilder.Entity("Domain.UserActivity", b =>
+                {
+                    b.Property<string>("AppUserId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("ActivityId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("DateJoined")
+                        .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsHost")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("AppUserId", "ActivityId");
+
+                    b.HasIndex("ActivityId");
+
+                    b.ToTable("UserActivities");
+                });
+
+            modelBuilder.Entity("Domain.UserFollowing", b =>
+                {
+                    b.Property<string>("ObserverId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("TargetId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ObserverId", "TargetId");
+
+                    b.HasIndex("TargetId");
+
+                    b.ToTable("Followings");
+                });
+
             modelBuilder.Entity("Domain.WeatherForecast", b =>
                 {
                     b.Property<int>("Id")
@@ -137,49 +222,49 @@ namespace Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            Date = new DateTime(2020, 12, 25, 19, 59, 11, 853, DateTimeKind.Local).AddTicks(3757),
+                            Date = new DateTime(2020, 12, 30, 17, 44, 35, 681, DateTimeKind.Local).AddTicks(1442),
                             Summary = "Freezing",
                             TemperatureC = -15
                         },
                         new
                         {
                             Id = 2,
-                            Date = new DateTime(2020, 12, 26, 19, 59, 11, 859, DateTimeKind.Local).AddTicks(5633),
+                            Date = new DateTime(2020, 12, 31, 17, 44, 35, 686, DateTimeKind.Local).AddTicks(635),
                             Summary = "Chilly",
                             TemperatureC = 16
                         },
                         new
                         {
                             Id = 3,
-                            Date = new DateTime(2020, 12, 27, 19, 59, 11, 859, DateTimeKind.Local).AddTicks(5786),
+                            Date = new DateTime(2021, 1, 1, 17, 44, 35, 686, DateTimeKind.Local).AddTicks(745),
                             Summary = "Cool",
                             TemperatureC = 20
                         },
                         new
                         {
                             Id = 4,
-                            Date = new DateTime(2020, 12, 28, 19, 59, 11, 859, DateTimeKind.Local).AddTicks(5802),
+                            Date = new DateTime(2021, 1, 2, 17, 44, 35, 686, DateTimeKind.Local).AddTicks(753),
                             Summary = "Mild",
                             TemperatureC = 25
                         },
                         new
                         {
                             Id = 5,
-                            Date = new DateTime(2020, 12, 29, 19, 59, 11, 859, DateTimeKind.Local).AddTicks(5809),
+                            Date = new DateTime(2021, 1, 3, 17, 44, 35, 686, DateTimeKind.Local).AddTicks(757),
                             Summary = "Warm",
                             TemperatureC = 30
                         },
                         new
                         {
                             Id = 6,
-                            Date = new DateTime(2020, 12, 30, 19, 59, 11, 859, DateTimeKind.Local).AddTicks(5816),
+                            Date = new DateTime(2021, 1, 4, 17, 44, 35, 686, DateTimeKind.Local).AddTicks(762),
                             Summary = "Hot",
                             TemperatureC = 40
                         },
                         new
                         {
                             Id = 7,
-                            Date = new DateTime(2020, 12, 31, 19, 59, 11, 859, DateTimeKind.Local).AddTicks(5827),
+                            Date = new DateTime(2021, 1, 5, 17, 44, 35, 686, DateTimeKind.Local).AddTicks(766),
                             Summary = "Scorching",
                             TemperatureC = 45
                         });
@@ -313,6 +398,66 @@ namespace Persistence.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Domain.Comment", b =>
+                {
+                    b.HasOne("Domain.Activity", "Activity")
+                        .WithMany("Comments")
+                        .HasForeignKey("ActivityId");
+
+                    b.HasOne("Domain.AppUser", "Author")
+                        .WithMany()
+                        .HasForeignKey("AuthorId");
+
+                    b.Navigation("Activity");
+
+                    b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("Domain.Photo", b =>
+                {
+                    b.HasOne("Domain.AppUser", null)
+                        .WithMany("Photos")
+                        .HasForeignKey("AppUserId");
+                });
+
+            modelBuilder.Entity("Domain.UserActivity", b =>
+                {
+                    b.HasOne("Domain.Activity", "Activity")
+                        .WithMany("UserActivities")
+                        .HasForeignKey("ActivityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Domain.AppUser", "AppUser")
+                        .WithMany("UserActivities")
+                        .HasForeignKey("AppUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Activity");
+
+                    b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("Domain.UserFollowing", b =>
+                {
+                    b.HasOne("Domain.AppUser", "Observer")
+                        .WithMany("Followings")
+                        .HasForeignKey("ObserverId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Domain.AppUser", "Target")
+                        .WithMany("Followers")
+                        .HasForeignKey("TargetId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Observer");
+
+                    b.Navigation("Target");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -362,6 +507,24 @@ namespace Persistence.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Activity", b =>
+                {
+                    b.Navigation("Comments");
+
+                    b.Navigation("UserActivities");
+                });
+
+            modelBuilder.Entity("Domain.AppUser", b =>
+                {
+                    b.Navigation("Followers");
+
+                    b.Navigation("Followings");
+
+                    b.Navigation("Photos");
+
+                    b.Navigation("UserActivities");
                 });
 #pragma warning restore 612, 618
         }
