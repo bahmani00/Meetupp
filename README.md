@@ -1,6 +1,6 @@
 
 
-# Meetup-like App
+# MeetUppy: a tiny Meetup app
 ## a social network Activity app in which you can create your activities(mettings) and others can registere and start conversing about it.
 
 ### This is a course from Udemy: [Complete guide to building an app with .Net Core and React](https://www.udemy.com/course/complete-guide-to-building-an-app-with-net-core-and-react/)
