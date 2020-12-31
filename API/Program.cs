@@ -39,7 +39,7 @@ namespace API
               webBuilder
               //turn of server header to prevent revealing the software version of the server. 
               //otherwise the server machine may become more vulnerable to attacks
-              .UseKestrel()
+              .UseKestrel(x => x.AddServerHeader = false)
               .UseStartup<Startup>();
             });
   }
