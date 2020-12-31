@@ -170,6 +170,10 @@ namespace API
             }
 
             app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<SignalR.ChatHub>("/chat");
+            });
 
             app.UseDefaultFiles();//enable index.html,default.htm,...
             app.UseStaticFiles();//static files: js, css, img,...
@@ -178,12 +182,7 @@ namespace API
             app.UseAuthorization();
 
             app.UseCors("CORSPolicy_React");
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-                endpoints.MapHub<SignalR.ChatHub>("/chat");
-            });
-			
+           
             app.UseMvc(routes => 
             {
 				//when it's not /chat or api endpoints go to:
