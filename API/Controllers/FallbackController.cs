@@ -20,7 +20,7 @@ namespace API.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return new PhysicalFileResult(Path.Combine(HostingEnv.WebRootPath, "wwwroot","index.html"),
+            return new PhysicalFileResult(Path.Combine(HostingEnv.WebRootPath, "index.html"),
                 new MediaTypeHeaderValue("text/html") 
             );
 
