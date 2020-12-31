@@ -76,17 +76,17 @@ namespace API
                 //c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
                 // UseFullTypeNameInSchemaIds replacement for .NET Core
                 c.CustomSchemaIds(x => x.FullName);
-           });
+            });
 
             services.AddCors(options =>
                 options.AddPolicy("CORSPolicy_React", policyBuilder =>
                     policyBuilder
                         .AllowAnyHeader()
                         .AllowAnyMethod()
-                        .WithExposedHeaders("WWW-Authenticate")
-                        .WithOrigins("http://localhost:3000")
                         .AllowCredentials()//let signalR gets cridentials (by getting passed by websockets)
-                ));
+                        .WithOrigins("http://localhost:3000", "https://localhost:3000")
+                        .WithExposedHeaders("WWW-Authenticate")
+            ));
 
             services.AddMediatR(typeof(List.Query).Assembly);
             services.AddAutoMapper(typeof(List.Handler));
@@ -162,23 +162,22 @@ namespace API
                 //app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("v1/swagger.json", "API v1"));
-
-                app.UseCors("CORSPolicy_React");            
             }
             else {
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
-                app.UseHttpsRedirection();
+                //app.UseHsts();
+                //app.UseHttpsRedirection();
             }
 
             app.UseRouting();
 
-            app.UseDefaultFiles();//enable index.html,default.htm,....
-            app.UseStaticFiles();//static files: js, css, img,..
-
+            app.UseDefaultFiles();//enable index.html,default.htm,...
+            app.UseStaticFiles();//static files: js, css, img,...
+            
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.UseCors("CORSPolicy_React");
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
