@@ -218,7 +218,8 @@ namespace Persistence.SqlServerDbMigrations.Migrations
                 columns: table => new
                 {
                     ObserverId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    TargetId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    TargetId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -288,13 +289,13 @@ namespace Persistence.SqlServerDbMigrations.Migrations
                 columns: new[] { "Id", "Date", "Summary", "TemperatureC" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2020, 12, 30, 18, 1, 52, 882, DateTimeKind.Local).AddTicks(667), "Freezing", -15 },
-                    { 2, new DateTime(2020, 12, 31, 18, 1, 52, 890, DateTimeKind.Local).AddTicks(6778), "Chilly", 16 },
-                    { 3, new DateTime(2021, 1, 1, 18, 1, 52, 890, DateTimeKind.Local).AddTicks(6953), "Cool", 20 },
-                    { 4, new DateTime(2021, 1, 2, 18, 1, 52, 890, DateTimeKind.Local).AddTicks(6968), "Mild", 25 },
-                    { 5, new DateTime(2021, 1, 3, 18, 1, 52, 890, DateTimeKind.Local).AddTicks(6978), "Warm", 30 },
-                    { 6, new DateTime(2021, 1, 4, 18, 1, 52, 890, DateTimeKind.Local).AddTicks(6985), "Hot", 40 },
-                    { 7, new DateTime(2021, 1, 5, 18, 1, 52, 890, DateTimeKind.Local).AddTicks(6991), "Scorching", 45 }
+                    { 1, new DateTime(2020, 12, 31, 15, 32, 25, 133, DateTimeKind.Local).AddTicks(7263), "Freezing", -15 },
+                    { 2, new DateTime(2021, 1, 1, 15, 32, 25, 141, DateTimeKind.Local).AddTicks(4778), "Chilly", 16 },
+                    { 3, new DateTime(2021, 1, 2, 15, 32, 25, 141, DateTimeKind.Local).AddTicks(4959), "Cool", 20 },
+                    { 4, new DateTime(2021, 1, 3, 15, 32, 25, 141, DateTimeKind.Local).AddTicks(4975), "Mild", 25 },
+                    { 5, new DateTime(2021, 1, 4, 15, 32, 25, 141, DateTimeKind.Local).AddTicks(4983), "Warm", 30 },
+                    { 6, new DateTime(2021, 1, 5, 15, 32, 25, 141, DateTimeKind.Local).AddTicks(4990), "Hot", 40 },
+                    { 7, new DateTime(2021, 1, 6, 15, 32, 25, 141, DateTimeKind.Local).AddTicks(4998), "Scorching", 45 }
                 });
 
             migrationBuilder.CreateIndex(

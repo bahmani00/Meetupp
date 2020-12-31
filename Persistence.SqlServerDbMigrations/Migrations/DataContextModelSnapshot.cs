@@ -196,6 +196,9 @@ namespace Persistence.SqlServerDbMigrations.Migrations
                     b.Property<string>("TargetId")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.HasKey("ObserverId", "TargetId");
 
                     b.HasIndex("TargetId");
@@ -227,49 +230,49 @@ namespace Persistence.SqlServerDbMigrations.Migrations
                         new
                         {
                             Id = 1,
-                            Date = new DateTime(2020, 12, 30, 18, 1, 52, 882, DateTimeKind.Local).AddTicks(667),
+                            Date = new DateTime(2020, 12, 31, 15, 32, 25, 133, DateTimeKind.Local).AddTicks(7263),
                             Summary = "Freezing",
                             TemperatureC = -15
                         },
                         new
                         {
                             Id = 2,
-                            Date = new DateTime(2020, 12, 31, 18, 1, 52, 890, DateTimeKind.Local).AddTicks(6778),
+                            Date = new DateTime(2021, 1, 1, 15, 32, 25, 141, DateTimeKind.Local).AddTicks(4778),
                             Summary = "Chilly",
                             TemperatureC = 16
                         },
                         new
                         {
                             Id = 3,
-                            Date = new DateTime(2021, 1, 1, 18, 1, 52, 890, DateTimeKind.Local).AddTicks(6953),
+                            Date = new DateTime(2021, 1, 2, 15, 32, 25, 141, DateTimeKind.Local).AddTicks(4959),
                             Summary = "Cool",
                             TemperatureC = 20
                         },
                         new
                         {
                             Id = 4,
-                            Date = new DateTime(2021, 1, 2, 18, 1, 52, 890, DateTimeKind.Local).AddTicks(6968),
+                            Date = new DateTime(2021, 1, 3, 15, 32, 25, 141, DateTimeKind.Local).AddTicks(4975),
                             Summary = "Mild",
                             TemperatureC = 25
                         },
                         new
                         {
                             Id = 5,
-                            Date = new DateTime(2021, 1, 3, 18, 1, 52, 890, DateTimeKind.Local).AddTicks(6978),
+                            Date = new DateTime(2021, 1, 4, 15, 32, 25, 141, DateTimeKind.Local).AddTicks(4983),
                             Summary = "Warm",
                             TemperatureC = 30
                         },
                         new
                         {
                             Id = 6,
-                            Date = new DateTime(2021, 1, 4, 18, 1, 52, 890, DateTimeKind.Local).AddTicks(6985),
+                            Date = new DateTime(2021, 1, 5, 15, 32, 25, 141, DateTimeKind.Local).AddTicks(4990),
                             Summary = "Hot",
                             TemperatureC = 40
                         },
                         new
                         {
                             Id = 7,
-                            Date = new DateTime(2021, 1, 5, 18, 1, 52, 890, DateTimeKind.Local).AddTicks(6991),
+                            Date = new DateTime(2021, 1, 6, 15, 32, 25, 141, DateTimeKind.Local).AddTicks(4998),
                             Summary = "Scorching",
                             TemperatureC = 45
                         });
