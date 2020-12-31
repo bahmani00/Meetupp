@@ -165,21 +165,49 @@ namespace API
             }
             else {
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                //app.UseHsts();
-                //app.UseHttpsRedirection();
+                app.UseHsts();// Middleware to send HTTP Strict Transport Security Protocol (HSTS) headers to clients.
+                app.UseHttpsRedirection();//Middleware to redirect HTTP requests to HTTPS
             }
 
             app.UseRouting();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapHub<SignalR.ChatHub>("/chat");
-            });
+			
+            //Configuring Content Type Options with the ‘nosniff’ option disables MIME-type sniffing
+            // to prevent attacks where files are missing metadata: X-Content-Type-Options: nosniff
+            app.UseXContentTypeOptions();
+            //exclude the ‘Referrer’ header, which can improve security in cases where 
+            //the URL of the previous web page contains sensitive data.Referrer-Policy: no-referrer
+            app.UseReferrerPolicy(opt => opt.NoReferrer());
+            //enables the detection of XSS attacks: X-XSS-Protection: 1; mode=block
+            app.UseXXssProtection(opt => opt.EnabledWithBlockMode());
+            //prevent click-jacking attacks: X-Frame-Options: Deny
+            app.UseXfo(opt => opt.Deny());
+            //Content Security Policy header,allows you to configure at a very granular level what content 
+            //you want to allow your web app to load and precisely which sources you want to load content from.
+            //use app.UseCspReportOnly to get the reports
+            app.UseCsp(opt => opt
+                    .BlockAllMixedContent()
+                    .StyleSources(s => s.Self()
+                        .CustomSources("https://fonts.googleapis.com", "sha256-F4GpCPyRepgP5znjMD8sc7PEjzet5Eef4r09dEGPpTs="))
+                    .FontSources(s => s.Self().CustomSources("https://fonts.gstatic.com", "data:"))
+                    .FormActions(s => s.Self())
+                    .FrameAncestors(s => s.Self())
+                    //to fix react-cropper issue: "blob:", "data:"
+                    .ImageSources(s => s.Self().CustomSources("https://res.cloudinary.com", "blob:", "data:"))
+                    //tried this but couldn't fix
+                    //.ScriptSources(s => s.Self().CustomSources("sha256-ma5XxS1EBgt17N22Qq31rOxxRWRfzUTQS1KOtfYwuNo="))
+                );
 
             app.UseDefaultFiles();//enable index.html,default.htm,...
             app.UseStaticFiles();//static files: js, css, img,...
             
+            //Authentication vs. Authorization
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<SignalR.ChatHub>("/chat");
+            });
 
             app.UseCors("CORSPolicy_React");
            

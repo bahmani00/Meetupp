@@ -36,7 +36,11 @@ namespace API
   public static IHostBuilder CreateHostBuilder(string[] args) =>
         Host.CreateDefaultBuilder(args)
             .ConfigureWebHostDefaults(webBuilder => {
-              webBuilder.UseStartup<Startup>();
+              webBuilder
+              //turn of server header to prevent revealing the software version of the server. 
+              //otherwise the server machine may become more vulnerable to attacks
+              .UseKestrel()
+              .UseStartup<Startup>();
             });
   }
 }
