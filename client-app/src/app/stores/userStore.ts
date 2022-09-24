@@ -33,6 +33,7 @@ export default class UserStore {
   @action register = async (values: IUserFormValues) => {
     try {
       const user = await agent.User.register(values);
+      //save token into sessionStorage ??
       this.rootStore.commonStore.setToken(user.token);
       this.rootStore.modalStore.closeModal();
       history.push('/activities')

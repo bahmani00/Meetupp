@@ -39,6 +39,54 @@ namespace Persistence
                     Email = "tom@test.com",
                     Photos = new [] {new Photo {Id="3", IsMain = true , Url = "https://res.cloudinary.com/stankansas/image/upload/v1609120019/wdxbk5qjkettlxnvzmy5.jpg"}}
                 },
+                new AppUser
+                {
+                    Id = "d2",
+                    DisplayName = "Tom 2",
+                    UserName = "tom2",
+                    Email = "tom2@test.com",
+                    Photos = new [] {new Photo {Id="4", IsMain = true , Url = "https://res.cloudinary.com/stankansas/image/upload/v1609120019/wdxbk5qjkettlxnvzmy5.jpg"}}
+                },
+                new AppUser
+                {
+                    Id = "c3",
+                    DisplayName = "Tom 3",
+                    UserName = "tom3",
+                    Email = "tom3@test.com",
+                    Photos = new [] {new Photo {Id="5", IsMain = true , Url = "https://res.cloudinary.com/stankansas/image/upload/v1609120019/wdxbk5qjkettlxnvzmy5.jpg"}}
+                },
+                new AppUser
+                {
+                    Id = "c4",
+                    DisplayName = "Tom 4",
+                    UserName = "tom4",
+                    Email = "tom4@test.com",
+                    Photos = new [] {new Photo {Id="6", IsMain = true , Url = "https://res.cloudinary.com/stankansas/image/upload/v1609120019/wdxbk5qjkettlxnvzmy5.jpg"}}
+                },
+                new AppUser
+                {
+                    Id = "c5",
+                    DisplayName = "Tom 5",
+                    UserName = "tom5",
+                    Email = "tom5@test.com",
+                    Photos = new [] {new Photo {Id="7", IsMain = true , Url = "https://res.cloudinary.com/stankansas/image/upload/v1609120019/wdxbk5qjkettlxnvzmy5.jpg"}}
+                },
+                                new AppUser
+                {
+                    Id = "c6",
+                    DisplayName = "Tom 6",
+                    UserName = "tom6",
+                    Email = "tom6@test.com",
+                    Photos = new [] {new Photo {Id="8", IsMain = true , Url = "https://res.cloudinary.com/stankansas/image/upload/v1609120019/wdxbk5qjkettlxnvzmy5.jpg"}}
+                },
+                                new AppUser
+                {
+                    Id = "c7",
+                    DisplayName = "Tom 007",
+                    UserName = "tom7",
+                    Email = "tom7@test.com",
+                    Photos = new [] {new Photo {Id="9", IsMain = true , Url = "https://res.cloudinary.com/stankansas/image/upload/v1609120019/wdxbk5qjkettlxnvzmy5.jpg"}}
+                },
             };
 
             foreach (var user in users)
@@ -305,7 +353,73 @@ namespace Persistence
                 }
             };
 
+            for(var i = 10; i <= 100; ++i){
+                activities.Add(new Activity {
+                    Title = "Future Activity " + i,
+                    Date = DateTime.Now.AddMonths(1),
+                    Description = $"Activity {i} months in future",
+                    Category = "fun",
+                    City = "Montreal",
+                    Venue = "Pub",
+                    UserActivities = new List<UserActivity>
+                    {
+                        new UserActivity
+                        {
+                            AppUserId = "b",
+                            IsHost = true,
+                            DateJoined = DateTime.Now.AddMonths(8)
+                        },
+                        new UserActivity
+                        {
+                            AppUserId = "a",
+                            IsHost = false,
+                            DateJoined = DateTime.Now.AddMonths(8)
+                        },
+                    }
+                });
+            }
+
             await dbContext.Activities.AddRangeAsync(activities);
+            await dbContext.SaveChangesAsync();
+        }
+
+        if (!dbContext.Followings.Any())
+        {
+            var followings = new List<UserFollowing>
+            {
+                new UserFollowing
+                {
+                    Observer = userManager.Users.ToList().ElementAt(0),
+                    Target = userManager.Users.ToList().ElementAt(1),
+                },
+                new UserFollowing
+                {
+                    Observer = userManager.Users.ToList().ElementAt(0),
+                    Target = userManager.Users.ToList().ElementAt(2),
+                },
+                new UserFollowing
+                {
+                    Observer = userManager.Users.ToList().ElementAt(0),
+                    Target = userManager.Users.ToList().ElementAt(3),
+                },
+                new UserFollowing
+                {
+                    Observer = userManager.Users.ToList().ElementAt(0),
+                    Target = userManager.Users.ToList().ElementAt(4),
+                },
+                new UserFollowing
+                {
+                    Observer = userManager.Users.ToList().ElementAt(0),
+                    Target = userManager.Users.ToList().ElementAt(5),
+                },
+                new UserFollowing
+                {
+                    Observer = userManager.Users.ToList().ElementAt(1),
+                    Target = userManager.Users.ToList().ElementAt(2),
+                }
+            };
+
+            await dbContext.Followings.AddRangeAsync(followings);
             await dbContext.SaveChangesAsync();
         }
     }
