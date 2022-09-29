@@ -5,3 +5,4 @@ obj
 wwwroot
 publish
 appsettings.json
+/.vs

@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Domain
 {
+    //[Table("Activity")]
     public class Activity
     {
         public Guid Id { get; set; }
@@ -12,8 +14,8 @@ namespace Domain
         public DateTime Date { get; set; }
         public string City { get; set; }
         public string Venue { get; set; }
-		
-		//use virtial to do efcore lazy loading rather eagerly
+
+        //use virtial to efcore lazy loading rather eagerly loading
         public virtual ICollection<UserActivity> UserActivities { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
     }

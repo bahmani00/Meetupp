@@ -1,11 +1,16 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
 namespace Domain
 {
+    //[Table("AppUser")]
     public class AppUser : IdentityUser
     {
+        [StringLength(50)]
         public string DisplayName { get; set; }
+
+        [StringLength(500)]
         public string Bio { get; set; }
 		
 		//use virtial to do efcore lazy loading rather eagerly
