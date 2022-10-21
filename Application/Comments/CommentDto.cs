@@ -1,17 +1,15 @@
 using System;
 
-namespace Application.Comments
-{
-    public class CommentDto
-    {
-        public Guid Id { get; set; }
-        public string Body { get; set; }
-        public DateTime CreatedAt { get; set; }
-		
-		//commenter's profile
-        public string Username { get; set; }
-        public string DisplayName { get; set; }
-		//commenter's main image profile
-        public string Image { get; set; }
-    }
+namespace Application.Comments;
+
+public class CommentDto {
+  public Guid Id { get; set; }
+  public string Body { get; set; }
+  public DateTime CreatedAt { get; set; }
+
+  //commenter's profile
+  public string Username { get; set; }
+  public string DisplayName { get; set; }
+  //commenter's main image profile
+  public string Image { get; set; }
 }

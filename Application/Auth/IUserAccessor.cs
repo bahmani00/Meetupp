@@ -1,7 +1,5 @@
-namespace Application.Auth
-{
-    public interface IUserAccessor
-    {
-         string GetCurrentUsername();
-    }
+namespace Application.Auth;
+
+public interface IUserAccessor {
+  string GetCurrentUsername();
 }
