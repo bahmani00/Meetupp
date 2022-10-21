@@ -6,44 +6,38 @@ using Application.Auth;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
-namespace Application.Profiles
-{
-    public class ProfileReader : IProfileReader
-    {
-        private readonly DataContext _context;
-        private readonly IUserAccessor _userAccessor;
-        public ProfileReader(DataContext context, IUserAccessor userAccessor)
-        {
-            _userAccessor = userAccessor;
-            _context = context;
-        }
+namespace Application.Profiles;
 
-        public async Task<Profile> ReadProfile(string username)
-        {
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == username);
+public class ProfileReader : IProfileReader {
+  private readonly DataContext _context;
+  private readonly IUserAccessor _userAccessor;
+  public ProfileReader(DataContext context, IUserAccessor userAccessor) {
+    _userAccessor = userAccessor;
+    _context = context;
+  }
 
-            if (user == null)
-                throw new RestException(HttpStatusCode.NotFound, new { User = "Not found" });
+  public async Task<Profile> ReadProfile(string username) {
+    var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == username);
 
-            var currentUser = await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername());
+    if (user == null)
+      throw new RestException(HttpStatusCode.NotFound, new { User = "Not found" });
 
-            var profile = new Profile
-            {
-                DisplayName = user.DisplayName,
-                Username = user.UserName,
-                Image = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
-                Photos = user.Photos,
-                Bio = user.Bio,
-                FollowersCount = user.Followers.Count(),
-                FollowingCount = user.Followings.Count(),
-            };
+    var currentUser = await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername());
 
-            if (currentUser.Followings.Any(x => x.TargetId == user.Id))
-            {
-                profile.IsFollowed = true;
-            }
+    var profile = new Profile {
+      DisplayName = user.DisplayName,
+      Username = user.UserName,
+      Image = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
+      Photos = user.Photos,
+      Bio = user.Bio,
+      FollowersCount = user.Followers.Count(),
+      FollowingCount = user.Followings.Count(),
+    };
 
-            return profile;
-        }
+    if (currentUser.Followings.Any(x => x.TargetId == user.Id)) {
+      profile.IsFollowed = true;
     }
+
+    return profile;
+  }
 }

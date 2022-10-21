@@ -6,59 +6,50 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace API.Middleware
-{
-    public class ErrorHandlingMiddleware
-    {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<ErrorHandlingMiddleware> _logger;
+namespace API.Middleware;
 
-        public ErrorHandlingMiddleware(
-            RequestDelegate next,
-            ILogger<ErrorHandlingMiddleware> logger) {
-            _logger = logger;
-            _next = next;
+public class ErrorHandlingMiddleware {
+    private readonly RequestDelegate _next;
+    private readonly ILogger<ErrorHandlingMiddleware> _logger;
+
+    public ErrorHandlingMiddleware(
+        RequestDelegate next,
+        ILogger<ErrorHandlingMiddleware> logger) {
+        _logger = logger;
+        _next = next;
+    }
+
+    public async Task Invoke(HttpContext context) {
+        try {
+            await _next(context);
+        } catch (Exception ex) {
+            await HandleExceptionAsync(context, ex);
+        }
+    }
+
+    private async Task HandleExceptionAsync(HttpContext context, Exception ex) {
+        object errors = null;
+
+        switch (ex) {
+            case RestException re:
+                _logger.LogError(ex, "REST ERROR");
+                errors = re.Errors;
+                context.Response.StatusCode = (int)re.Code;
+                break;
+            case Exception e:
+                _logger.LogError(ex, "SERVER ERROR");
+                errors = string.IsNullOrWhiteSpace(e.Message) ? "Error" : e.Message;
+                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                break;
         }
 
-        public async Task Invoke(HttpContext context)
-        {
-            try
-            {
-                await _next(context);
-            } 
-            catch (Exception ex)
-            {
-                await HandleExceptionAsync(context, ex);
-            }
-        }
+        context.Response.ContentType = "application/json";
+        if (errors != null) {
+            var result = JsonConvert.SerializeObject(new {
+                errors
+            });
 
-        private async Task HandleExceptionAsync(HttpContext context, Exception ex)
-        {
-            object errors = null;
-
-            switch (ex)
-            {
-                case RestException re:
-                    _logger.LogError(ex, "REST ERROR");
-                    errors = re.Errors;
-                    context.Response.StatusCode = (int)re.Code;
-                    break;
-                case Exception e:
-                    _logger.LogError(ex, "SERVER ERROR");
-                    errors = string.IsNullOrWhiteSpace(e.Message) ? "Error" : e.Message;
-                    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                    break;
-            }
-
-            context.Response.ContentType = "application/json";
-            if (errors != null)
-            {
-                var result = JsonConvert.SerializeObject(new {
-                    errors
-                });
-
-                await context.Response.WriteAsync(result);
-            }
+            await context.Response.WriteAsync(result);
         }
     }
 }

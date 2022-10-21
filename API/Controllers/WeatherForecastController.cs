@@ -2,45 +2,38 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Persistence;
 
-namespace API.Controllers
-{
-    [ApiController]
-    [Route("api/[controller]")]
-    public class WeatherForecastController : ControllerBase
-    {
-        private static readonly string[] Summaries = new[]
-        {
-            "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        };
-        private readonly Persistence.DataContext dbContext;
-        private readonly ILogger<WeatherForecastController> logger;
+namespace API.Controllers;
+[ApiController]
+[Route("api/[controller]")]
+public class WeatherForecastController : ControllerBase {
+  private static readonly string[] Summaries = new[]
+  {
+          "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
+      };
+  private readonly Persistence.DataContext dbContext;
+  private readonly ILogger<WeatherForecastController> logger;
 
-        public WeatherForecastController(Persistence.DataContext dbContext, ILogger<WeatherForecastController> logger)
-        {
-            this.dbContext = dbContext;
-            this.logger = logger;
-        }
+  public WeatherForecastController(Persistence.DataContext dbContext, ILogger<WeatherForecastController> logger) {
+    this.dbContext = dbContext;
+    this.logger = logger;
+  }
 
-        [HttpGet]
-        public async Task<IActionResult> Get()
-        {
-            var list = await dbContext.WeatherForecasts.ToListAsync();
-            logger.LogInformation("WeatherForecastController.GetAll is called.");
+  [HttpGet]
+  public async Task<IActionResult> Get() {
+    var list = await dbContext.WeatherForecasts.ToListAsync();
+    logger.LogInformation("WeatherForecastController.GetAll is called.");
 
-            return Ok(list);
-        }
+    return Ok(list);
+  }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(int id)
-        {
-            var entity = await dbContext.WeatherForecasts.FindAsync(id);
-            logger.LogInformation($"WeatherForecastController.GetById={id} is called.");
-            if (entity == null)
-                return new StatusCodeResult(202);
+  [HttpGet("{id}")]
+  public async Task<IActionResult> Get(int id) {
+    var entity = await dbContext.WeatherForecasts.FindAsync(id);
+    logger.LogInformation($"WeatherForecastController.GetById={id} is called.");
+    if (entity == null)
+      return new StatusCodeResult(202);
 
-            return Ok(entity);
-        }
-    }
+    return Ok(entity);
+  }
 }
