@@ -11,7 +11,7 @@ namespace Persistence
   {
     public static async Task SeedAsync(DataContext dbContext, UserManager<AppUser> userManager)
     {
-        if (!userManager.Users.Any())
+        if (!dbContext.Users.Any())
         {
             var users = new List<AppUser>
             {

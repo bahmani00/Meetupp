@@ -1,5 +1,4 @@
 using Application.Activities;
-using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -28,8 +27,7 @@ using System.Threading.Tasks;
 using Application.Profiles;
 using System;
 
-namespace API
-{
+namespace API {
     public class Startup
     {
         public Startup(IConfiguration configuration)
@@ -71,11 +69,12 @@ namespace API
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers(options => options.EnableEndpointRouting = false);
-            services.AddSwaggerGen(c => {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "MeetUppy API", Version = "v1" });
-                //c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+            services.AddSwaggerGen(options => {
+                options.SwaggerDoc("v1", new OpenApiInfo { Title = "MeetUppy API", Version = "v1" });
+                //options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
                 // UseFullTypeNameInSchemaIds replacement for .NET Core
-                c.CustomSchemaIds(x => x.FullName);
+                options.CustomSchemaIds(x => x.FullName);
+                //options.DisplayOperationId();
             });
 
             services.AddCors(options =>

@@ -12,8 +12,10 @@ namespace API.Middleware
     {
         private readonly RequestDelegate _next;
         private readonly ILogger<ErrorHandlingMiddleware> _logger;
-        public ErrorHandlingMiddleware(RequestDelegate next, ILogger<ErrorHandlingMiddleware> logger)
-        {
+
+        public ErrorHandlingMiddleware(
+            RequestDelegate next,
+            ILogger<ErrorHandlingMiddleware> logger) {
             _logger = logger;
             _next = next;
         }
@@ -26,23 +28,23 @@ namespace API.Middleware
             } 
             catch (Exception ex)
             {
-                await HandleExceptionAsync(context, ex, _logger);
+                await HandleExceptionAsync(context, ex);
             }
         }
 
-        private async Task HandleExceptionAsync(HttpContext context, Exception ex, ILogger<ErrorHandlingMiddleware> logger)
+        private async Task HandleExceptionAsync(HttpContext context, Exception ex)
         {
             object errors = null;
 
             switch (ex)
             {
                 case RestException re:
-                    logger.LogError(ex, "REST ERROR");
+                    _logger.LogError(ex, "REST ERROR");
                     errors = re.Errors;
                     context.Response.StatusCode = (int)re.Code;
                     break;
                 case Exception e:
-                    logger.LogError(ex, "SERVER ERROR");
+                    _logger.LogError(ex, "SERVER ERROR");
                     errors = string.IsNullOrWhiteSpace(e.Message) ? "Error" : e.Message;
                     context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                     break;
@@ -51,8 +53,7 @@ namespace API.Middleware
             context.Response.ContentType = "application/json";
             if (errors != null)
             {
-                var result = JsonConvert.SerializeObject(new 
-                {
+                var result = JsonConvert.SerializeObject(new {
                     errors
                 });
 

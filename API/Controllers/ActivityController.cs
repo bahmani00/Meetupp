@@ -1,17 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using Application.Activities;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace API.Controllers
-{
+namespace API.Controllers {
     public class ActivitiesController : BaseController
     {
         [HttpGet]
+        [ProducesResponseType(typeof(List.ActivitiesEnvelope), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<List.ActivitiesEnvelope>> List(int? limit, 
             int? offset, bool isGoing, bool isHost, DateTime? startDate)
         {
