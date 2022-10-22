@@ -66,7 +66,7 @@ public class Startup {
       options.SwaggerDoc("v1", new OpenApiInfo { Title = "MeetUppy API", Version = "v1" });
       //options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
       // UseFullTypeNameInSchemaIds replacement for .NET Core
-      options.CustomSchemaIds(x => x.FullName);
+      options.CustomSchemaIds(x => x.FullName.Replace("+", "."));
       //options.DisplayOperationId();
     });
 

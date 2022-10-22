@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence", "Persistence\Persistence.csproj", "{CB97C082-E42C-4706-AD85-B316BD16EF18}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReactUI", "client-app\ReactUI.csproj", "{F37DCE17-1666-45D3-B8B3-267111586965}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence.SqliteDbMigrations", "Persistence.SqliteDbMigrations\Persistence.SqliteDbMigrations.csproj", "{C5FB2311-1CBF-4D51-9C7D-6D3FA8EB52B0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Persistence.SqlServerDbMigrations", "Persistence.SqlServerDbMigrations\Persistence.SqlServerDbMigrations.csproj", "{C660408E-D91C-4429-9B5C-00A6BA48C63D}"
@@ -24,6 +22,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.editorconfig = .editorconfig
 		cli-notes.txt = cli-notes.txt
 	EndProjectSection
+EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "reactUI", "client-app\reactUI.esproj", "{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,17 +83,6 @@ Global
 		{CB97C082-E42C-4706-AD85-B316BD16EF18}.Release|x64.Build.0 = Release|Any CPU
 		{CB97C082-E42C-4706-AD85-B316BD16EF18}.Release|x86.ActiveCfg = Release|Any CPU
 		{CB97C082-E42C-4706-AD85-B316BD16EF18}.Release|x86.Build.0 = Release|Any CPU
-		{F37DCE17-1666-45D3-B8B3-267111586965}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F37DCE17-1666-45D3-B8B3-267111586965}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{F37DCE17-1666-45D3-B8B3-267111586965}.Debug|x64.Build.0 = Debug|Any CPU
-		{F37DCE17-1666-45D3-B8B3-267111586965}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{F37DCE17-1666-45D3-B8B3-267111586965}.Debug|x86.Build.0 = Debug|Any CPU
-		{F37DCE17-1666-45D3-B8B3-267111586965}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F37DCE17-1666-45D3-B8B3-267111586965}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F37DCE17-1666-45D3-B8B3-267111586965}.Release|x64.ActiveCfg = Release|Any CPU
-		{F37DCE17-1666-45D3-B8B3-267111586965}.Release|x64.Build.0 = Release|Any CPU
-		{F37DCE17-1666-45D3-B8B3-267111586965}.Release|x86.ActiveCfg = Release|Any CPU
-		{F37DCE17-1666-45D3-B8B3-267111586965}.Release|x86.Build.0 = Release|Any CPU
 		{C5FB2311-1CBF-4D51-9C7D-6D3FA8EB52B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{C5FB2311-1CBF-4D51-9C7D-6D3FA8EB52B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5FB2311-1CBF-4D51-9C7D-6D3FA8EB52B0}.Debug|x64.ActiveCfg = Debug|Any CPU
@@ -130,6 +119,24 @@ Global
 		{347154C8-5F1E-44A8-B424-76B08430637A}.Release|x64.Build.0 = Release|Any CPU
 		{347154C8-5F1E-44A8-B424-76B08430637A}.Release|x86.ActiveCfg = Release|Any CPU
 		{347154C8-5F1E-44A8-B424-76B08430637A}.Release|x86.Build.0 = Release|Any CPU
+		{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}.Debug|x64.Build.0 = Debug|Any CPU
+		{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}.Debug|x64.Deploy.0 = Debug|Any CPU
+		{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}.Debug|x86.Build.0 = Debug|Any CPU
+		{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}.Debug|x86.Deploy.0 = Debug|Any CPU
+		{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}.Release|x64.ActiveCfg = Release|Any CPU
+		{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}.Release|x64.Build.0 = Release|Any CPU
+		{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}.Release|x64.Deploy.0 = Release|Any CPU
+		{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}.Release|x86.ActiveCfg = Release|Any CPU
+		{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}.Release|x86.Build.0 = Release|Any CPU
+		{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}.Release|x86.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
