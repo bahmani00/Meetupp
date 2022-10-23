@@ -27,6 +27,7 @@ using System.Threading.Tasks;
 using Application.Profiles;
 using System;
 using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 
 namespace API;
 public class Startup {
@@ -62,7 +63,12 @@ public class Startup {
 
   // This method gets called by the runtime. Use this method to add services to the container.
   public void ConfigureServices(IServiceCollection services) {
-    services.AddControllers(options => options.EnableEndpointRouting = false);
+    services.AddControllers(options => {
+      options.EnableEndpointRouting = false;
+      // set default media type to json
+      // //swagger changes also: https://stackoverflow.com/a/72367887/336511
+      options.Filters.Add(new ProducesAttribute("application/json"));
+    });
     services.AddSwaggerGen(options => {
       options.SwaggerDoc("v1", new OpenApiInfo { Title = "MeetUppy API", Version = "v1" });
       //options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
