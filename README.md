@@ -21,3 +21,7 @@ Here are some of the things done in this app:
 * Using SignalR to enable real time web communication to a chat feature in our app
 * Publishing the application to Azure
 * Getting an ‘A’ rating for security from a well known security scanning site.
+
+##### Swagger API: [http://localhost:5000/swagger/index.html](http://localhost:5000/swagger/index.html)
+##### The application: [http://localhost:3000/](http://localhost:3000/)
+##### User API calling: [http://localhost:5000/api/user](http://localhost:5000/api/user)
