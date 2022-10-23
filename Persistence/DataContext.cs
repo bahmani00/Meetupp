@@ -33,32 +33,32 @@ public class DataContext : IdentityDbContext<AppUser> {
             );
 
         //Define Primary Keys for UserActivity
-        modelBuilder.Entity<UserActivity>(x => {
-            x.HasKey(ua => new { ua.AppUserId, ua.ActivityId });
+        modelBuilder.Entity<UserActivity>(entity => {
+            entity.HasKey(ua => new { ua.AppUserId, ua.ActivityId });
 
             //Define relationship btw UserActivity & AppUser tables
-            x.HasOne(u => u.AppUser)
+            entity.HasOne(u => u.AppUser)
               .WithMany(a => a.UserActivities)
               .HasForeignKey(u => u.AppUserId);
 
             //Define relationship btw UserActivity & Activity tables
-            x.HasOne(a => a.Activity)
+            entity.HasOne(a => a.Activity)
                 .WithMany(u => u.UserActivities)
                 .HasForeignKey(a => a.ActivityId);
         });
 
         //ef fluent configuration
-        modelBuilder.Entity<UserFollowing>(b => {
-            b.HasKey(k => new { k.ObserverId, k.TargetId });
+        modelBuilder.Entity<UserFollowing>(entity => {
+            entity.HasKey(k => new { k.ObserverId, k.TargetId });
 
             //define many-to-many relationship
 
-            b.HasOne(o => o.Observer)
+            entity.HasOne(o => o.Observer)
                 .WithMany(f => f.Followings)
                 .HasForeignKey(o => o.ObserverId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            b.HasOne(o => o.Target)
+            entity.HasOne(o => o.Target)
                 .WithMany(f => f.Followers)
                 .HasForeignKey(o => o.TargetId)
                 .OnDelete(DeleteBehavior.Restrict);

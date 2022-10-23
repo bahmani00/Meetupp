@@ -41,7 +41,7 @@ public class Create {
             _context = context;
         }
 
-        public async Task<Guid> Handle(Command request, CancellationToken cancellationToken) {
+        public async Task<Guid> Handle(Command request, CancellationToken ct) {
             var activity = new Activity {
                 Id = request.Id,
                 Title = request.Title,

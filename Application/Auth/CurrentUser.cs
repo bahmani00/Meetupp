@@ -20,7 +20,7 @@ public class CurrentUser {
             _userManager = userManager;
         }
 
-        public async Task<User> Handle(Query request, CancellationToken cancellationToken) {
+        public async Task<User> Handle(Query request, CancellationToken ct) {
             var user = await _userManager.FindByNameAsync(_userAccessor.GetCurrentUsername());
 
             return new User {

@@ -55,7 +55,7 @@ public class Create {
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<CommentDto> Handle(Command request, CancellationToken cancellationToken) {
+        public async Task<CommentDto> Handle(Command request, CancellationToken ct) {
             // var activity = await _dbContext.Activities.FindAsync(request.ActivityId);
             // if (activity == null)
             //     throw new RestException(HttpStatusCode.NotFound, new {Activity = "Not found"});

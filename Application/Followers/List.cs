@@ -24,7 +24,7 @@ public class List {
       _context = context;
     }
 
-    public async Task<List<Profile>> Handle(Query request, CancellationToken cancellationToken) {
+    public async Task<List<Profile>> Handle(Query request, CancellationToken ct) {
       var queryable = _context.Followings.AsQueryable();
 
       var userFollowings = new List<UserFollowing>();

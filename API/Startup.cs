@@ -26,6 +26,7 @@ using Infrastructure.Photos;
 using System.Threading.Tasks;
 using Application.Profiles;
 using System;
+using FluentValidation;
 
 namespace API;
 public class Startup {
@@ -87,11 +88,20 @@ public class Startup {
       opt.EnableEndpointRouting = false;
       var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
       opt.Filters.Add(new AuthorizeFilter(policy));
-    })
-    .AddFluentValidation(cfg => cfg.RegisterValidatorsFromAssemblyContaining<Create>());
+    });
 
+    services.AddFluentValidationAutoValidation();
+    services.AddValidatorsFromAssemblyContaining<Create.CommandValidator>();
+    
     services.AddSingleton<ISystemClock, SystemClock>();
-    var builder = services.AddIdentityCore<AppUser>();
+    var builder = services.AddIdentityCore<AppUser>(opt => {              
+      // opt.Password.RequireDigit = false;
+      // opt.Password.RequireNonAlphanumeric = false;
+      // opt.Password.RequireUppercase = false;
+      // opt.Password.RequireLowercase = false;
+      // opt.Password.RequiredLength = 1;
+    });
+
     var identityBuilder = new IdentityBuilder(builder.UserType, builder.Services);
     identityBuilder.AddEntityFrameworkStores<DataContext>();
     identityBuilder.AddSignInManager<SignInManager<AppUser>>();

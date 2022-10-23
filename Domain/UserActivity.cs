@@ -1,8 +1,11 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Domain;
 
 public class UserActivity {
+    
+    [StringLength(50)]
     public string AppUserId { get; set; }
 
     //use virtial to efcore lazy loading rather eagerly

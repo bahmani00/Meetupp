@@ -33,7 +33,7 @@ public class Login {
       _userManager = userManager;
     }
 
-    public async Task<User> Handle(Query request, CancellationToken cancellationToken) {
+    public async Task<User> Handle(Query request, CancellationToken ct) {
       var user = await _userManager.FindByEmailAsync(request.Email);
 
       if (user == null)

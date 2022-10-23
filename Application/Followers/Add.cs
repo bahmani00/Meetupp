@@ -24,15 +24,15 @@ public class Add {
       _dbContext = dbContext;
     }
 
-    public async Task<Unit> Handle(Command request, CancellationToken cancellationToken) {
-      var observer = await _dbContext.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername());
+    public async Task<Unit> Handle(Command request, CancellationToken ct) {
+      var observer = await _dbContext.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername(), ct);
 
-      var target = await _dbContext.Users.SingleOrDefaultAsync(x => x.UserName == request.Username);
+      var target = await _dbContext.Users.SingleOrDefaultAsync(x => x.UserName == request.Username, ct);
 
       if (target == null)
         throw new RestException(HttpStatusCode.NotFound, new { User = "Not found" });
 
-      var following = await _dbContext.Followings.SingleOrDefaultAsync(x => x.ObserverId == observer.Id && x.TargetId == target.Id);
+      var following = await _dbContext.Followings.SingleOrDefaultAsync(x => x.ObserverId == observer.Id && x.TargetId == target.Id, ct);
 
       if (following != null)
         throw new RestException(HttpStatusCode.BadRequest, new { User = "You are already following this user" });
@@ -46,7 +46,7 @@ public class Add {
         _dbContext.Followings.Add(following);
       }
 
-      var success = await _dbContext.SaveChangesAsync() > 0;
+      var success = await _dbContext.SaveChangesAsync(ct) > 0;
 
       if (success) return Unit.Value;
 

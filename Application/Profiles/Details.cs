@@ -14,7 +14,7 @@ public class Details {
             _profileReader = profileReader;
         }
 
-        public async Task<Profile> Handle(Query request, CancellationToken cancellationToken) {
+        public async Task<Profile> Handle(Query request, CancellationToken ct) {
             return await _profileReader.ReadProfile(request.Username);
         }
     }

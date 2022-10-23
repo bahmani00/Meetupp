@@ -27,7 +27,7 @@ public class Delete {
       _context = context;
     }
 
-    public async Task<Unit> Handle(Command request, CancellationToken cancellationToken) {
+    public async Task<Unit> Handle(Command request, CancellationToken ct) {
       var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername());
 
       var photo = user.Photos.FirstOrDefault(x => x.Id == request.Id);

@@ -24,7 +24,7 @@ public class ListActivities {
     }
 
     public async Task<List<UserActivityDto>> Handle(Query request,
-        CancellationToken cancellationToken) {
+        CancellationToken ct) {
       var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == request.Username);
 
       if (user == null)

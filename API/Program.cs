@@ -25,6 +25,7 @@ public class Program {
       } catch (Exception ex) {
         var logger = services.GetRequiredService<ILogger<Program>>();
         logger.LogError(ex, "Error occured during MeetUppy db migration.");
+        throw;
       }
     };
 

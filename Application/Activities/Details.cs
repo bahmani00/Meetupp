@@ -22,7 +22,7 @@ public class Details {
       _context = context;
     }
 
-    public async Task<ActivityDto> Handle(Query request, CancellationToken cancellationToken) {
+    public async Task<ActivityDto> Handle(Query request, CancellationToken ct) {
       var activity = await _context.Activities
           .FindAsync(request.Id);
 

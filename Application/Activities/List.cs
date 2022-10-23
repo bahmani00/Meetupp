@@ -48,7 +48,7 @@ public class List {
       _logger = logger;
     }
 
-    public async Task<ActivitiesEnvelope> Handle(Query request, CancellationToken cancellationToken) {
+    public async Task<ActivitiesEnvelope> Handle(Query request, CancellationToken ct) {
       var queryable = _context.Activities
           .Where(x => x.Date >= request.StartDate)
           .OrderBy(x => x.Date)
@@ -72,12 +72,12 @@ public class List {
       };
     }
 
-    public async Task<List<ActivityDto>> Handle111(Query request, CancellationToken cancellationToken) {
+    public async Task<List<ActivityDto>> Handle111(Query request, CancellationToken ct) {
       // try
       // {
       //     for(var i = 0; i < 5; i++){
-      //         cancellationToken.ThrowIfCancellationRequested();
-      //         await Task.Delay(1000, cancellationToken);
+      //         ct.ThrowIfCancellationRequested();
+      //         await Task.Delay(1000, ct);
       //         _logger.LogInformation($"Task {i} has completed");
       //     }
       // }

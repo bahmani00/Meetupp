@@ -23,7 +23,7 @@ public class Delete {
       _context = context;
     }
 
-    public async Task<Unit> Handle(Command request, CancellationToken cancellationToken) {
+    public async Task<Unit> Handle(Command request, CancellationToken ct) {
       var observer = await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername());
 
       var target = await _context.Users.SingleOrDefaultAsync(x => x.UserName == request.Username);

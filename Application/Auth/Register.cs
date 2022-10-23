@@ -40,7 +40,7 @@ public class Register {
       _context = context;
     }
 
-    public async Task<User> Handle(Command request, CancellationToken cancellationToken) {
+    public async Task<User> Handle(Command request, CancellationToken ct) {
       if (await _context.Users.Where(x => x.Email == request.Email).AnyAsync())
         throw new RestException(HttpStatusCode.BadRequest, new { Email = "Email already exists" });
 
