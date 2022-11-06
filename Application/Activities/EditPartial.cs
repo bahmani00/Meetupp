@@ -3,6 +3,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
+using Domain;
 using FluentValidation;
 using MediatR;
 using Persistence;
@@ -11,57 +12,52 @@ namespace Application.Activities;
 
 public class EditPartial {
   public class Command : IRequest {
-    public Guid Id { get; set; }
-    public string Title { get; set; }
-    public string Description { get; set; }
-    public string Category { get; set; }
-    public DateTime? Date { get; set; }
-    public string City { get; set; }
-    public string Venue { get; set; }
+    public ActivityDto Activity { get; set; }
   }
 
   public class CommandValidator : AbstractValidator<Command> {
     public CommandValidator() {
-      //RuleFor(x => x.Id).NotEmpty();
+      RuleFor(x => x.Activity.Id).NotEmpty();
       RuleFor(command => command)
-          .Must(x => !string.IsNullOrEmpty(x.Title) |
-                     !string.IsNullOrEmpty(x.Description) ||
-                     !string.IsNullOrEmpty(x.Category) ||
-                     !x.Date.HasValue ||
-                     !string.IsNullOrEmpty(x.City) ||
-                     !string.IsNullOrEmpty(x.Venue)
+          .Must(x => !string.IsNullOrEmpty(x.Activity.Title) |
+                     !string.IsNullOrEmpty(x.Activity.Description) ||
+                     !string.IsNullOrEmpty(x.Activity.Category) ||
+                     !x.Activity.Date.HasValue ||
+                     !string.IsNullOrEmpty(x.Activity.City) ||
+                     !string.IsNullOrEmpty(x.Activity.Venue)
               )
-          .WithMessage("Provide at least either Title, Description, Category, Date, City or Venue");
+          .WithMessage($"Provide at least either {nameof(Activity.Title)}, {nameof(Activity.Description)}, {nameof(Activity.Category)}, {nameof(Activity.Date)}, {nameof(Activity.City)} or {nameof(Activity.Venue)}");
       RuleFor(command => command)
-          .Must(x => !x.Date.HasValue || (x.Date >= DateTime.Now))
-          .WithMessage("Date should be greater than current time");
+          .Must(x => !x.Activity.Date.HasValue || (x.Activity.Date >= DateTime.Now))
+          .WithMessage($"{nameof(Activity.Date)} should be greater than current time");
     }
   }
 
   public class Handler : IRequestHandler<Command> {
-    private readonly DataContext _context;
-    public Handler(DataContext context) {
-      _context = context;
+    private readonly DataContext dbContext;
+
+    public Handler(DataContext dbContext) {
+      this.dbContext = dbContext;
     }
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
-      var activity = await _context.Activities.FindAsync(request.Id);
+      var activity = await dbContext.Activities.FindAsync(request.Activity.Id, ct);
 
       if (activity == null)
         throw new RestException(HttpStatusCode.NotFound, new { Activity = "Not found" });
 
-      activity.Title = request.Title ?? activity.Title;
-      activity.Description = request.Description ?? activity.Description;
-      activity.Category = request.Category ?? activity.Category;
-      activity.Date = request.Date ?? activity.Date;
-      activity.City = request.City ?? activity.City;
-      activity.Venue = request.Venue ?? activity.Venue;
+      activity.Title = request.Activity.Title ?? activity.Title;
+      activity.Description = request.Activity.Description ?? activity.Description;
+      activity.Category = request.Activity.Category ?? activity.Category;
+      activity.Date = request.Activity.Date ?? activity.Date;
+      activity.City = request.Activity.City ?? activity.City;
+      activity.Venue = request.Activity.Venue ?? activity.Venue;
 
-      var success = await _context.SaveChangesAsync() > 0;
+      var success = await dbContext.SaveChangesAsync(ct) > 0;
 
       if (success) return Unit.Value;
 
-      throw new Exception("Problem saving Activity");
+      throw new Exception($"Problem saving {nameof(Activity)}");
     }
   }
 }
