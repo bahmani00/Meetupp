@@ -129,8 +129,11 @@ Build started...
 Build succeeded.
 Done. To undo this action, use 'ef migrations remove'
 
+PS D:\Development\Repos\MeetUppy> dotnet watch run --project .\src\API\
 
-PS D:\Development\Repos\MeetUppy\API> dotnet watch run
+or
+
+PS D:\Development\Repos\MeetUppy\src\API> dotnet watch run
 watch : Started
 Building...
 info: Microsoft.Hosting.Lifetime[0]
