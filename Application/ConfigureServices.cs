@@ -17,6 +17,7 @@ public static class ConfigureServices {
       
     services.AddDbContext<DataContext>(opt => {
       opt.UseLazyLoadingProxies();
+      opt.EnableSensitiveDataLogging();
       opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"),
                 x => x.MigrationsAssembly("Persistence.SqliteDbMigrations"));
       //opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),

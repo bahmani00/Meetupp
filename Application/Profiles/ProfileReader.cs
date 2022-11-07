@@ -24,9 +24,6 @@ public class ProfileReader : IProfileReader {
     if (user == null)
       throw new RestException(HttpStatusCode.NotFound, new { User = "Not found" });
 
-    var loggedInUser = await dbContext.Users
-      .SingleOrDefaultAsync(x => x.UserName == userAccessor.GetCurrentUsername(), ct);
-
     var profile = new Profile {
       DisplayName = user.DisplayName,
       Username = user.UserName,
@@ -36,6 +33,9 @@ public class ProfileReader : IProfileReader {
       FollowersCount = user.Followers.Count,
       FollowingCount = user.Followings.Count,
     };
+
+    var loggedInUser = await dbContext.Users
+      .SingleOrDefaultAsync(x => x.UserName == userAccessor.GetCurrentUsername(), ct);
 
     if (loggedInUser.Followings.Any(x => x.TargetId == user.Id)) {
       profile.IsFollowed = true;
