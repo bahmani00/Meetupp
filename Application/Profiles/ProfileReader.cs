@@ -5,24 +5,27 @@ using Application.Errors;
 using Application.Auth;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using System.Threading;
 
 namespace Application.Profiles;
 
 public class ProfileReader : IProfileReader {
-  private readonly DataContext _context;
-  private readonly IUserAccessor _userAccessor;
-  public ProfileReader(DataContext context, IUserAccessor userAccessor) {
-    _userAccessor = userAccessor;
-    _context = context;
+  private readonly DataContext dbContext;
+  private readonly IUserAccessor userAccessor;
+  
+  public ProfileReader(DataContext dbContext, IUserAccessor userAccessor) {
+    this.dbContext = dbContext;
+    this.userAccessor = userAccessor;
   }
 
-  public async Task<Profile> ReadProfile(string username) {
-    var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == username);
+  public async Task<Profile> ReadProfileAsync(string username, CancellationToken ct) {
+    var user = await dbContext.Users.SingleOrDefaultAsync(x => x.UserName == username, ct);
 
     if (user == null)
       throw new RestException(HttpStatusCode.NotFound, new { User = "Not found" });
 
-    var currentUser = await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername());
+    var loggedInUser = await dbContext.Users
+      .SingleOrDefaultAsync(x => x.UserName == userAccessor.GetCurrentUsername(), ct);
 
     var profile = new Profile {
       DisplayName = user.DisplayName,
@@ -30,11 +33,11 @@ public class ProfileReader : IProfileReader {
       Image = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
       Photos = user.Photos,
       Bio = user.Bio,
-      FollowersCount = user.Followers.Count(),
-      FollowingCount = user.Followings.Count(),
+      FollowersCount = user.Followers.Count,
+      FollowingCount = user.Followings.Count,
     };
 
-    if (currentUser.Followings.Any(x => x.TargetId == user.Id)) {
+    if (loggedInUser.Followings.Any(x => x.TargetId == user.Id)) {
       profile.IsFollowed = true;
     }
 

@@ -16,31 +16,32 @@ public class Delete {
   }
 
   public class Handler : IRequestHandler<Command> {
-    private readonly DataContext _context;
-    private readonly IUserAccessor _userAccessor;
-    public Handler(DataContext context, IUserAccessor userAccessor) {
-      _userAccessor = userAccessor;
-      _context = context;
+    private readonly DataContext dbContext;
+    private readonly IUserAccessor userAccessor;
+    
+    public Handler(DataContext dbContext, IUserAccessor userAccessor) {
+      this.dbContext = dbContext;
+      this.userAccessor = userAccessor;
     }
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
-      var observer = await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername());
+      var observer = await dbContext.Users.SingleOrDefaultAsync(x => x.UserName == userAccessor.GetCurrentUsername(), ct);
 
-      var target = await _context.Users.SingleOrDefaultAsync(x => x.UserName == request.Username);
+      var target = await dbContext.Users.SingleOrDefaultAsync(x => x.UserName == request.Username, ct);
 
       if (target == null)
         throw new RestException(HttpStatusCode.NotFound, new { User = "Not found" });
 
-      var following = await _context.Followings.SingleOrDefaultAsync(x => x.ObserverId == observer.Id && x.TargetId == target.Id);
+      var following = await dbContext.Followings.SingleOrDefaultAsync(x => x.ObserverId == observer.Id && x.TargetId == target.Id, ct);
 
       if (following == null)
         throw new RestException(HttpStatusCode.BadRequest, new { User = "You are not following this user" });
 
       if (following != null) {
-        _context.Followings.Remove(following);
+        dbContext.Followings.Remove(following);
       }
 
-      var success = await _context.SaveChangesAsync() > 0;
+      var success = await dbContext.SaveChangesAsync(ct) > 0;
 
       if (success) return Unit.Value;
 

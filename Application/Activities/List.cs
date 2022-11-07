@@ -36,60 +36,56 @@ public class List {
   }
 
   public class Handler : IRequestHandler<Query, ActivitiesEnvelope> {
-    private readonly DataContext _context;
-    private readonly ILogger<List> _logger;
-    private readonly IMapper _mapper;
-    private readonly IUserAccessor _userAccessor;
+    private readonly DataContext dbContext;
+    private readonly ILogger<List> logger;
+    private readonly IMapper mapper;
+    private readonly IUserAccessor userAccessor;
 
-    public Handler(DataContext context, IMapper mapper, IUserAccessor userAccessor, ILogger<List> logger) {
-      _userAccessor = userAccessor;
-      _mapper = mapper;
-      _context = context;
-      _logger = logger;
+    public Handler(DataContext dbContext, IMapper mapper, IUserAccessor userAccessor, ILogger<List> logger) {
+      this.dbContext = dbContext;
+      this.userAccessor = userAccessor;
+      this.mapper = mapper;
+      this.logger = logger;
     }
 
     public async Task<ActivitiesEnvelope> Handle(Query request, CancellationToken ct) {
-      var queryable = _context.Activities
+      var queryable = dbContext.Activities
           .Where(x => x.Date >= request.StartDate)
           .OrderBy(x => x.Date)
           .AsQueryable();
 
       if (request.IsGoing && !request.IsHost) {
-        queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.UserName == _userAccessor.GetCurrentUsername()));
+        queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.UserName == userAccessor.GetCurrentUsername()));
       }
 
       if (request.IsHost && !request.IsGoing) {
-        queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.UserName == _userAccessor.GetCurrentUsername() && a.IsHost));
+        queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.UserName == userAccessor.GetCurrentUsername() && a.IsHost));
       }
 
       var activities = await queryable
           .Skip(request.Offset ?? 0)
-          .Take(request.Limit ?? 3).ToListAsync();
+          .Take(request.Limit ?? 3).ToListAsync(ct);
 
       return new ActivitiesEnvelope {
-        Activities = _mapper.Map<List<Activity>, List<ActivityDto>>(activities),
+        Activities = mapper.Map<List<Activity>, List<ActivityDto>>(activities),
         ActivityCount = queryable.Count()
       };
     }
 
     public async Task<List<ActivityDto>> Handle111(Query request, CancellationToken ct) {
-      // try
-      // {
-      //     for(var i = 0; i < 5; i++){
-      //         ct.ThrowIfCancellationRequested();
-      //         await Task.Delay(1000, ct);
-      //         _logger.LogInformation($"Task {i} has completed");
-      //     }
-      // }
-      // catch (Exception ex) when(ex is TaskCanceledException)
-      // {
-      //     _logger.LogInformation("Task was cancelled.");
-      // }
+      try {
+        request.ToString();
 
-      var activities = await _context.Activities
-          .ToListAsync();
+        for (var i = 0; i < 5; i++) {
+          ct.ThrowIfCancellationRequested();
+          await Task.Delay(1000, ct);
+          logger.LogInformation($"Task {i} has completed");
+        }
+      } catch (Exception ex) when (ex is TaskCanceledException) {
+        logger.LogInformation("Task was cancelled.");
+      }
 
-      return _mapper.Map<List<Activity>, List<ActivityDto>>(activities);
+      return mapper.Map<List<Activity>, List<ActivityDto>>(null);
     }
   }
 }

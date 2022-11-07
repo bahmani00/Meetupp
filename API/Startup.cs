@@ -1,33 +1,30 @@
-using Application.Activities;
+using System;
+using System.Text;
+using System.Threading.Tasks;
+using API.Middleware;
+using Application;
+using Application.Auth;
+using Application.Interfaces;
+using Application.Profiles;
+using Domain;
+using Infrastructure.Photos;
+using Infrastructure.Security;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Persistence;
-using MediatR;
-using FluentValidation.AspNetCore;
-using API.Middleware;
-using Domain;
-using Microsoft.AspNetCore.Authentication;
-using Application.Auth;
-using Infrastructure.Security;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using System.Text;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.Extensions.Logging;
-using Application.Interfaces;
-using Infrastructure.Photos;
-using System.Threading.Tasks;
-using Application.Profiles;
-using System;
-using FluentValidation;
-using Microsoft.AspNetCore.Mvc;
 
 namespace API;
 public class Startup {
@@ -35,17 +32,11 @@ public class Startup {
     Configuration = configuration;
   }
 
-  public IConfiguration Configuration { get; }
+  private readonly IConfiguration Configuration;
 
   public void ConfigureDevelopmentServices(IServiceCollection services) {
-    services.AddDbContext<DataContext>(opt => {
-      opt.UseLazyLoadingProxies();
-      opt.UseSqlite(Configuration.GetConnectionString("DefaultConnection"),
-               x => x.MigrationsAssembly("Persistence.SqliteDbMigrations"));
-      //opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
-      //        x => x.MigrationsAssembly("Persistence.SqlServerDbMigrations"));
-      opt.UseLoggerFactory(LoggerFactory.Create(builder => { builder.AddConsole(); }));
-    });
+
+    services.AddApplicationServices(Configuration);
 
     ConfigureServices(services);
   }
@@ -71,10 +62,31 @@ public class Startup {
     });
     services.AddSwaggerGen(options => {
       options.SwaggerDoc("v1", new OpenApiInfo { Title = "MeetUppy API", Version = "v1" });
-      //options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+
       // UseFullTypeNameInSchemaIds replacement for .NET Core
       options.CustomSchemaIds(x => x.FullName.Replace("+", "."));
-      //options.DisplayOperationId();
+
+      //https://www.infoworld.com/article/3650668/implement-authorization-for-swagger-in-aspnet-core-6.html
+      options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+      });
+
+      options.AddSecurityRequirement(new OpenApiSecurityRequirement {
+        {
+          new OpenApiSecurityScheme {
+            Reference = new OpenApiReference {
+              Type = ReferenceType.SecurityScheme,
+              Id = "Bearer"
+            }
+          },
+          Array.Empty<string>()
+        }
+      });
     });
 
     services.AddCors(options =>
@@ -87,8 +99,7 @@ public class Startup {
                 .WithExposedHeaders("WWW-Authenticate")
     ));
 
-    services.AddMediatR(typeof(List.Query).Assembly);
-    services.AddAutoMapper(typeof(List.Handler));
+
     services.AddSignalR();
     services.AddMvc(opt => {
       opt.EnableEndpointRouting = false;
@@ -96,9 +107,6 @@ public class Startup {
       opt.Filters.Add(new AuthorizeFilter(policy));
     });
 
-    services.AddFluentValidationAutoValidation();
-    services.AddValidatorsFromAssemblyContaining<Create.CommandValidator>();
-    
     services.AddSingleton<ISystemClock, SystemClock>();
     var builder = services.AddIdentityCore<AppUser>(opt => {              
       // opt.Password.RequireDigit = false;
@@ -220,5 +228,8 @@ public class Startup {
           defaults: new { controller = "Fallback", action = "Index" }
       );
     });
+
+    //app.MapFallbackToFile("index.html"); ;
+
   }
 }

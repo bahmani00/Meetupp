@@ -17,15 +17,17 @@ public class SetMain {
   }
 
   public class Handler : IRequestHandler<Command> {
-    private readonly DataContext _context;
-    private readonly IUserAccessor _userAccessor;
-    public Handler(DataContext context, IUserAccessor userAccessor) {
-      _userAccessor = userAccessor;
-      _context = context;
+    private readonly DataContext dbContext;
+    private readonly IUserAccessor userAccessor;
+
+    public Handler(DataContext dbContext, IUserAccessor userAccessor) {
+      this.dbContext = dbContext;
+      this.userAccessor = userAccessor;
     }
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
-      var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername());
+      var user = await dbContext.Users
+        .SingleOrDefaultAsync(x => x.UserName == userAccessor.GetCurrentUsername(), ct);
 
       var photo = user.Photos.FirstOrDefault(x => x.Id == request.Id);
 
@@ -37,7 +39,7 @@ public class SetMain {
       currentMain.IsMain = false;
       photo.IsMain = true;
 
-      var success = await _context.SaveChangesAsync() > 0;
+      var success = await dbContext.SaveChangesAsync(ct) > 0;
 
       if (success) return Unit.Value;
 

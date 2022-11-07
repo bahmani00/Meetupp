@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using System.Threading;
 using Domain;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -66,3 +68,7 @@ public class DataContext : IdentityDbContext<AppUser> {
     }
 }
 
+public static class DbSetExtensions {
+  public static async ValueTask<T> FindItemAsync<T>(this DbSet<T> set, params object[] keyValues) where T : class =>
+      keyValues[^1] is CancellationToken ct ? await set.FindAsync(keyValues[0..^1], ct) : await set.FindAsync(keyValues);
+}

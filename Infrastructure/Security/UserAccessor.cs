@@ -12,8 +12,7 @@ public class UserAccessor : IUserAccessor {
   }
 
   public string GetCurrentUsername() {
-    var username = _httpContextAccessor.HttpContext.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-
-    return username;
+    return _httpContextAccessor.HttpContext.User?.Claims?
+      .FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
   }
 }

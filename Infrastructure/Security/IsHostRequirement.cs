@@ -6,15 +6,17 @@ using Microsoft.AspNetCore.Http;
 using Persistence;
 
 namespace Infrastructure.Security;
+
 public class IsHostRequirement : IAuthorizationRequirement {
 }
 
 public class IsHostRequirementHandler : AuthorizationHandler<IsHostRequirement> {
-  private readonly IHttpContextAccessor _httpContextAccessor;
-  private readonly DataContext _dbContext;
-  public IsHostRequirementHandler(IHttpContextAccessor httpContextAccessor, DataContext context) {
-    _dbContext = context;
-    _httpContextAccessor = httpContextAccessor;
+  private readonly IHttpContextAccessor httpContextAccessor;
+  private readonly DataContext dbContext;
+
+  public IsHostRequirementHandler(IHttpContextAccessor httpContextAccessor, DataContext dbContext) {
+    this.dbContext = dbContext;
+    this.httpContextAccessor = httpContextAccessor;
   }
 
   protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsHostRequirement requirement) {
@@ -26,8 +28,8 @@ public class IsHostRequirementHandler : AuthorizationHandler<IsHostRequirement> 
     var currUserName =
         context.User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
-    var activityId = _httpContextAccessor.GetId();
-    var activity = _dbContext.Activities.FindAsync(activityId).Result;
+    var activityId = httpContextAccessor.GetId();
+    var activity = dbContext.Activities.Find(activityId);
     var host = activity.UserActivities.FirstOrDefault(x => x.IsHost);
 
     if (host?.AppUser?.UserName == currUserName)

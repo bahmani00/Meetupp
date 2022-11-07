@@ -2,21 +2,21 @@ using System.Linq;
 using Application.Auth;
 using AutoMapper;
 using Domain;
-using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Activities;
 
 public class FollowingResolver : IValueResolver<UserActivity, AttendeeDto, bool> {
-  private readonly DataContext _context;
-  private readonly IUserAccessor _userAccessor;
-  public FollowingResolver(DataContext context, IUserAccessor userAccessor) {
-    _userAccessor = userAccessor;
-    _context = context;
+  private readonly DataContext dbContext;
+  private readonly IUserAccessor userAccessor;
+  
+  public FollowingResolver(DataContext dbContext, IUserAccessor userAccessor) {
+    this.dbContext = dbContext;
+    this.userAccessor = userAccessor;
   }
 
   public bool Resolve(UserActivity source, AttendeeDto destination, bool destMember, ResolutionContext context) {
-    var currentUser = _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername()).Result;
+    var currentUser = dbContext.Users.SingleOrDefault(x => x.UserName == userAccessor.GetCurrentUsername());
 
     if (currentUser.Followings.Any(x => x.TargetId == source.AppUserId))
       return true;

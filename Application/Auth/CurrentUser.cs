@@ -13,15 +13,16 @@ public class CurrentUser {
     public class Handler : IRequestHandler<Query, User> {
         private readonly UserManager<AppUser> _userManager;
         private readonly IJwtGenerator _jwtGenerator;
-        private readonly IUserAccessor _userAccessor;
+        private readonly IUserAccessor userAccessor;
+
         public Handler(UserManager<AppUser> userManager, IJwtGenerator jwtGenerator, IUserAccessor userAccessor) {
-            _userAccessor = userAccessor;
+            this.userAccessor = userAccessor;
             _jwtGenerator = jwtGenerator;
             _userManager = userManager;
         }
 
         public async Task<User> Handle(Query request, CancellationToken ct) {
-            var user = await _userManager.FindByNameAsync(_userAccessor.GetCurrentUsername());
+            var user = await _userManager.FindByNameAsync(userAccessor.GetCurrentUsername());
 
             return new User {
                 DisplayName = user.DisplayName,

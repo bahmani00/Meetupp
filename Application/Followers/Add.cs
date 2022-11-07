@@ -17,22 +17,22 @@ public class Add {
   }
 
   public class Handler : IRequestHandler<Command> {
-    private readonly DataContext _dbContext;
-    private readonly IUserAccessor _userAccessor;
+    private readonly DataContext dbContext;
+    private readonly IUserAccessor userAccessor;
     public Handler(DataContext dbContext, IUserAccessor userAccessor) {
-      _userAccessor = userAccessor;
-      _dbContext = dbContext;
+      this.userAccessor = userAccessor;
+      this.dbContext = dbContext;
     }
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
-      var observer = await _dbContext.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername(), ct);
+      var observer = await dbContext.Users.SingleOrDefaultAsync(x => x.UserName == userAccessor.GetCurrentUsername(), ct);
 
-      var target = await _dbContext.Users.SingleOrDefaultAsync(x => x.UserName == request.Username, ct);
+      var target = await dbContext.Users.SingleOrDefaultAsync(x => x.UserName == request.Username, ct);
 
       if (target == null)
         throw new RestException(HttpStatusCode.NotFound, new { User = "Not found" });
 
-      var following = await _dbContext.Followings.SingleOrDefaultAsync(x => x.ObserverId == observer.Id && x.TargetId == target.Id, ct);
+      var following = await dbContext.Followings.SingleOrDefaultAsync(x => x.ObserverId == observer.Id && x.TargetId == target.Id, ct);
 
       if (following != null)
         throw new RestException(HttpStatusCode.BadRequest, new { User = "You are already following this user" });
@@ -43,10 +43,10 @@ public class Add {
           Target = target
         };
 
-        _dbContext.Followings.Add(following);
+        dbContext.Followings.Add(following);
       }
 
-      var success = await _dbContext.SaveChangesAsync(ct) > 0;
+      var success = await dbContext.SaveChangesAsync(ct) > 0;
 
       if (success) return Unit.Value;
 

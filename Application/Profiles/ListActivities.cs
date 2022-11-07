@@ -18,14 +18,14 @@ public class ListActivities {
   }
 
   public class Handler : IRequestHandler<Query, List<UserActivityDto>> {
-    private readonly DataContext _context;
-    public Handler(DataContext context) {
-      _context = context;
+    private readonly DataContext dbContext;
+    public Handler(DataContext dbContext) {
+      this.dbContext = dbContext;
     }
 
     public async Task<List<UserActivityDto>> Handle(Query request,
         CancellationToken ct) {
-      var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == request.Username);
+      var user = await dbContext.Users.SingleOrDefaultAsync(x => x.UserName == request.Username, ct);
 
       if (user == null)
         throw new RestException(HttpStatusCode.NotFound, new { User = "Not found" });
@@ -34,19 +34,12 @@ public class ListActivities {
           .OrderBy(a => a.Activity.Date)
           .AsQueryable();
 
-      switch (request.Predicate) {
-        case "past":
-          queryable = queryable.Where(a => a.Activity.Date <= DateTime.Now);
-          break;
-        case "hosting":
-          queryable = queryable.Where(a => a.IsHost);
-          break;
-        default:
-          queryable = queryable.Where(a => a.Activity.Date >= DateTime.Now);
-          break;
-      }
-
-      var activities = queryable.ToList();
+      queryable = request.Predicate switch {
+        "past" => queryable.Where(a => a.Activity.Date <= DateTime.Now),
+        "hosting" => queryable.Where(a => a.IsHost),
+        _ => queryable.Where(a => a.Activity.Date >= DateTime.Now),
+      };
+      var activities = await queryable.ToListAsync(ct);
       var activitiesToReturn = new List<UserActivityDto>();
 
       foreach (var activity in activities) {

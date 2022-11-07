@@ -9,27 +9,28 @@ using MediatR;
 using Persistence;
 
 namespace Application.Activities;
+
 public class Details {
   public class Query : IRequest<ActivityDto> {
     public Guid Id { get; set; }
   }
 
   public class Handler : IRequestHandler<Query, ActivityDto> {
-    private readonly DataContext _context;
-    private readonly IMapper _mapper;
-    public Handler(DataContext context, IMapper mapper) {
-      _mapper = mapper;
-      _context = context;
+    private readonly DataContext dbContext;
+    private readonly IMapper mapper;
+
+    public Handler(DataContext dbContext, IMapper mapper) {
+      this.dbContext = dbContext;
+      this.mapper = mapper;
     }
 
     public async Task<ActivityDto> Handle(Query request, CancellationToken ct) {
-      var activity = await _context.Activities
-          .FindAsync(request.Id);
+      var activity = await dbContext.Activities.FindItemAsync(request.Id, ct);
 
       if (activity == null)
         throw new RestException(HttpStatusCode.NotFound, new { Activity = "Not found" });
 
-      var activityToReturn = _mapper.Map<Activity, ActivityDto>(activity);
+      var activityToReturn = mapper.Map<Activity, ActivityDto>(activity);
 
       return activityToReturn;
     }

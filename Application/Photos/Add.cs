@@ -18,19 +18,20 @@ public class Add {
   }
 
   public class Handler : IRequestHandler<Command, Photo> {
-    private readonly DataContext _context;
-    private readonly IUserAccessor _userAccessor;
-    private readonly IPhotoAccessor _photoAccessor;
-    public Handler(DataContext context, IUserAccessor userAccessor, IPhotoAccessor photoAccessor) {
-      _photoAccessor = photoAccessor;
-      _userAccessor = userAccessor;
-      _context = context;
+    private readonly DataContext dbContext;
+    private readonly IUserAccessor userAccessor;
+    private readonly IPhotoAccessor photoAccessor;
+
+    public Handler(DataContext dbContext, IUserAccessor userAccessor, IPhotoAccessor photoAccessor) {
+      this.dbContext = dbContext;
+      this.photoAccessor = photoAccessor;
+      this.userAccessor = userAccessor;
     }
 
     public async Task<Photo> Handle(Command request, CancellationToken ct) {
-      var photoUploadResult = _photoAccessor.AddPhoto(request.File);
+      var photoUploadResult = photoAccessor.AddPhoto(request.File);
 
-      var user = await _context.Users.SingleOrDefaultAsync(x => x.UserName == _userAccessor.GetCurrentUsername());
+      var user = await dbContext.Users.SingleOrDefaultAsync(x => x.UserName == userAccessor.GetCurrentUsername(), ct);
 
       var photo = new Photo {
         Url = photoUploadResult.Url,
@@ -42,7 +43,7 @@ public class Add {
 
       user.Photos.Add(photo);
 
-      var success = await _context.SaveChangesAsync() > 0;
+      var success = await dbContext.SaveChangesAsync(ct) > 0;
 
       if (success) return photo;
 

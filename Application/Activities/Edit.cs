@@ -31,7 +31,7 @@ public class Edit {
     }
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
-      var activity = await dbContext.Activities.FindAsync(request.Activity.Id, ct);
+      var activity = await dbContext.Activities.FindItemAsync(request.Activity.Id, ct);
 
       if (activity == null)
         throw new RestException(HttpStatusCode.NotFound, new { Activity = "Not found" });

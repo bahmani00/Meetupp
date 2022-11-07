@@ -14,20 +14,20 @@ public class Delete {
   }
 
   public class Handler : IRequestHandler<Command> {
-    private readonly DataContext _context;
-    public Handler(DataContext context) {
-      _context = context;
+    private readonly DataContext dbContext;
+    public Handler(DataContext dbContext) {
+      this.dbContext = dbContext;
     }
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
-      var activity = await _context.Activities.FindAsync(request.Id);
+      var activity = await dbContext.Activities.FindItemAsync(request.Id, ct);
 
       if (activity == null)
         throw new RestException(HttpStatusCode.NotFound, new { Activity = "Not found" });
 
-      _context.Remove(activity);
+      dbContext.Remove(activity);
 
-      var success = await _context.SaveChangesAsync() > 0;
+      var success = await dbContext.SaveChangesAsync(ct) > 0;
 
       if (success) return Unit.Value;
 
