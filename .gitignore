@@ -1,8 +1,13 @@
 bin
 obj
 .DS_Store
-*.db
+*.db*
 wwwroot
 publish
 appsettings.json
+<<<<<<< HEAD
 /.vs
+=======
+/.vs
+node_modules
+>>>>>>> main

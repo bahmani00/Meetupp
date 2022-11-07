@@ -10,6 +10,10 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.10" />
  
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.10" />
+<<<<<<< HEAD:Persistence/Persistence.csproj
+=======
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Design" Version="1.1.6" />
+>>>>>>> main:src/Persistence/Persistence.csproj
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.10" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="6.0.2" />
   </ItemGroup>

@@ -46,7 +46,15 @@ type script: inteface vs class
 dont need to use [FromBody] in action controllers when endpoint it's decorated by [ApiController]
 
 
+-----------------------------------------------
+npm ERR! code ERR_SOCKET_TIMEOUT on creating new project using ng new appname
+find default values running:
+ npm config ls -l
+set new values:
+ npm config set fetch-retry-mintimeout 200000 --200_000
+ npm config set fetch-retry-maxtimeout 1200000 --1_200_000
 
+https://stackoverflow.com/a/70958595/336511
 --Added semantic-ui------------------------------------------------------------------------
 MeetUppy\client-app> npm install semantic-ui-react
 MeetUppy\client-app> npm start
@@ -121,8 +129,11 @@ Build started...
 Build succeeded.
 Done. To undo this action, use 'ef migrations remove'
 
+PS D:\Development\Repos\MeetUppy> dotnet watch run --project .\src\API\
 
-PS D:\Development\Repos\MeetUppy\API> dotnet watch run
+or
+
+PS D:\Development\Repos\MeetUppy\src\API> dotnet watch run
 watch : Started
 Building...
 info: Microsoft.Hosting.Lifetime[0]
