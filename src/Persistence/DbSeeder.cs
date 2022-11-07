@@ -43,11 +43,13 @@ public class DbSeeder {
 
     var users = userManager.Users.ToList();
     var followings = new List<UserFollowing> {
-        new() { Observer = users[0], Target = users[1] },
         new() { Observer = users[0], Target = users[2] },
-        new() { Observer = users[0], Target = users[3] },
-        new() { Observer = users[0], Target = users[4] },
-        new() { Observer = users[0], Target = users[5] },
+
+        new() { Observer = users[1], Target = users[0] },
+        new() { Observer = users[1], Target = users[2] },
+        new() { Observer = users[1], Target = users[3] },
+        new() { Observer = users[1], Target = users[4] },
+        new() { Observer = users[1], Target = users[5] },
 
         new() { Observer = users[2], Target = users[0] },
         new() { Observer = users[2], Target = users[1] },
