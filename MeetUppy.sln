@@ -21,6 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		cli-notes.txt = cli-notes.txt
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "reactUI", "client-app\reactUI.esproj", "{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}"
@@ -120,7 +121,6 @@ Global
 		{347154C8-5F1E-44A8-B424-76B08430637A}.Release|x86.ActiveCfg = Release|Any CPU
 		{347154C8-5F1E-44A8-B424-76B08430637A}.Release|x86.Build.0 = Release|Any CPU
 		{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}.Debug|x64.ActiveCfg = Debug|Any CPU
 		{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}.Debug|x64.Build.0 = Debug|Any CPU
 		{FC5A0F6B-8758-4B81-AD8B-2CCD40775C44}.Debug|x64.Deploy.0 = Debug|Any CPU
