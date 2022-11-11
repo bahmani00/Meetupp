@@ -10,7 +10,7 @@ using Persistence;
 
 namespace Application.Activities;
 
-public class Unattend {
+public static class Unattend {
   public class Command : IRequest {
     public Guid Id { get; set; }
   }
@@ -18,7 +18,7 @@ public class Unattend {
   public class Handler : IRequestHandler<Command> {
     private readonly DataContext dbContext;
     private readonly IUserAccessor userAccessor;
-    
+
     public Handler(DataContext dbContext, IUserAccessor userAccessor) {
       this.dbContext = dbContext;
       this.userAccessor = userAccessor;

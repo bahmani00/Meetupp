@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Persistence;
 
-public class DbSeeder {
+public static class DbSeeder {
   public static async Task SeedAsync(DataContext dbContext, UserManager<AppUser> userManager) {
     await AddUsers(dbContext, userManager);
 
@@ -15,8 +15,8 @@ public class DbSeeder {
 
     await AddFollowers(dbContext, userManager);
   }
-  static Random rand = new();
-  static Dictionary<int, (string cat, string desc)> categories = new() {
+  static readonly Random rand = new();
+  static readonly Dictionary<int, (string cat, string desc)> categories = new() {
     { 1, ("drinks", " Let's drink to humanity & peace") },
     { 2, ("culture", "A social gathering potluck")},
     { 3, ("film", "Let's watch a movie and discuss it") },
@@ -26,7 +26,7 @@ public class DbSeeder {
     { 7, ("coding", "Come discuss your side projects") },
     { 8, ("fun", "Go funny! 1, 2, 3 be funny!") }
   };
-  static Dictionary<int, (string city, string venue)> cities = new() {
+  static readonly Dictionary<int, (string city, string venue)> cities = new() {
     { 1, ("Montreal", "Musée beaux-arts") },
     { 2, ("London", "Punch and Judy")},
     { 3, ("Toronto", "Rogers center") },
@@ -39,7 +39,7 @@ public class DbSeeder {
     { 10, ("Lisbon", "Oceanário de Lisboa") },
   };
   private static async Task AddFollowers(DataContext dbContext, UserManager<AppUser> userManager) {
-    if (dbContext.Followings.Any())  return;
+    if (dbContext.Followings.Any()) return;
 
     var users = userManager.Users.ToList();
     var followings = new List<UserFollowing> {
@@ -137,7 +137,7 @@ public class DbSeeder {
           new() {Id=Id(), IsMain = true, Url = $"{baseUrl}/v1609119965/yglovzkycojx7f0zafgh.jpg"},
           new() {Id=Id(), IsMain = false, Url = $"{baseUrl}/v1667788951/hqcv71nr4unfyaoefbld.jpg"},
         }
-      },      
+      },
       new() {
         Id = "nicki",
         DisplayName = "Nicki",

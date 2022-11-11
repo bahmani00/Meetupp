@@ -10,10 +10,6 @@ namespace API.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 public class WeatherForecastController : ControllerBase {
-  private static readonly string[] Summaries = new[]
-  {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-  };
   private readonly DataContext dbContext;
   private readonly ILogger<WeatherForecastController> logger;
 
@@ -34,9 +30,13 @@ public class WeatherForecastController : ControllerBase {
   public async Task<IActionResult> Get(int id, CancellationToken ct) {
     var entity = await dbContext.WeatherForecasts.FindItemAsync(id, ct);
     logger.LogInformation($"WeatherForecastController.GetById={id} is called.");
+    //_loggerMessage(this._logger, "Person cannot be null.",  null);
     if (entity == null)
       return new StatusCodeResult(202);
 
     return Ok(entity);
   }
+
+  //private static Action<ILogger, string, Exception> _loggerMessage = 
+  //  LoggerMessage.Define<string>(LogLevel.Error, eventId: new EventId(id: 0, name: "ERROR"), formatString: "{Message}");
 }

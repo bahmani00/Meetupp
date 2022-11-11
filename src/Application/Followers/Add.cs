@@ -11,7 +11,7 @@ using Persistence;
 
 namespace Application.Followers;
 
-public class Add {
+public static class Add {
   public class Command : IRequest {
     public string Username { get; set; }
   }
@@ -33,19 +33,11 @@ public class Add {
         throw new RestException(HttpStatusCode.NotFound, new { User = "Not found" });
 
       var following = await dbContext.Followings.SingleOrDefaultAsync(x => x.ObserverId == observer.Id && x.TargetId == target.Id, ct);
-
       if (following != null)
         throw new RestException(HttpStatusCode.BadRequest, new { User = "You are already following this user" });
 
-      if (following == null) {
-        following = new UserFollowing {
-          Observer = observer,
-          Target = target
-        };
-
-        dbContext.Followings.Add(following);
-      }
-
+      following = new UserFollowing { Observer = observer, Target = target };
+      dbContext.Followings.Add(following);
       var success = await dbContext.SaveChangesAsync(ct) > 0;
 
       if (success) return Unit.Value;

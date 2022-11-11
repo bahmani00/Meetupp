@@ -1,18 +1,18 @@
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
-using Application.Errors;
 using Application.Auth;
+using Application.Errors;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-using System.Threading;
 
 namespace Application.Profiles;
 
 public class ProfileReader : IProfileReader {
   private readonly DataContext dbContext;
   private readonly IUserAccessor userAccessor;
-  
+
   public ProfileReader(DataContext dbContext, IUserAccessor userAccessor) {
     this.dbContext = dbContext;
     this.userAccessor = userAccessor;

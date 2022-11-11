@@ -11,7 +11,7 @@ using Persistence;
 
 namespace Application.Activities;
 
-public class Attend {
+public static class Attend {
   public class Command : IRequest {
     public Guid Id { get; set; }
   }
@@ -19,7 +19,7 @@ public class Attend {
   public class Handler : IRequestHandler<Command> {
     private readonly DataContext dbContext;
     private readonly IUserAccessor userAccessor;
-    
+
     public Handler(DataContext dbContext, IUserAccessor userAccessor) {
       this.dbContext = dbContext;
       this.userAccessor = userAccessor;

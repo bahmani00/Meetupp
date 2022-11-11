@@ -14,7 +14,7 @@ public static class ConfigureServices {
   public static IServiceCollection AddApplicationServices(
     this IServiceCollection services,
     IConfiguration Configuration) {
-      
+
     services.AddDbContext<DataContext>(opt => {
       opt.UseLazyLoadingProxies();
       opt.EnableSensitiveDataLogging();
@@ -28,7 +28,7 @@ public static class ConfigureServices {
     services.AddMediatR(Assembly.GetExecutingAssembly());
     services.AddFluentValidationAutoValidation();
     services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-    
+
     //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
     //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehaviour<,>));
     //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));

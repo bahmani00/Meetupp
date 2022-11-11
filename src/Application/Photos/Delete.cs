@@ -12,7 +12,7 @@ using Persistence;
 
 namespace Application.Photos;
 
-public class Delete {
+public static class Delete {
   public class Command : IRequest {
     public string Id { get; set; }
   }

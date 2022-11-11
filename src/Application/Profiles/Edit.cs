@@ -9,7 +9,7 @@ using Persistence;
 
 namespace Application.Profiles;
 
-public class Edit {
+public static class Edit {
   public class Command : IRequest {
     public string DisplayName { get; set; }
     public string Bio { get; set; }

@@ -10,7 +10,7 @@ using Persistence;
 
 namespace Application.Activities;
 
-public class Details {
+public static class Details {
   public class Query : IRequest<ActivityDto> {
     public Guid Id { get; set; }
   }

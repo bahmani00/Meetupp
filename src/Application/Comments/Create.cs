@@ -11,7 +11,7 @@ using Persistence;
 
 namespace Application.Comments;
 
-public class Create {
+public static class Create {
 
   public class Command : IRequest<CommentDto> {
     public string Body { get; set; }
