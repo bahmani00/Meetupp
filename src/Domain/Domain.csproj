@@ -3,6 +3,8 @@
     <TargetFramework>net6.0</TargetFramework>
 
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <TreatWarningAsError>true</TreatWarningAsError>
+    <!-- <WarningsNotAsErrors>618,1030,1701,1702</WarningsNotAsErrors> -->
   </PropertyGroup>
   
   <ItemGroup>

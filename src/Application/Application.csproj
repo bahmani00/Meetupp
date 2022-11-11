@@ -4,6 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
 
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <TreatWarningAsError>true</TreatWarningAsError>
   </PropertyGroup>
 
   <ItemGroup>
