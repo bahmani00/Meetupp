@@ -1,11 +1,5 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-
-    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-    <TreatWarningAsError>true</TreatWarningAsError>
-    <!-- <WarningsNotAsErrors>618,1030,1701,1702</WarningsNotAsErrors> -->
-  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />
   
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.10" />
