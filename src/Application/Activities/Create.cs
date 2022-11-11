@@ -11,7 +11,7 @@ using Persistence;
 
 namespace Application.Activities;
 
-public class Create {
+public static class Create {
   public class Command : IRequest<Guid> {
     public ActivityDto Activity { get; set; }
   }
@@ -45,12 +45,7 @@ public class Create {
       var user = await dbContext.Users.SingleOrDefaultAsync(x =>
           x.UserName == userAccessor.GetCurrentUsername(), ct);
 
-      var attendee = new UserActivity {
-          AppUser = user,
-          Activity = activity,
-          IsHost = true,
-          DateJoined = DateTime.Now
-      };
+      var attendee = UserActivity.CreateHostActivity(user, activity);
 
       dbContext.UserActivities.Add(attendee);
 

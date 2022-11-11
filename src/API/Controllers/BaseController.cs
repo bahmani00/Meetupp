@@ -9,9 +9,9 @@ namespace API.Controllers;
 [ApiController]
 public class BaseController : ControllerBase {
   private IMediator mediator;
-  protected IMediator Mediator => 
+  protected IMediator Mediator =>
     mediator ??= HttpContext.RequestServices.GetService<IMediator>();
 
-  protected ActionResult Created(Guid id) => 
-    Created(nameof(ActivitiesController.Details), new { id = id });
+  protected ActionResult Created(Guid id) =>
+    base.Created(nameof(ActivitiesController.Details), new { id });
 }

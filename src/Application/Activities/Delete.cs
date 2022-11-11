@@ -8,7 +8,7 @@ using Persistence;
 
 namespace Application.Activities;
 
-public class Delete {
+public static class Delete {
   public class Command : IRequest {
     public Guid Id { get; set; }
   }

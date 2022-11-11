@@ -12,7 +12,7 @@ using Persistence;
 
 namespace Application.Photos;
 
-public class Add {
+public static class Add {
   public class Command : IRequest<Domain.Photo> {
     public IFormFile File { get; set; }
   }

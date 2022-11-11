@@ -20,11 +20,11 @@ public class ActivitiesController : BaseController {
 
   [HttpGet("{id}")]
   [Authorize]
-  public async Task<ActionResult> Details(Guid id, CancellationToken ct) => 
+  public async Task<ActionResult> Details(Guid id, CancellationToken ct) =>
     Ok(await Mediator.Send(new Details.Query { Id = id }, ct));
 
   [HttpPost]
-  public async Task<ActionResult> Create(Create.Command command, CancellationToken ct) => 
+  public async Task<ActionResult> Create(Create.Command command, CancellationToken ct) =>
     Created(await Mediator.Send(command, ct));
 
 

@@ -8,12 +8,12 @@ using AutoMapper;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Persistence;
 using Microsoft.Extensions.Logging;
+using Persistence;
 
 namespace Application.Activities;
 
-public class List {
+public static class List {
   public class ActivitiesEnvelope {
     public List<ActivityDto> Activities { get; set; }
     public int ActivityCount { get; set; }
@@ -37,11 +37,11 @@ public class List {
 
   public class Handler : IRequestHandler<Query, ActivitiesEnvelope> {
     private readonly DataContext dbContext;
-    private readonly ILogger<List> logger;
+    private readonly ILogger<Handler> logger;
     private readonly IMapper mapper;
     private readonly IUserAccessor userAccessor;
 
-    public Handler(DataContext dbContext, IMapper mapper, IUserAccessor userAccessor, ILogger<List> logger) {
+    public Handler(DataContext dbContext, IMapper mapper, IUserAccessor userAccessor, ILogger<Handler> logger) {
       this.dbContext = dbContext;
       this.userAccessor = userAccessor;
       this.mapper = mapper;
@@ -73,17 +73,18 @@ public class List {
     }
 
     public async Task<List<ActivityDto>> Handle111(Query request, CancellationToken ct) {
-      try {
-        request.ToString();
+      // try {
+      //   request.ToString();
 
-        for (var i = 0; i < 5; i++) {
-          ct.ThrowIfCancellationRequested();
-          await Task.Delay(1000, ct);
-          logger.LogInformation($"Task {i} has completed");
-        }
-      } catch (Exception ex) when (ex is TaskCanceledException) {
-        logger.LogInformation("Task was cancelled.");
-      }
+      //   for (var i = 0; i < 5; i++) {
+      //     ct.ThrowIfCancellationRequested();
+      //     await Task.Delay(1000, ct);
+      //     logger.LogInformation($"Task {i} has completed");
+      //   }
+      // } catch (Exception ex) when (ex is TaskCanceledException) {
+      //   logger.LogInformation("Task was cancelled.");
+      // }
+      await Task.CompletedTask;
 
       return mapper.Map<List<Activity>, List<ActivityDto>>(null);
     }

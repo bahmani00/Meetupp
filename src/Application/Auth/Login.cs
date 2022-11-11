@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Application.Auth;
 
-public class Login {
+public static class Login {
   public class Query : IRequest<User> {
     public string Email { get; set; }
     public string Password { get; set; }

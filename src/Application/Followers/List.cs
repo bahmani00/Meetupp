@@ -9,7 +9,7 @@ using Persistence;
 
 namespace Application.Followers;
 
-public class List {
+public static class List {
   public class Query : IRequest<List<Profile>> {
     public string Username { get; set; }
     public string Predicate { get; set; }

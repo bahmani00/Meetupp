@@ -1,7 +1,6 @@
 using System.Linq;
 using AutoMapper;
 using Domain;
-using Application;
 
 namespace Application.Activities;
 
@@ -9,7 +8,7 @@ public class MappingProfile : Profile {
   public MappingProfile() {
     CreateMap<Activity, ActivityDto>();
     CreateMap<ActivityDto, Activity>();
-    
+
     CreateMap<UserActivity, Profiles.UserActivityDto>()
         .ForMember(d => d.Id, o => o.MapFrom(s => s.Activity.Id))
         .ForMember(d => d.Title, o => o.MapFrom(s => s.Activity.Title))

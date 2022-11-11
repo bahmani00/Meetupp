@@ -9,7 +9,7 @@ namespace Application.Activities;
 public class FollowingResolver : IValueResolver<UserActivity, AttendeeDto, bool> {
   private readonly DataContext dbContext;
   private readonly IUserAccessor userAccessor;
-  
+
   public FollowingResolver(DataContext dbContext, IUserAccessor userAccessor) {
     this.dbContext = dbContext;
     this.userAccessor = userAccessor;

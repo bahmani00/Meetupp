@@ -248,3 +248,22 @@ dotnet_style_prefer_inferred_anonymous_type_member_names = true:suggestion
 dotnet_style_prefer_compound_assignment = true:suggestion
 dotnet_style_prefer_simplified_interpolation = true:suggestion
 dotnet_style_namespace_match_folder = true:suggestion
+
+#### .NET Analyzers ####
+
+## The type name conflicts with any namespace
+dotnet_diagnostic.CA1002.severity = none
+## Do not directly await a Task
+dotnet_diagnostic.CA2007.severity = none
+## add innerException
+dotnet_diagnostic.CA1032.severity = none
+dotnet_diagnostic.CA1034.severity = none
+dotnet_diagnostic.CA1056.severity = none
+## Possible ArgumentNullException
+dotnet_diagnostic.CA1062.severity = none
+dotnet_diagnostic.CA1724.severity = none
+## System.Exception is not sufficiently specific
+dotnet_diagnostic.CA2201.severity = none
+dotnet_diagnostic.CA2227.severity = none
+## change parameter name in order to match the identifier as it has been declared
+dotnet_diagnostic.CA1725.severity = none

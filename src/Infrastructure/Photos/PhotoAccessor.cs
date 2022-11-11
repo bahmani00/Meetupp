@@ -10,7 +10,7 @@ namespace Infrastructure.Photos;
 
 public class PhotoAccessor : IPhotoAccessor {
   private readonly Cloudinary _cloudinary;
-  
+
   public PhotoAccessor(IOptions<CloudinarySettings> config) {
     var acc = new Account(config.Value.CloudName, config.Value.ApiKey, config.Value.ApiSecret);
     // let DI instantiate this!

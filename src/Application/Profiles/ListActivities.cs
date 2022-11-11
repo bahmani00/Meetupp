@@ -13,7 +13,7 @@ using Persistence;
 
 namespace Application.Profiles;
 
-public class ListActivities {
+public static class ListActivities {
   public class Query : IRequest<List<UserActivityDto>> {
     public string Username { get; set; }
     public string Predicate { get; set; }

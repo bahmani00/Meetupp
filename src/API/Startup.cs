@@ -65,7 +65,7 @@ public class Startup {
       options.SwaggerDoc("v1", new OpenApiInfo { Title = "MeetUppy API", Version = "v1" });
 
       // UseFullTypeNameInSchemaIds replacement for .NET Core
-      options.CustomSchemaIds(x => x.FullName.Replace("+", "."));
+      options.CustomSchemaIds(x => x.FullName.Replace("+", ".", StringComparison.OrdinalIgnoreCase));
 
       //https://www.infoworld.com/article/3650668/implement-authorization-for-swagger-in-aspnet-core-6.html
       options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
@@ -109,7 +109,7 @@ public class Startup {
     });
 
     services.AddSingleton<ISystemClock, SystemClock>();
-    var builder = services.AddIdentityCore<AppUser>(opt => {              
+    var builder = services.AddIdentityCore<AppUser>(opt => {
       // opt.Password.RequireDigit = false;
       // opt.Password.RequireNonAlphanumeric = false;
       // opt.Password.RequireUppercase = false;
@@ -145,7 +145,7 @@ public class Startup {
                 {
                   var accessToken = context.Request.Query["access_token"];
                   var path = context.HttpContext.Request.Path;
-                  if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/chat"))) {
+                  if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/chat", StringComparison.OrdinalIgnoreCase))) {
                     context.Token = accessToken;
                   }
 

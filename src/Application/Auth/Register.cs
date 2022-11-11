@@ -13,7 +13,7 @@ using Persistence;
 
 namespace Application.Auth;
 
-public class Register {
+public static class Register {
   public class Command : IRequest<User> {
     public string DisplayName { get; set; }
     public string Username { get; set; }
@@ -34,7 +34,7 @@ public class Register {
     private readonly DataContext dbContext;
     private readonly UserManager<AppUser> userManager;
     private readonly IJwtGenerator jwtGenerator;
-    
+
     public Handler(DataContext dbContext, UserManager<AppUser> userManager, IJwtGenerator jwtGenerator) {
       this.dbContext = dbContext;
       this.jwtGenerator = jwtGenerator;

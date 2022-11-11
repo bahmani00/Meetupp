@@ -10,7 +10,7 @@ using Persistence;
 
 namespace Application.Activities;
 
-public class EditPartial {
+public static class EditPartial {
   public class Command : IRequest {
     public ActivityDto Activity { get; set; }
   }

@@ -10,7 +10,7 @@ using Persistence;
 
 namespace Application.Followers;
 
-public class Delete {
+public static class Delete {
   public class Command : IRequest {
     public string Username { get; set; }
   }
@@ -18,7 +18,7 @@ public class Delete {
   public class Handler : IRequestHandler<Command> {
     private readonly DataContext dbContext;
     private readonly IUserAccessor userAccessor;
-    
+
     public Handler(DataContext dbContext, IUserAccessor userAccessor) {
       this.dbContext = dbContext;
       this.userAccessor = userAccessor;
@@ -37,10 +37,7 @@ public class Delete {
       if (following == null)
         throw new RestException(HttpStatusCode.BadRequest, new { User = "You are not following this user" });
 
-      if (following != null) {
-        dbContext.Followings.Remove(following);
-      }
-
+      dbContext.Followings.Remove(following);
       var success = await dbContext.SaveChangesAsync(ct) > 0;
 
       if (success) return Unit.Value;
