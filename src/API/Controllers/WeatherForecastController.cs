@@ -30,7 +30,9 @@ public class WeatherForecastController : ControllerBase {
   [HttpGet("{id}")]
   public async Task<IActionResult> Get(int id, CancellationToken ct) {
     var entity = await dbContext.WeatherForecasts.FindItemAsync(id, ct);
+
     logger.Info($"WeatherForecastController.GetById={id} is called.");
+
     if (entity == null)
       return new StatusCodeResult(202);
 

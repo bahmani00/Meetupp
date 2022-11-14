@@ -60,4 +60,5 @@ public class ActivitiesController : BaseController {
 
   private ActionResult Created(Guid id) =>
     base.Created(nameof(ActivitiesController.Details), new { Id = id });
+
 }
