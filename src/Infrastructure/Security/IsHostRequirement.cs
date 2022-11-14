@@ -19,22 +19,20 @@ public class IsHostRequirementHandler : AuthorizationHandler<IsHostRequirement> 
     this.httpContextAccessor = httpContextAccessor;
   }
 
-  protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, IsHostRequirement requirement) {
+  protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, IsHostRequirement requirement) {
     if (context.User == null || !context.User.Identity.IsAuthenticated) {
       context.Fail();
-      return Task.CompletedTask;
+      return;
     }
 
     var currUserName =
         context.User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
     var activityId = httpContextAccessor.GetId();
-    var activity = dbContext.Activities.Find(activityId);
+    var activity = await dbContext.Activities.FindAsync(activityId);
     var host = activity.UserActivities.FirstOrDefault(x => x.IsHost);
 
     if (host?.AppUser?.UserName == currUserName)
       context.Succeed(requirement);
-
-    return Task.CompletedTask;
   }
 }
