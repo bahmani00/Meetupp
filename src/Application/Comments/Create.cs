@@ -62,7 +62,7 @@ public static class Create {
     public async Task<CommentDto> Handle(Command request, CancellationToken ct) {
       // var activity = await dbContext.Activities.FindItemAsync(request.ActivityId, ct);
       // if (activity == null)
-      //     throw new RestException(HttpStatusCode.NotFound, new {Activity = "Not found"});
+      //     RestException.ThrowNotFound(new {Activity = "Not found"});
       var activity = (Activity)httpContextAccessor.HttpContext.Items[$"Activity_{request.ActivityId}"];
 
       //dont have access to IUserAccessor(HttpContext) as using SignalR(webSockets)

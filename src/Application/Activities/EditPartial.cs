@@ -1,5 +1,4 @@
 using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
@@ -19,17 +18,17 @@ public static class EditPartial {
     public CommandValidator() {
       RuleFor(x => x.Activity.Id).NotEmpty();
       RuleFor(command => command)
-          .Must(x => !string.IsNullOrEmpty(x.Activity.Title) |
-                     !string.IsNullOrEmpty(x.Activity.Description) ||
-                     !string.IsNullOrEmpty(x.Activity.Category) ||
-                     !x.Activity.Date.HasValue ||
-                     !string.IsNullOrEmpty(x.Activity.City) ||
-                     !string.IsNullOrEmpty(x.Activity.Venue)
-              )
+        .Must(x => !string.IsNullOrEmpty(x.Activity.Title) |
+            !string.IsNullOrEmpty(x.Activity.Description) ||
+            !string.IsNullOrEmpty(x.Activity.Category) ||
+            !x.Activity.Date.HasValue ||
+            !string.IsNullOrEmpty(x.Activity.City) ||
+            !string.IsNullOrEmpty(x.Activity.Venue)
+          )
           .WithMessage($"Provide at least either {nameof(Activity.Title)}, {nameof(Activity.Description)}, {nameof(Activity.Category)}, {nameof(Activity.Date)}, {nameof(Activity.City)} or {nameof(Activity.Venue)}");
       RuleFor(command => command)
-          .Must(x => !x.Activity.Date.HasValue || (x.Activity.Date >= DateTime.Now))
-          .WithMessage($"{nameof(Activity.Date)} should be greater than current time");
+        .Must(x => !x.Activity.Date.HasValue || (x.Activity.Date >= DateTime.Now))
+        .WithMessage($"{nameof(Activity.Date)} should be greater than current time");
     }
   }
 
@@ -44,7 +43,7 @@ public static class EditPartial {
       var activity = await dbContext.Activities.FindItemAsync(request.Activity.Id, ct);
 
       if (activity == null)
-        throw new RestException(HttpStatusCode.NotFound, new { Activity = "Not found" });
+        RestException.ThrowNotFound(new { Activity = "Not found" });
 
       activity.Title = request.Activity.Title ?? activity.Title;
       activity.Description = request.Activity.Description ?? activity.Description;

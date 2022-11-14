@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
@@ -34,7 +33,7 @@ public static class ListActivities {
         .SingleOrDefaultAsync(x => x.UserName == request.Username, ct);
 
       if (user == null)
-        throw new RestException(HttpStatusCode.NotFound, new { User = "Not found" });
+        RestException.ThrowNotFound(new { User = "Not found" });
 
       var queryable = user.UserActivities
         .OrderBy(a => a.Activity.Date)

@@ -1,5 +1,4 @@
 using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
@@ -34,7 +33,7 @@ public static class Edit {
       var activity = await dbContext.Activities.FindItemAsync(request.Activity.Id, ct);
 
       if (activity == null)
-        throw new RestException(HttpStatusCode.NotFound, new { Activity = "Not found" });
+        RestException.ThrowNotFound(new { Activity = "Not found" });
 
       mapper.Map(request.Activity, activity);
 

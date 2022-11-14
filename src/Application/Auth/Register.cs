@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
@@ -43,10 +42,10 @@ public static class Register {
 
     public async Task<User> Handle(Command request, CancellationToken ct) {
       if (await dbContext.Users.Where(x => x.Email == request.Email).AnyAsync(ct))
-        throw new RestException(HttpStatusCode.BadRequest, new { Email = "Email already exists" });
+        RestException.ThrowBadRequest(new { Email = "Email already exists" });
 
       if (await dbContext.Users.Where(x => x.UserName == request.Username).AnyAsync(ct))
-        throw new RestException(HttpStatusCode.BadRequest, new { Username = "Username already exists" });
+        RestException.ThrowBadRequest(new { Username = "Username already exists" });
 
       var user = new AppUser {
         DisplayName = request.DisplayName,

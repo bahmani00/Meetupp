@@ -1,5 +1,4 @@
 using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Auth;
@@ -30,12 +29,12 @@ public static class Delete {
       var target = await dbContext.Users.SingleOrDefaultAsync(x => x.UserName == request.Username, ct);
 
       if (target == null)
-        throw new RestException(HttpStatusCode.NotFound, new { User = "Not found" });
+        RestException.ThrowNotFound(new { User = "Not found" });
 
       var following = await dbContext.Followings.SingleOrDefaultAsync(x => x.ObserverId == observer.Id && x.TargetId == target.Id, ct);
 
       if (following == null)
-        throw new RestException(HttpStatusCode.BadRequest, new { User = "You are not following this user" });
+        RestException.ThrowBadRequest(new { User = "You are not following this user" });
 
       dbContext.Followings.Remove(following);
       var success = await dbContext.SaveChangesAsync(ct) > 0;

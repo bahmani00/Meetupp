@@ -18,6 +18,7 @@ public static class List {
     public List<ActivityDto> Activities { get; set; }
     public int ActivityCount { get; set; }
   }
+
   public class Query : IRequest<ActivitiesEnvelope> {
     public Query(int? limit, int? offset, bool isGoing, bool isHost, DateTime? startDate) {
       Limit = limit;
