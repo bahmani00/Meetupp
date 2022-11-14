@@ -1,0 +1,25 @@
+<Project>
+  
+  <PropertyGroup>
+    <Title>MeetUppy App</Title>
+    <Authors>Gary Woodfine</Authors>
+    <Description>Light version of Meetup.com</Description>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>api project, api endpoints, response</PackageTags>
+    <RepositoryUrl>https://github.com/bahmani00/MeetUppy</RepositoryUrl>
+    <PackageProjectUrl>https://meetup.com/</PackageProjectUrl>
+    <TargetFramework>net6.0</TargetFramework>
+
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <TreatWarningAsError>true</TreatWarningAsError>
+    <!-- <WarningsNotAsErrors>618,1030,1701,1702</WarningsNotAsErrors> -->
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <!--https://stackoverflow.com/questions/59927051/mark-an-assembly-clscompliant-in-csproj-->
+    <AssemblyAttribute Include="System.CLSCompliantAttribute">
+      <_Parameter1>false</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+  
+</Project>

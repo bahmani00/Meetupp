@@ -1,4 +1,3 @@
-using System;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,6 +11,4 @@ public class BaseController : ControllerBase {
   protected IMediator Mediator =>
     mediator ??= HttpContext.RequestServices.GetService<IMediator>();
 
-  protected ActionResult Created(Guid id) =>
-    base.Created(nameof(ActivitiesController.Details), new { id });
 }

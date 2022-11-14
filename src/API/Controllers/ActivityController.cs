@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Activities;
@@ -25,8 +25,7 @@ public class ActivitiesController : BaseController {
 
   [HttpPost]
   public async Task<ActionResult> Create(Create.Command command, CancellationToken ct) =>
-    Created(await Mediator.Send(command, ct));
-
+    this.Created(await Mediator.Send(command, ct));
 
   [HttpPut("{id}")]
   [Authorize(Policy = "IsHostCreatedActivity")]
@@ -58,4 +57,8 @@ public class ActivitiesController : BaseController {
     await Mediator.Send(new Unattend.Command { Id = id }, ct);
     return NoContent();
   }
+
+  private ActionResult Created(Guid id) =>
+    base.Created(nameof(ActivitiesController.Details), new { Id = id });
+
 }

@@ -1,3 +1,8 @@
+
+-----------------------------------------
+MeetUppy> dotnet run --project .\src\API\
+
+-----------------------------------------
 pass react stores to each others
 
 --------------------------------------
@@ -16,8 +21,6 @@ npm install --save revalidate
 MeetUppy\client-app> npm install react-toastify
 -----------------------------------------------------------
 create Guid for activity.Id by installing 'uuid' package
-
-
 
 
 ----------------------------------------------------------

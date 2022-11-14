@@ -1,6 +1,7 @@
 using System;
-using System.Threading.Tasks;
+using API;
 using Domain;
+using Infrastructure;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -9,36 +10,29 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Persistence;
 
-namespace API;
+var host = Host.CreateDefaultBuilder(args)
+    .ConfigureWebHostDefaults(webBuilder => {
+      //turn of server header to prevent revealing the software version of the server. 
+      //otherwise the server machine may become more vulnerable to attacks
+      webBuilder
+        .UseKestrel(x => x.AddServerHeader = false)
+        .UseStartup<Startup>();
+    }).Build();
 
-public class Program {
-  public static async Task Main(string[] args) {
-    var host = CreateHostBuilder(args).Build();
-    using (var scope = host.Services.CreateScope()) {
-      var services = scope.ServiceProvider;
-      try {
-        var context = services.GetRequiredService<Persistence.DataContext>();
-        var userManager = services.GetRequiredService<UserManager<AppUser>>();
-        await context.Database.MigrateAsync();
-        await DbSeeder.SeedAsync(context, userManager);
+using (var scope = host.Services.CreateScope()) {
+  var services = scope.ServiceProvider;
+  try {
+    var context = services.GetRequiredService<DataContext>();
+    var userManager = services.GetRequiredService<UserManager<AppUser>>();
+    await context.Database.MigrateAsync();
+    await DbSeeder.SeedAsync(context, userManager);
 
-      } catch (Exception ex) {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Error occured during MeetUppy db migration.");
-        throw;
-      }
-    };
-
-    host.Run();
+  } catch (Exception ex) {
+    ILogger logger = services.GetRequiredService<ILogger<Program>>();
+    logger.Error("Error occured during MeetUppy db migration.", ex);
+    throw;
   }
+};
 
-  public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder => {
-              webBuilder
-            //turn of server header to prevent revealing the software version of the server. 
-            //otherwise the server machine may become more vulnerable to attacks
-            .UseKestrel(x => x.AddServerHeader = false)
-            .UseStartup<Startup>();
-            });
-}
+host.Run();
+

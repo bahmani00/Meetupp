@@ -29,11 +29,13 @@ using Persistence;
 namespace API;
 
 public class Startup {
-  public Startup(IConfiguration configuration) {
+  public Startup(IConfiguration configuration, IWebHostEnvironment env) {
     Configuration = configuration;
+    CurrEnvironment = env;
   }
 
   private readonly IConfiguration Configuration;
+  private readonly IWebHostEnvironment CurrEnvironment;
 
   public void ConfigureDevelopmentServices(IServiceCollection services) {
 
@@ -110,11 +112,13 @@ public class Startup {
 
     services.AddSingleton<ISystemClock, SystemClock>();
     var builder = services.AddIdentityCore<AppUser>(opt => {
-      // opt.Password.RequireDigit = false;
-      // opt.Password.RequireNonAlphanumeric = false;
-      // opt.Password.RequireUppercase = false;
-      // opt.Password.RequireLowercase = false;
-      // opt.Password.RequiredLength = 1;
+      if (CurrEnvironment.IsDevelopment()) {
+        opt.Password.RequireDigit = false;
+        opt.Password.RequireNonAlphanumeric = false;
+        opt.Password.RequireUppercase = false;
+        opt.Password.RequireLowercase = false;
+        opt.Password.RequiredLength = 1;
+      }
     });
 
     var identityBuilder = new IdentityBuilder(builder.UserType, builder.Services);
@@ -166,10 +170,12 @@ public class Startup {
   public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
     app.UseMiddleware<ErrorHandlingMiddleware>();
 
+    app.UseSwagger();
+    //https://editor.swagger.io/
+    app.UseSwaggerUI(c => c.SwaggerEndpoint("v1/swagger.yaml", "API v1"));
+
     if (env.IsDevelopment()) {
       //app.UseDeveloperExceptionPage();
-      app.UseSwagger();
-      app.UseSwaggerUI(c => c.SwaggerEndpoint("v1/swagger.json", "API v1"));
     } else {
       // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
       // Middleware to send HTTP Strict Transport Security Protocol (HSTS) headers to clients.
@@ -195,17 +201,17 @@ public class Startup {
     //you want to allow your web app to load and precisely which sources you want to load content from.
     //use app.UseCspReportOnly to get the reports
     app.UseCsp(opt => opt
-            .BlockAllMixedContent()
-            .StyleSources(s => s.Self()
-                .CustomSources("https://fonts.googleapis.com", "sha256-F4GpCPyRepgP5znjMD8sc7PEjzet5Eef4r09dEGPpTs="))
-            .FontSources(s => s.Self().CustomSources("https://fonts.gstatic.com", "data:"))
-            .FormActions(s => s.Self())
-            .FrameAncestors(s => s.Self())
-            //to fix react-cropper issue: "blob:", "data:"
-            .ImageSources(s => s.Self().CustomSources("https://res.cloudinary.com", "blob:", "data:"))
-        //tried this but couldn't fix
-        //.ScriptSources(s => s.Self().CustomSources("sha256-ma5XxS1EBgt17N22Qq31rOxxRWRfzUTQS1KOtfYwuNo="))
-        );
+        .BlockAllMixedContent()
+        .StyleSources(s => s.Self()
+            .CustomSources("https://fonts.googleapis.com", "sha256-F4GpCPyRepgP5znjMD8sc7PEjzet5Eef4r09dEGPpTs="))
+        .FontSources(s => s.Self().CustomSources("https://fonts.gstatic.com", "data:"))
+        .FormActions(s => s.Self())
+        .FrameAncestors(s => s.Self())
+        //to fix react-cropper issue: "blob:", "data:"
+        .ImageSources(s => s.Self().CustomSources("https://res.cloudinary.com", "blob:", "data:"))
+    //tried this but couldn't fix
+    //.ScriptSources(s => s.Self().CustomSources("sha256-ma5XxS1EBgt17N22Qq31rOxxRWRfzUTQS1KOtfYwuNo="))
+    );
 
     app.UseDefaultFiles();//enable index.html,default.htm,...
     app.UseStaticFiles();//static files: js, css, img,...
