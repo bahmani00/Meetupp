@@ -11,7 +11,7 @@ namespace Persistence;
 public static class DbSeeder {
   public static async Task SeedAsync(DataContext dbContext, UserManager<AppUser> userManager) {
     await AddUsers(dbContext, userManager);
-    
+
     await AddFollowers(dbContext, userManager);
 
     await AddActivities(dbContext, userManager);
@@ -29,18 +29,18 @@ public static class DbSeeder {
     { 8, ("fun", "Go funny! 1, 2, 3 be funny!") }
   };
   static readonly Dictionary<int, (string city, string venue)> cities = new() {
-    { 1, ("Montreal", "Mus�e beaux-arts") },
+    { 1, ("Montreal", "Musée beaux-arts") },
     { 2, ("London", "Punch and Judy")},
     { 3, ("Toronto", "Rogers center") },
     { 4, ("Los Angeles", "Culver city") },
     { 5, ("Vancouver", "Stanley Park") },
     { 6, ("New York", "Central Park") },
     { 7, ("Sydney", "Harbour Bridge") },
-    { 8, ("Quebec City", "Ch�teau Frontenac") },
+    { 8, ("Quebec City", "Château Frontenac") },
     { 9, ("Paris", "The Louvre") },
-    { 10, ("Lisbon", "Ocean�rio de Lisboa") },
+    { 10, ("Lisbon", "Oceanário de Lisboa") },
   };
-  
+
   private static async Task AddFollowers(DataContext dbContext, UserManager<AppUser> userManager) {
     if (dbContext.Followings.Any()) return;
 

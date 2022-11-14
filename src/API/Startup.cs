@@ -112,7 +112,7 @@ public class Startup {
 
     services.AddSingleton<ISystemClock, SystemClock>();
     var builder = services.AddIdentityCore<AppUser>(opt => {
-      if(CurrEnvironment.IsDevelopment()) {
+      if (CurrEnvironment.IsDevelopment()) {
         opt.Password.RequireDigit = false;
         opt.Password.RequireNonAlphanumeric = false;
         opt.Password.RequireUppercase = false;

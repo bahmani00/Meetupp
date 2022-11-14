@@ -3,6 +3,9 @@ root = true
 
 # C# files
 [*.cs]
+# Convert all *.cs files to unicode in VisualStudio
+charset = utf-8
+
 csharp_style_namespace_declarations = file_scoped:warning
 
 #### Core EditorConfig Options ####
@@ -227,6 +230,7 @@ csharp_style_prefer_null_check_over_type_check = true:suggestion
 csharp_style_prefer_local_over_anonymous_function = true:suggestion
 csharp_style_prefer_tuple_swap = true:suggestion
 csharp_style_prefer_utf8_string_literals = true:suggestion
+dotnet_diagnostic.CA1812.severity = silent
 
 [*.{cs,vb}]
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
@@ -255,6 +259,7 @@ dotnet_style_namespace_match_folder = true:suggestion
 dotnet_diagnostic.CA1002.severity = none
 ## Do not directly await a Task
 dotnet_diagnostic.CA2007.severity = none
+dotnet_diagnostic.CA1031.severity = none
 ## add innerException
 dotnet_diagnostic.CA1032.severity = none
 dotnet_diagnostic.CA1034.severity = none
@@ -267,3 +272,4 @@ dotnet_diagnostic.CA2201.severity = none
 dotnet_diagnostic.CA2227.severity = none
 ## change parameter name in order to match the identifier as it has been declared
 dotnet_diagnostic.CA1725.severity = none
+dotnet_diagnostic.CA1014.severity = none
