@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Domain;
@@ -10,11 +11,12 @@ namespace Persistence;
 public static class DbSeeder {
   public static async Task SeedAsync(DataContext dbContext, UserManager<AppUser> userManager) {
     await AddUsers(dbContext, userManager);
+    
+    await AddFollowers(dbContext, userManager);
 
     await AddActivities(dbContext, userManager);
-
-    await AddFollowers(dbContext, userManager);
   }
+
   static readonly Random rand = new();
   static readonly Dictionary<int, (string cat, string desc)> categories = new() {
     { 1, ("drinks", " Let's drink to humanity & peace") },
@@ -27,17 +29,18 @@ public static class DbSeeder {
     { 8, ("fun", "Go funny! 1, 2, 3 be funny!") }
   };
   static readonly Dictionary<int, (string city, string venue)> cities = new() {
-    { 1, ("Montreal", "Musée beaux-arts") },
+    { 1, ("Montreal", "Musï¿½e beaux-arts") },
     { 2, ("London", "Punch and Judy")},
     { 3, ("Toronto", "Rogers center") },
     { 4, ("Los Angeles", "Culver city") },
     { 5, ("Vancouver", "Stanley Park") },
     { 6, ("New York", "Central Park") },
     { 7, ("Sydney", "Harbour Bridge") },
-    { 8, ("Quebec City", "Château Frontenac") },
+    { 8, ("Quebec City", "Chï¿½teau Frontenac") },
     { 9, ("Paris", "The Louvre") },
-    { 10, ("Lisbon", "Oceanário de Lisboa") },
+    { 10, ("Lisbon", "Oceanï¿½rio de Lisboa") },
   };
+  
   private static async Task AddFollowers(DataContext dbContext, UserManager<AppUser> userManager) {
     if (dbContext.Followings.Any()) return;
 
@@ -72,9 +75,11 @@ public static class DbSeeder {
 
     for (var i = 10; i <= 100; ++i) {
       var date = DateTime.Now.AddDays(i - 95);
+#pragma warning disable CA5394 // Do not use insecure randomness
       var cat = categories[rand.Next(1, categories.Count)];
       var (city, venue) = cities[rand.Next(1, cities.Count)];
-      var usrId = rand.Next(1, users.Count - 4);
+      var usrs = users.OrderBy(x => Guid.NewGuid()).ToList();
+#pragma warning restore CA5394 // Do not use insecure randomness
 
       await dbContext.Activities.AddAsync(new() {
         Title = $"Activity " + i,
@@ -84,22 +89,22 @@ public static class DbSeeder {
         City = city,
         Venue = venue,
         UserActivities = new List<UserActivity> {
-          new() { AppUser = users[0], IsHost = true, DateJoined = date },
-          new() { AppUser = users[usrId], IsHost = false, DateJoined = date.AddDays(-1) },
-          new() { AppUser = users[usrId + 1], IsHost = true, DateJoined = date.AddDays(-1) },
-          new() { AppUser = users[usrId + 4], IsHost = false, DateJoined = date.AddDays(-1) },
-          new() { AppUser = users[usrId + 2], IsHost = false, DateJoined = date.AddDays(-1) },
-          new() { AppUser = users[usrId + 3], IsHost = false, DateJoined = date.AddDays(-1) },
+          new() { AppUser = usrs[0], IsHost = true, DateJoined = date },
+          new() { AppUser = usrs[1], IsHost = false, DateJoined = date.AddDays(-1) },
+          new() { AppUser = usrs[2], IsHost = true, DateJoined = date.AddDays(-1) },
+          new() { AppUser = usrs[3], IsHost = false, DateJoined = date.AddDays(-1) },
+          new() { AppUser = usrs[4], IsHost = false, DateJoined = date.AddDays(-1) },
+          new() { AppUser = usrs[5], IsHost = false, DateJoined = date.AddDays(-1) },
         },
         Comments = new List<Comment> {
-          new() { Author = users[0], Body = "Still on?" },
-          new() { Author = users[usrId + 1], Body = "Of course it's on" },
-          new() { Author = users[0], Body = "This is awesome" },
-          new() { Author = users[1], Body = "I'm in" },
-          new() { Author = users[usrId + 4], Body = "Let's do it" },
-          new() { Author = users[usrId + 2], Body = "J'adore ca" },
-          new() { Author = users[usrId + 1], Body = "I'm from USA" },
-          new() { Author = users[usrId], Body = "Hello from MTL" },
+          new() { Author = usrs[0], Body = "Still on?" },
+          new() { Author = usrs[1], Body = "Of course it's on" },
+          new() { Author = usrs[2], Body = "This is awesome" },
+          new() { Author = usrs[3], Body = "I'm in" },
+          new() { Author = usrs[1], Body = "Let's do it" },
+          new() { Author = usrs[2], Body = "J'adore ca" },
+          new() { Author = usrs[3], Body = "I'm from USA, btw." },
+          new() { Author = usrs[5], Body = "Hello from MTL" },
         }
       });
     }
@@ -111,7 +116,7 @@ public static class DbSeeder {
     if (dbContext.Users.Any()) return;
 
     var i = 0;
-    var Id = () => (++i).ToString();
+    var Id = () => (++i).ToString(CultureInfo.InvariantCulture);
     var baseUrl = "https://res.cloudinary.com/stankansas/image/upload";
 
     var users = new List<AppUser> {
@@ -133,6 +138,7 @@ public static class DbSeeder {
         DisplayName = "Jane",
         UserName = "jane",
         Email = "jane@test.com",
+        Bio = "A passionate Photographer | Student",
         Photos = new Photo[] {
           new() {Id=Id(), IsMain = true, Url = $"{baseUrl}/v1609119965/yglovzkycojx7f0zafgh.jpg"},
           new() {Id=Id(), IsMain = false, Url = $"{baseUrl}/v1667788951/hqcv71nr4unfyaoefbld.jpg"},
@@ -143,6 +149,7 @@ public static class DbSeeder {
         DisplayName = "Nicki",
         UserName = "nicki",
         Email = "nicki@test.com",
+        Bio = "A passionate LifeCoach | Student",
         Photos = new Photo[] {
           new() {Id=Id(), IsMain = true, Url = $"{baseUrl}/v1667789135/w77rweub0je89khwqg02.jpg"},
           new() {Id=Id(), IsMain = false, Url = $"{baseUrl}/v1667788076/b27beexlxamrmulijxae.jpg"},
@@ -222,7 +229,10 @@ public static class DbSeeder {
     };
 
     foreach (var user in users) {
-      await userManager.CreateAsync(user, "Pa$$w0rd");
+      var result = await userManager.CreateAsync(user, user.UserName);//"Pa$$w0rd");
+      if (!result.Succeeded) {
+        throw new Exception("Faild seeding users");
+      }
     }
   }
 }
