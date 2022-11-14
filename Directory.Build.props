@@ -9,16 +9,17 @@
     <RepositoryUrl>https://github.com/bahmani00/MeetUppy</RepositoryUrl>
     <PackageProjectUrl>https://meetup.com/</PackageProjectUrl>
     <TargetFramework>net6.0</TargetFramework>
-    <PackageIcon>favicon.ico</PackageIcon>
 
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     <TreatWarningAsError>true</TreatWarningAsError>
     <!-- <WarningsNotAsErrors>618,1030,1701,1702</WarningsNotAsErrors> -->
   </PropertyGroup>
-
+  
   <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)/src/client-app/public/favicon.ico" Pack="true" PackagePath="/">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <!--https://stackoverflow.com/questions/59927051/mark-an-assembly-clscompliant-in-csproj-->
+    <AssemblyAttribute Include="System.CLSCompliantAttribute">
+      <_Parameter1>false</_Parameter1>
+    </AssemblyAttribute>
   </ItemGroup>
+  
 </Project>
