@@ -11,7 +11,4 @@ public class BaseController : ControllerBase {
   private IMediator mediator;
   protected IMediator Mediator =>
     mediator ??= HttpContext.RequestServices.GetService<IMediator>();
-
-  protected ActionResult Created(Guid id) =>
-    base.Created(nameof(ActivitiesController.Details), new { id });
 }

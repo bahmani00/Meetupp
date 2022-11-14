@@ -5,43 +5,33 @@ namespace Infrastructure;
 
 public static class Log {
 
-  public static void InformationalMessageNoParams(ILogger logger) => _informationLoggerMessageNoParams(logger, null);
+  public static void Info(this ILogger logger, string message) =>
+    info(logger, message, null);
 
-  public static void InformationalMessageOneParam(ILogger logger, string value1) => _informationLoggerMessageOneParam(logger, value1, null);
+  public static void Debug(this ILogger logger, string message, Exception exc) =>
+    debug(logger, message, exc);
 
-  public static void InformationalMessageTwoParams(ILogger logger, string value1, int value2) => _informationLoggerMessage(logger, value1, value2, null);
+  public static void Error(this ILogger logger, string message, Exception exc) =>
+    error(logger, message, exc);
 
-  public static void DebugMessage(ILogger logger, string value1, int value2) => _debugLoggerMessage(logger, value1, value2, null);
-
-  public static void DebugMessageWithLevelCheck(ILogger logger, string value1, int value2) {
-    if (logger.IsEnabled(LogLevel.Debug))
-      _debugLoggerMessage(logger, value1, value2, null);
-  }
-
-  private static readonly Action<ILogger, Exception> _informationLoggerMessageNoParams = LoggerMessage.Define(
+  private static readonly Action<ILogger, string, Exception> info =
+    LoggerMessage.Define<string>(
       LogLevel.Information,
       Events.Started,
-      "This is a message with no params!");
+      "{Param1}");
 
-
-  private static readonly Action<ILogger, string, Exception> _informationLoggerMessageOneParam = LoggerMessage.Define<string>(
-      LogLevel.Information,
-      Events.Started,
-      "This is a message with one param! {Param1}");
-
-
-  private static readonly Action<ILogger, string, int, Exception> _informationLoggerMessage = LoggerMessage.Define<string, int>(
-      LogLevel.Information,
-      Events.Started,
-      "This is a message with two params! {Param1}, {Param2}");
-
-
-  private static readonly Action<ILogger, string, int, Exception> _debugLoggerMessage = LoggerMessage.Define<string, int>(
+  private static readonly Action<ILogger, string, Exception> debug =
+    LoggerMessage.Define<string>(
       LogLevel.Debug,
       Events.Started,
-      "This is a debug message with two params! {Param1}, {Param2}");
+      "{Param1}");
 
+  private static readonly Action<ILogger, string, Exception> error =
+     LoggerMessage.Define<string>(
+       LogLevel.Error,
+       Events.Started,
+       "{Param1}");
   internal static class Events {
-    public static readonly EventId Started = new EventId(100, "Started");
+    public static readonly EventId Started = new(100, "Started");
   }
 }

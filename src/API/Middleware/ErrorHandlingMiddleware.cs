@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Application.Errors;
+using Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -10,7 +11,7 @@ namespace API.Middleware;
 
 public class ErrorHandlingMiddleware {
   private readonly RequestDelegate _next;
-  private readonly ILogger<ErrorHandlingMiddleware> _logger;
+  private readonly ILogger _logger;
 
   public ErrorHandlingMiddleware(
       RequestDelegate next,
@@ -32,12 +33,12 @@ public class ErrorHandlingMiddleware {
 
     switch (ex) {
       case RestException re:
-        _logger.LogError(ex, "REST ERROR");
+        _logger.Error("REST ERROR", ex);
         errors = re.Errors;
         context.Response.StatusCode = (int)re.Code;
         break;
       case Exception e:
-        _logger.LogError(ex, "SERVER ERROR");
+        _logger.Error("SERVER ERROR", ex);
         errors = string.IsNullOrWhiteSpace(e.Message) ? "Error" : e.Message;
         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
         break;

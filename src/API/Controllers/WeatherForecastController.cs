@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -11,7 +12,7 @@ namespace API.Controllers;
 [Route("api/[controller]")]
 public class WeatherForecastController : ControllerBase {
   private readonly DataContext dbContext;
-  private readonly ILogger<WeatherForecastController> logger;
+  private readonly ILogger logger;
 
   public WeatherForecastController(DataContext dbContext, ILogger<WeatherForecastController> logger) {
     this.dbContext = dbContext;
@@ -21,7 +22,7 @@ public class WeatherForecastController : ControllerBase {
   [HttpGet]
   public async Task<IActionResult> Get(CancellationToken ct) {
     var list = await dbContext.WeatherForecasts.ToListAsync(ct);
-    logger.LogInformation("WeatherForecastController.GetAll is called.");
+    logger.Info("WeatherForecastController.GetAll is called.");
 
     return Ok(list);
   }
@@ -29,14 +30,10 @@ public class WeatherForecastController : ControllerBase {
   [HttpGet("{id}")]
   public async Task<IActionResult> Get(int id, CancellationToken ct) {
     var entity = await dbContext.WeatherForecasts.FindItemAsync(id, ct);
-    logger.LogInformation($"WeatherForecastController.GetById={id} is called.");
-    //_loggerMessage(this._logger, "Person cannot be null.",  null);
+    logger.Info($"WeatherForecastController.GetById={id} is called.");
     if (entity == null)
       return new StatusCodeResult(202);
 
     return Ok(entity);
   }
-
-  //private static Action<ILogger, string, Exception> _loggerMessage = 
-  //  LoggerMessage.Define<string>(LogLevel.Error, eventId: new EventId(id: 0, name: "ERROR"), formatString: "{Message}");
 }
