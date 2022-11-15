@@ -8,7 +8,7 @@
     <PackageTags>api project, api endpoints, response</PackageTags>
     <RepositoryUrl>https://github.com/bahmani00/MeetUppy</RepositoryUrl>
     <PackageProjectUrl>https://meetup.com/</PackageProjectUrl>
-    
+
     <TargetFramework>net7.0</TargetFramework>
 
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
