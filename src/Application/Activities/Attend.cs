@@ -1,5 +1,4 @@
 using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Auth;
@@ -29,7 +28,7 @@ public static class Attend {
       var activity = await dbContext.Activities.FindItemAsync(request.Id, ct);
 
       if (activity == null)
-        throw new RestException(HttpStatusCode.NotFound, new { Activity = "Cound not find activity" });
+        RestException.ThrowNotFound(new { Activity = "Cound not find activity" });
 
       var user = await dbContext.Users.SingleOrDefaultAsync(x =>
           x.UserName == userAccessor.GetCurrentUsername(), ct);
@@ -38,9 +37,9 @@ public static class Attend {
           .SingleOrDefaultAsync(x => x.ActivityId == activity.Id &&
               x.AppUserId == user.Id, ct);
 
-      if (attendance != null)
-        throw new RestException(HttpStatusCode.BadRequest,
-            new { Attendance = "Already attending this activity" });
+      if (attendance != null) {
+        RestException.ThrowBadRequest(new { Attendance = "Already attending this activity" });
+      }
 
       attendance = new UserActivity {
         Activity = activity,

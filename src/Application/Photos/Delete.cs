@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Auth;
@@ -34,13 +33,12 @@ public static class Delete {
       var photo = user.Photos.FirstOrDefault(x => x.Id == request.Id);
 
       if (photo == null)
-        throw new RestException(HttpStatusCode.NotFound, new { Photo = "Not found" });
+        RestException.ThrowNotFound(new { Photo = "Not found" });
 
       if (photo.IsMain)
-        throw new RestException(HttpStatusCode.BadRequest, new { Photo = "You cannot delete your main photo" });
+        RestException.ThrowBadRequest(new { Photo = "You cannot delete your main photo" });
 
       var result = photoAccessor.DeletePhoto(photo.Id);
-
       if (result == null)
         throw new Exception("Problem deleting photo");
 

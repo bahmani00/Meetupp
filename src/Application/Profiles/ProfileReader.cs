@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Auth;
@@ -22,7 +21,7 @@ public class ProfileReader : IProfileReader {
     var user = await dbContext.Users.SingleOrDefaultAsync(x => x.UserName == username, ct);
 
     if (user == null)
-      throw new RestException(HttpStatusCode.NotFound, new { User = "Not found" });
+      RestException.ThrowNotFound(new { User = "Not found" });
 
     var profile = new Profile {
       DisplayName = user.DisplayName,

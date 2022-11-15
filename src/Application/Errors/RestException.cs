@@ -11,4 +11,10 @@ public class RestException : Exception {
 
   public HttpStatusCode Code { get; }
   public object Errors { get; }
+
+  public static void ThrowBadRequest(object errors) =>
+    throw new RestException(HttpStatusCode.BadRequest, errors);
+
+  public static void ThrowNotFound(object errors) =>
+    throw new RestException(HttpStatusCode.NotFound, errors);
 }

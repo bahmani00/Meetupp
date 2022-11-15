@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Auth;
@@ -32,7 +31,7 @@ public static class SetMain {
       var photo = user.Photos.FirstOrDefault(x => x.Id == request.Id);
 
       if (photo == null)
-        throw new RestException(HttpStatusCode.NotFound, new { Photo = "Not found" });
+        RestException.ThrowNotFound(new { Photo = "Not found" });
 
       var currentMain = user.Photos.FirstOrDefault(x => x.IsMain);
 

@@ -1,5 +1,4 @@
 using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Auth;
@@ -28,7 +27,7 @@ public static class Unattend {
       var activity = await dbContext.Activities.FindItemAsync(request.Id, ct);
 
       if (activity == null)
-        throw new RestException(HttpStatusCode.NotFound, new { Activity = "Cound not find activity" });
+        RestException.ThrowNotFound(new { Activity = "Cound not find activity" });
 
       var user = await dbContext.Users.SingleOrDefaultAsync(x =>
           x.UserName == userAccessor.GetCurrentUsername(), ct);
@@ -41,7 +40,7 @@ public static class Unattend {
         return Unit.Value;
 
       if (attendance.IsHost)
-        throw new RestException(HttpStatusCode.BadRequest, new { Attendance = "You cannot remove yourself as host" });
+        RestException.ThrowBadRequest(new { Attendance = "You cannot remove yourself as host" });
 
       dbContext.UserActivities.Remove(attendance);
 

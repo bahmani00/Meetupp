@@ -1,5 +1,4 @@
 using System;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
@@ -28,7 +27,7 @@ public static class Details {
       var activity = await dbContext.Activities.FindItemAsync(request.Id, ct);
 
       if (activity == null)
-        throw new RestException(HttpStatusCode.NotFound, new { Activity = "Not found" });
+        RestException.ThrowNotFound(new { Activity = "Not found" });
 
       var activityToReturn = mapper.Map<Activity, ActivityDto>(activity);
 
