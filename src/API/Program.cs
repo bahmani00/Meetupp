@@ -185,10 +185,10 @@ void Configure() {
     app.UseHttpsRedirection();//Middleware to redirect HTTP requests to HTTPS
   }
 
-  //Configuring Content Type Options with the ‘nosniff’ option disables MIME-type sniffing
+  //Configuring Content Type Options with the �nosniff� option disables MIME-type sniffing
   // to prevent attacks where files are missing metadata: X-Content-Type-Options: nosniff
   app.UseXContentTypeOptions();
-  //exclude the ‘Referrer’ header, which can improve security in cases where 
+  //exclude the �Referrer� header, which can improve security in cases where 
   //the URL of the previous web page contains sensitive data.Referrer-Policy: no-referrer
   app.UseReferrerPolicy(opt => opt.NoReferrer());
   //enables the detection of XSS attacks: X-XSS-Protection: 1; mode=block
