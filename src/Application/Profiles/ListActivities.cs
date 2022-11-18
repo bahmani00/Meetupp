@@ -29,13 +29,16 @@ public static class ListActivities {
 
     public async Task<List<UserActivityDto>> Handle(Query request, CancellationToken ct) {
       var user = await dbContext.Users
-        //.AsNoTracking()
+        .AsNoTracking()
         .SingleOrDefaultAsync(x => x.UserName == request.Username, ct);
 
       if (user == null)
         RestException.ThrowNotFound(new { User = "Not found" });
 
-      var queryable = user.UserActivities
+      var queryable = dbContext.UserActivities
+        .AsNoTracking()
+        .Include(x => x.Activity)
+        .Where(x => x.AppUserId == user.Id)
         .OrderBy(a => a.Activity.Date)
         .AsQueryable();
 

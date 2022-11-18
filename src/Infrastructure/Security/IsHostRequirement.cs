@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Infrastructure.Security;
@@ -29,10 +30,13 @@ public class IsHostRequirementHandler : AuthorizationHandler<IsHostRequirement> 
         context.User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
 
     var activityId = httpContextAccessor.GetId();
-    var activity = await dbContext.Activities.FindAsync(activityId);
-    var host = activity.UserActivities.FirstOrDefault(x => x.IsHost);
+    var attendance = await dbContext.UserActivities
+      .Include(x => x.AppUser)
+      .FirstOrDefaultAsync(x => x.ActivityId == activityId && x.IsHost);
 
-    if (host?.AppUser?.UserName == currUserName)
+    //var host = activity.UserActivities.FirstOrDefault(x => x.IsHost);
+
+    if (attendance?.AppUser?.UserName == currUserName)
       context.Succeed(requirement);
   }
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Domain;
@@ -66,9 +67,20 @@ public class DataContext : IdentityDbContext<AppUser> {
           .OnDelete(DeleteBehavior.Restrict);
     });
   }
+
+  public async Task<AppUser> GetUserAsync(string userName, bool asTracking = false, CancellationToken ct = default) =>
+    await Users
+      .AsTracking(asTracking)
+      .Include(x => x.Followings)
+      .Include(x => x.Followers)
+      .Include(x => x.Photos)
+      .SingleOrDefaultAsync(x => x.UserName == userName, ct);
 }
 
 public static class DbSetExtensions {
   public static async ValueTask<T> FindItemAsync<T>(this DbSet<T> set, params object[] keyValues) where T : class =>
-      keyValues[^1] is CancellationToken ct ? await set.FindAsync(keyValues[0..^1], ct) : await set.FindAsync(keyValues);
+    keyValues[^1] is CancellationToken ct ? await set.FindAsync(keyValues[0..^1], ct) : await set.FindAsync(keyValues);
+
+  public static IQueryable<T> AsTracking<T>(this IQueryable<T> query, bool isTracked = false) where T : class =>
+    isTracked ? query.AsTracking() : query.AsNoTracking();
 }

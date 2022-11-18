@@ -51,9 +51,12 @@ public static class List {
 
     public async Task<ActivitiesEnvelope> Handle(Query request, CancellationToken ct) {
       var queryable = dbContext.Activities
-          .Where(x => x.Date >= request.StartDate)
-          .OrderBy(x => x.Date)
-          .AsQueryable();
+        .AsNoTracking()
+        .Include(x => x.Comments).ThenInclude(x => x.Author)
+        .Include(x => x.UserActivities).ThenInclude(x => x.AppUser).ThenInclude(x => x.Photos)
+        .Where(x => x.Date >= request.StartDate)
+        .OrderBy(x => x.Date)
+        .AsQueryable();
 
       if (request.IsGoing && !request.IsHost) {
         queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.UserName == userAccessor.GetCurrentUsername()));
@@ -68,7 +71,7 @@ public static class List {
           .Take(request.Limit ?? 3).ToListAsync(ct);
 
       return new ActivitiesEnvelope {
-        Activities = mapper.Map<List<Activity>, List<ActivityDto>>(activities),
+        Activities = mapper.Map<List<ActivityDto>>(activities),
         ActivityCount = queryable.Count()
       };
     }

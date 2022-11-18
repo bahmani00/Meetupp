@@ -12,14 +12,13 @@ using Persistence;
 namespace Application.Activities;
 
 public static class Create {
-  public class Command : IRequest<Guid> {
-    public ActivityDto Activity { get; set; }
+  public class Command : ActivityDto, IRequest<Guid> {
   }
 
   public class CommandValidator : AbstractValidator<Command> {
     public CommandValidator() {
-      RuleFor(x => x.Activity).SetValidator(new ActivityValidator());
-      RuleFor(x => x.Activity.Date).GreaterThan(DateTime.Now)
+      RuleFor(x => x).SetValidator(new ActivityValidator());
+      RuleFor(x => x.Date).GreaterThan(DateTime.Now)
        .WithMessage($"{nameof(Activity.Date)} should be greater than current time");
     }
   }
@@ -36,8 +35,7 @@ public static class Create {
     }
 
     public async Task<Guid> Handle(Command request, CancellationToken ct) {
-      var activity = new Activity();
-      mapper.Map(request.Activity, activity);
+      var activity = request.ToEntity();
 
       //Dont use AddSync
       dbContext.Activities.Add(activity);
@@ -50,7 +48,6 @@ public static class Create {
       dbContext.UserActivities.Add(attendee);
 
       var success = await dbContext.SaveChangesAsync(ct) > 0;
-
       if (success) return activity.Id;
 
       throw new Exception("Problem Adding changes");

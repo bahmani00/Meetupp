@@ -25,7 +25,11 @@ public static class List {
     }
 
     public async Task<List<Profile>> Handle(Query request, CancellationToken ct) {
-      var queryable = dbContext.Followings.AsQueryable();
+      var queryable = dbContext.Followings
+        .AsNoTracking()
+        .Include(x => x.Observer)
+        .Include(x => x.Target)
+        .AsQueryable();
 
       var profiles = new List<Profile>();
 

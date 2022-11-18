@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Application.Errors;
-using AutoMapper;
 using FluentValidation;
 using MediatR;
 using Persistence;
@@ -10,32 +9,28 @@ using Persistence;
 namespace Application.Activities;
 
 public static class Edit {
-  public class Command : IRequest {
-    public ActivityDto Activity { get; set; }
-  }
+  public class Command : ActivityDto, IRequest { }
 
   public class CommandValidator : AbstractValidator<Command> {
     public CommandValidator() {
-      RuleFor(x => x.Activity).SetValidator(new ActivityValidator());
+      RuleFor(x => x).SetValidator(new ActivityValidator());
     }
   }
 
   public class Handler : IRequestHandler<Command> {
     private readonly DataContext dbContext;
-    private readonly IMapper mapper;
 
-    public Handler(DataContext dbContext, IMapper mapper) {
+    public Handler(DataContext dbContext) {
       this.dbContext = dbContext;
-      this.mapper = mapper;
     }
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
-      var activity = await dbContext.Activities.FindItemAsync(request.Activity.Id, ct);
+      var activity = await dbContext.Activities.FindItemAsync(request.Id, ct);
 
       if (activity == null)
         RestException.ThrowNotFound(new { Activity = "Not found" });
 
-      mapper.Map(request.Activity, activity);
+      activity = request.ToEntityPartial(activity);
 
       var success = await dbContext.SaveChangesAsync(ct) > 0;
 

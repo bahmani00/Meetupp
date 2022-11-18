@@ -5,6 +5,7 @@ using Application.Errors;
 using AutoMapper;
 using Domain;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Activities;
@@ -24,7 +25,10 @@ public static class Details {
     }
 
     public async Task<ActivityDto> Handle(Query request, CancellationToken ct) {
-      var activity = await dbContext.Activities.FindItemAsync(request.Id, ct);
+      var activity = await dbContext.Activities
+        .Include(x => x.Comments).ThenInclude(x => x.Author).ThenInclude(x => x.Photos)
+        .Include(x => x.UserActivities).ThenInclude(x => x.AppUser).ThenInclude(x => x.Photos)
+        .SingleOrDefaultAsync(x => x.Id == request.Id, ct);
 
       if (activity == null)
         RestException.ThrowNotFound(new { Activity = "Not found" });

@@ -7,7 +7,8 @@ namespace Application.Activities;
 public class MappingProfile : Profile {
   public MappingProfile() {
     CreateMap<Activity, ActivityDto>();
-    CreateMap<ActivityDto, Activity>();
+
+    //CreateMap<ActivityDto, Activity>(MemberList.None);
 
     CreateMap<UserActivity, Profiles.UserActivityDto>()
         .ForMember(d => d.Id, o => o.MapFrom(s => s.Activity.Id))

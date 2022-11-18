@@ -29,15 +29,15 @@ public class ActivitiesController : BaseController {
 
   [HttpPut("{id}")]
   [Authorize(Policy = "IsHostCreatedActivity")]
-  public async Task<ActionResult<Unit>> Edit(Guid id, ActivityDto activity, CancellationToken ct) {
-    activity.Id = id;
-    return await Mediator.Send(new Edit.Command { Activity = activity }, ct);
+  public async Task<ActionResult<Unit>> Edit(Guid id, Edit.Command command, CancellationToken ct) {
+    command.Id = id;
+    return await Mediator.Send(command, ct);
   }
 
   [HttpPatch("{id}")]
-  public async Task<ActionResult<Unit>> EditPartial(Guid id, ActivityDto activity, CancellationToken ct) {
-    activity.Id = id;
-    return await Mediator.Send(new EditPartial.Command { Activity = activity }, ct);
+  public async Task<ActionResult<Unit>> EditPartial(Guid id, EditPartial.Command command, CancellationToken ct) {
+    command.Id = id;
+    return await Mediator.Send(command, ct);
   }
 
   [HttpDelete("{id}")]

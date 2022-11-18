@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Application.Auth;
 using Application.Errors;
-using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Profiles;
@@ -18,7 +17,7 @@ public class ProfileReader : IProfileReader {
   }
 
   public async Task<Profile> ReadProfileAsync(string username, CancellationToken ct) {
-    var user = await dbContext.Users.SingleOrDefaultAsync(x => x.UserName == username, ct);
+    var user = await dbContext.GetUserAsync(username, false, ct);
 
     if (user == null)
       RestException.ThrowNotFound(new { User = "Not found" });
@@ -33,9 +32,7 @@ public class ProfileReader : IProfileReader {
       FollowingCount = user.Followings.Count,
     };
 
-    var loggedInUser = await dbContext.Users
-      .SingleOrDefaultAsync(x => x.UserName == userAccessor.GetCurrentUsername(), ct);
-
+    var loggedInUser = await userAccessor.GetCurrentUserAsync(ct);
     if (loggedInUser.Followings.Any(x => x.TargetId == user.Id)) {
       profile.IsFollowed = true;
     }
