@@ -49,7 +49,7 @@ app.Run();
 
 void ConfigureServices() {
   // Configure JSON logging to the console.
-  builder.Logging.AddJsonConsole();
+  //builder.Logging.AddJsonConsole();
 
   builder.Services.AddApplicationServices(builder.Configuration, builder.Environment);
 
@@ -219,12 +219,22 @@ void Configure() {
   app.UseAuthentication();
   app.UseAuthorization();
 
-  app.MapHub<API.SignalR.ChatHub>("/chat", options => {
-  });
 
-  //app.UseEndpoints(endpoints => {
-  //  endpoints.MapHub<API.SignalR.ChatHub>("/chat");
-  //});
+  app.MapControllers();
+  app.MapHub<API.SignalR.ChatHub>("/chat", options => {
+    //https://scientificprogrammer.net/2022/09/28/advanced-signalr-configuration-fine-tuning-the-server-side-hub-and-all-supported-client-types/
+    //options.Transports =
+    //                HttpTransportType.WebSockets |
+    //                HttpTransportType.LongPolling;
+    //options.CloseOnAuthenticationExpiration = true;
+    //options.ApplicationMaxBufferSize = 65_536;
+    //options.TransportMaxBufferSize = 65_536;
+    //options.MinimumProtocolVersion = 0;
+    //options.TransportSendTimeout = TimeSpan.FromSeconds(10);
+    //options.WebSockets.CloseTimeout = TimeSpan.FromSeconds(3);
+    //options.LongPolling.PollTimeout = TimeSpan.FromSeconds(10);
+    //Console.WriteLine($"Authorization data items: {options.AuthorizationData.Count}");
+  });
 
   app.UseCors("CORSPolicy_React");
 
@@ -238,7 +248,7 @@ void Configure() {
     );
   });
 
-  //app.MapFallbackToFile("index.html"); ;
+  //app.MapSpaFallbackRoute(x => x.);
 
 }
 

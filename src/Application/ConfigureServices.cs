@@ -15,11 +15,11 @@ namespace Application;
 public static class ConfigureServices {
   public static IServiceCollection AddApplicationServices(
     this IServiceCollection services,
-    IConfiguration Configuration, 
+    IConfiguration Configuration,
     IWebHostEnvironment env) {
 
     services.AddDbContext<DataContext>(opt => {
-      opt.UseLazyLoadingProxies();
+      //opt.UseLazyLoadingProxies();
 
       if (env.IsDevelopment()) {
         opt.EnableSensitiveDataLogging();

@@ -19,7 +19,7 @@ public class UserController : BaseController {
     return await Mediator.Send(command, ct);
   }
 
-  [HttpGet("currUser")]
+  [HttpGet]
   public async Task<ActionResult<User>> CurrentUser(CancellationToken ct) {
     return await Mediator.Send(new CurrentUser.Query(), ct);
   }

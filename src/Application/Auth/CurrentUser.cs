@@ -22,7 +22,7 @@ public static class CurrentUser {
     }
 
     public async Task<User> Handle(Query request, CancellationToken ct) {
-      var user = await _userManager.FindByNameAsync(userAccessor.GetCurrentUsername());
+      var user = await userAccessor.GetCurrentUserAsync(ct);
 
       return new User {
         DisplayName = user.DisplayName,
