@@ -1,10 +1,6 @@
-using System;
 using System.Net;
-using System.Threading.Tasks;
 using Application.Errors;
 using Infrastructure;
-using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace API.Middleware;
