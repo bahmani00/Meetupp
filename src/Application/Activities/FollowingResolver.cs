@@ -1,4 +1,3 @@
-using System.Linq;
 using Application.Auth;
 using AutoMapper;
 using Domain;

@@ -1,6 +1,4 @@
-using System;
 using System.Text;
-using System.Threading.Tasks;
 using API.Middleware;
 using Application;
 using Application.Auth;
@@ -13,24 +11,16 @@ using Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Persistence;
 
-var webApplicationOptions = new WebApplicationOptions {
-  Args = args,
-};
 
-var builder = WebApplication.CreateBuilder(webApplicationOptions);
+var builder = WebApplication.CreateBuilder(args);
 ConfigureServices();
 
 builder.WebHost

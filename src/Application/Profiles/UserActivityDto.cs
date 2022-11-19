@@ -1,5 +1,3 @@
-using System;
-
 namespace Application.Profiles;
 
 public class UserActivityDto {

@@ -1,5 +1,3 @@
-using System.Threading;
-using System.Threading.Tasks;
 using Application.Photos;
 using Domain;
 using MediatR;

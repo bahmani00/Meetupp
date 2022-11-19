@@ -10,6 +10,7 @@
     <PackageProjectUrl>https://meetup.com/</PackageProjectUrl>
     
     <TargetFramework>net7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
 
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     <TreatWarningAsError>true</TreatWarningAsError>
