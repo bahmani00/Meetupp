@@ -16,11 +16,11 @@ public class UserActivity {
   public DateTime DateJoined { get; set; }
   public bool IsHost { get; set; }
 
-  public static UserActivity CreateHostActivity(AppUser user, Activity activity) =>
+  public static UserActivity Create(AppUser user, Activity activity, bool isHost = false) =>
     new() {
-      AppUser = user,
-      Activity = activity,
-      IsHost = true,
+      AppUserId = user.Id,
+      ActivityId = activity.Id,
+      IsHost = isHost,
       DateJoined = DateTime.Now
     };
 }

@@ -59,15 +59,15 @@ public static class Create {
     public async Task<CommentDto> Handle(Command request, CancellationToken ct) {
       // var activity = await dbContext.Activities.FindItemAsync(request.ActivityId, ct);
       // if (activity == null)
-      //     RestException.ThrowNotFound(new {Activity = "Not found"});
+      //     RestException.ThrowIfNotFound(new {Activity = "Not found"});
       var activity = (Activity)httpContextAccessor.HttpContext.Items[$"Activity_{request.ActivityId}"];
 
       //dont have access to IUserAccessor(HttpContext) as using SignalR(webSockets)
-      var user = await dbContext.Users.SingleOrDefaultAsync(x => x.UserName == request.Username, ct);
+      var user = await dbContext.GetUserAsync(request.Username, ct);
 
       var comment = new Comment {
-        Author = user,
-        Activity = activity,
+        AuthorId = user.Id,
+        ActivityId = activity.Id,
         Body = request.Body,
         CreatedAt = DateTime.Now
       };

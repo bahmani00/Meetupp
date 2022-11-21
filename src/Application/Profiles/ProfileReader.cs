@@ -1,6 +1,6 @@
 using Application.Auth;
-using Application.Errors;
 using Persistence;
+using static Application.Errors.RestException;
 
 namespace Application.Profiles;
 
@@ -14,26 +14,10 @@ public class ProfileReader : IProfileReader {
   }
 
   public async Task<Profile> ReadProfileAsync(string username, CancellationToken ct) {
-    var user = await dbContext.GetUserAsync(username, false, ct);
+    var user = await dbContext.GetUserProfileAsync(username, ct);
+    ThrowIfNotFound(user, new { User = "Not found" });
 
-    if (user == null)
-      RestException.ThrowNotFound(new { User = "Not found" });
-
-    var profile = new Profile {
-      DisplayName = user.DisplayName,
-      Username = user.UserName,
-      Image = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
-      Photos = user.Photos,
-      Bio = user.Bio,
-      FollowersCount = user.Followers.Count,
-      FollowingCount = user.Followings.Count,
-    };
-
-    var loggedInUser = await userAccessor.GetCurrentUserAsync(ct);
-    if (loggedInUser.Followings.Any(x => x.TargetId == user.Id)) {
-      profile.IsFollowed = true;
-    }
-
-    return profile;
+    var loggedInUser = await userAccessor.GetCurrUserAsync(ct);
+    return Profile.From(user, loggedInUser);
   }
 }

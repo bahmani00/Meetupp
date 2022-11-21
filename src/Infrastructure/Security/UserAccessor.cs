@@ -15,14 +15,14 @@ public class UserAccessor : IUserAccessor {
     this.httpContext = httpContextAccessor.HttpContext;
   }
 
-  public string GetCurrentUsername() {
+  public string GetCurrUsername() {
     return httpContext.User?.Claims?
       .FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
   }
 
-  public async Task<AppUser> GetCurrentUserAsync(CancellationToken ct) {
+  public async Task<AppUser> GetCurrUserAsync(CancellationToken ct) {
     httpContext.Items["loggedInUser"] ??=
-      await dbContext.GetUserAsync(GetCurrentUsername(), false, ct);
+      await dbContext.GetUserProfileAsync(GetCurrUsername(), ct);
 
     return httpContext.Items["loggedInUser"] as AppUser;
   }
