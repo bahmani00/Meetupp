@@ -10,6 +10,6 @@ public class PhotoUploadResult {
     new() {
       Url = this.Url,
       Id = this.PublicId,
-      IsMain = !user.Photos.Any(x => x.IsMain);
+      IsMain = !user.Photos.Any(x => x.IsMain)
     };
 }
