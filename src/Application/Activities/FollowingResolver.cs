@@ -12,5 +12,5 @@ public class FollowingResolver : IValueResolver<UserActivity, AttendeeDto, bool>
   }
 
   public bool Resolve(UserActivity source, AttendeeDto destination, bool destMember, ResolutionContext context) =>
-    userAccessor.GetCurrentUserAsync().Result.Followings.Any(x => x.TargetId == source.AppUserId);
+    userAccessor.GetCurrUserAsync().Result.Followings.Any(x => x.TargetId == source.AppUserId);
 }

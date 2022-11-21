@@ -1,9 +1,9 @@
-using Application.Errors;
 using AutoMapper;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using static Application.Errors.RestException;
 
 namespace Application.Activities;
 
@@ -27,8 +27,7 @@ public static class Details {
         .Include(x => x.UserActivities).ThenInclude(x => x.AppUser).ThenInclude(x => x.Photos)
         .SingleOrDefaultAsync(x => x.Id == request.Id, ct);
 
-      if (activity == null)
-        RestException.ThrowNotFound(new { Activity = "Not found" });
+      ThrowIfNotFound(activity, new { Activity = "Not found" });
 
       var activityToReturn = mapper.Map<Activity, ActivityDto>(activity);
 

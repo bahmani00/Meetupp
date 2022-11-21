@@ -28,7 +28,7 @@ public static class Edit {
     }
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
-      var user = await dbContext.Users.SingleOrDefaultAsync(x => x.UserName == userAccessor.GetCurrentUsername(), ct);
+      var user = await dbContext.GetUserAsync(userAccessor.GetCurrUsername(), ct, true);
 
       user.DisplayName = request.DisplayName ?? user.DisplayName;
       user.Bio = request.Bio ?? user.Bio;

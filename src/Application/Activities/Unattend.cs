@@ -1,8 +1,8 @@
 using Application.Auth;
-using Application.Errors;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using static Application.Errors.RestException;
 
 namespace Application.Activities;
 
@@ -22,12 +22,9 @@ public static class Unattend {
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
       var activity = await dbContext.Activities.FindItemAsync(request.Id, ct);
+      ThrowIfNotFound(activity, new { Activity = "Not found" });
 
-      if (activity == null)
-        RestException.ThrowNotFound(new { Activity = "Cound not find activity" });
-
-      var user = await dbContext.Users.SingleOrDefaultAsync(x =>
-          x.UserName == userAccessor.GetCurrentUsername(), ct);
+      var user = await userAccessor.GetCurrUserAsync();
 
       var attendance = await dbContext.UserActivities
           .SingleOrDefaultAsync(x => x.ActivityId == activity.Id &&
@@ -36,8 +33,7 @@ public static class Unattend {
       if (attendance == null)
         return Unit.Value;
 
-      if (attendance.IsHost)
-        RestException.ThrowBadRequest(new { Attendance = "You cannot remove yourself as host" });
+      ThrowIfBadRequest(attendance.IsHost, new { Attendance = "You cannot remove yourself as host" });
 
       dbContext.UserActivities.Remove(attendance);
 

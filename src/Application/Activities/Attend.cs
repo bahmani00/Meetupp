@@ -1,9 +1,9 @@
 using Application.Auth;
-using Application.Errors;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using static Application.Errors.RestException;
 
 namespace Application.Activities;
 
@@ -22,28 +22,16 @@ public static class Attend {
     }
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
-      var activity = await dbContext.Activities.FindItemAsync(request.Id, ct);
+      var activity = await dbContext.Activities.SingleOrDefaultAsync(x => x.Id == request.Id, ct);
+      ThrowIfNotFound(activity, new { Activity = "Not found" });
 
-      if (activity == null)
-        RestException.ThrowNotFound(new { Activity = "Cound not find activity" });
-
-      var user = await dbContext.Users.SingleOrDefaultAsync(x =>
-          x.UserName == userAccessor.GetCurrentUsername(), ct);
+      var user = await userAccessor.GetCurrUserAsync();
 
       var attendance = await dbContext.UserActivities
-          .SingleOrDefaultAsync(x => x.ActivityId == activity.Id &&
-              x.AppUserId == user.Id, ct);
+        .SingleOrDefaultAsync(x => x.ActivityId == activity.Id && x.AppUserId == user.Id, ct);
+      ThrowIfBadRequest(attendance != null, new { Attendance = "Already attending this activity" });
 
-      if (attendance != null) {
-        RestException.ThrowBadRequest(new { Attendance = "Already attending this activity" });
-      }
-
-      attendance = new UserActivity {
-        Activity = activity,
-        AppUser = user,
-        IsHost = false,
-        DateJoined = DateTime.Now
-      };
+      attendance = UserActivity.Create(user, activity);
 
       dbContext.UserActivities.Add(attendance);
 

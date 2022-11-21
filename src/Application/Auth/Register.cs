@@ -1,10 +1,10 @@
-using Application.Errors;
 using Domain;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using static Application.Errors.RestException;
 
 namespace Application.Auth;
 
@@ -37,11 +37,9 @@ public static class Register {
     }
 
     public async Task<User> Handle(Command request, CancellationToken ct) {
-      if (await dbContext.Users.Where(x => x.Email == request.Email).AnyAsync(ct))
-        RestException.ThrowBadRequest(new { Email = "Email already exists" });
-
-      if (await dbContext.Users.Where(x => x.UserName == request.Username).AnyAsync(ct))
-        RestException.ThrowBadRequest(new { Username = "Username already exists" });
+      var exists = await dbContext.Users
+        .AnyAsync(x => x.Email == request.Email || x.UserName == request.Username, ct);
+      ThrowIfBadRequest(exists, new { Email = "Email or Username already exists" });
 
       var user = new AppUser {
         DisplayName = request.DisplayName,

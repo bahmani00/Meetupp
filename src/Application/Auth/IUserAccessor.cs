@@ -4,7 +4,7 @@ namespace Application.Auth;
 
 public interface IUserAccessor {
 
-  string GetCurrentUsername();
+  string GetCurrUsername();
 
-  Task<AppUser> GetCurrentUserAsync(CancellationToken ct = default);
+  Task<AppUser> GetCurrUserAsync(CancellationToken ct = default);
 }

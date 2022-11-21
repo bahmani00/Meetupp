@@ -1,5 +1,4 @@
 using Application.Auth;
-using AutoMapper;
 using Domain;
 using FluentValidation;
 using MediatR;
@@ -23,12 +22,10 @@ public static class Create {
   public class Handler : IRequestHandler<Command, Guid> {
     private readonly DataContext dbContext;
     private readonly IUserAccessor userAccessor;
-    private readonly IMapper mapper;
 
-    public Handler(DataContext dbContext, IUserAccessor userAccessor, IMapper mapper) {
+    public Handler(DataContext dbContext, IUserAccessor userAccessor) {
       this.dbContext = dbContext;
       this.userAccessor = userAccessor;
-      this.mapper = mapper;
     }
 
     public async Task<Guid> Handle(Command request, CancellationToken ct) {
@@ -37,10 +34,8 @@ public static class Create {
       //Dont use AddSync
       dbContext.Activities.Add(activity);
 
-      var user = await dbContext.Users.SingleOrDefaultAsync(x =>
-          x.UserName == userAccessor.GetCurrentUsername(), ct);
-
-      var attendee = UserActivity.CreateHostActivity(user, activity);
+      var user = await userAccessor.GetCurrUserAsync();
+      var attendee = UserActivity.Create(user, activity, true);
 
       dbContext.UserActivities.Add(attendee);
 
