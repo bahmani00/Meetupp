@@ -47,18 +47,18 @@ public static class List {
     public async Task<ActivitiesEnvelope> Handle(Query request, CancellationToken ct) {
       var queryable = dbContext.Activities
         .AsNoTracking()
-        .Include(x => x.Comments).ThenInclude(x => x.Author)
+        .Include(x => x.Comments).ThenInclude(x => x.Author).ThenInclude(x => x.Photos)
         .Include(x => x.UserActivities).ThenInclude(x => x.AppUser).ThenInclude(x => x.Photos)
         .Where(x => x.Date >= request.StartDate)
         .OrderBy(x => x.Date)
         .AsQueryable();
 
       if (request.IsGoing && !request.IsHost) {
-        queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.UserName == userAccessor.GetCurrentUsername()));
+        queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.UserName == userAccessor.GetCurrUsername()));
       }
 
       if (request.IsHost && !request.IsGoing) {
-        queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.UserName == userAccessor.GetCurrentUsername() && a.IsHost));
+        queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.UserName == userAccessor.GetCurrUsername() && a.IsHost));
       }
 
       var activities = await queryable
