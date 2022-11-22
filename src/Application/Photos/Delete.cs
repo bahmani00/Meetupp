@@ -1,9 +1,9 @@
 using Application.Auth;
-using Application.Errors;
 using Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using static Application.Errors.RestException;
 
 namespace Application.Photos;
 
@@ -24,19 +24,17 @@ public static class Delete {
     }
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
-      var user = await dbContext.Users.SingleOrDefaultAsync(x => x.UserName == userAccessor.GetCurrentUsername(), ct);
+      var user = await dbContext.Users
+        .Include(x => x.Photos)
+        .SingleOrDefaultAsync(x => x.UserName == userAccessor.GetCurrUsername(), ct);
 
       var photo = user.Photos.FirstOrDefault(x => x.Id == request.Id);
-
-      if (photo == null)
-        RestException.ThrowNotFound(new { Photo = "Not found" });
-
-      if (photo.IsMain)
-        RestException.ThrowBadRequest(new { Photo = "You cannot delete your main photo" });
+      ThrowIfNotFound(photo, new { Photo = "Not found" });
+      ThrowIfBadRequest(photo.IsMain, new { Photo = "You cannot delete your main photo" });
 
       var result = photoAccessor.DeletePhoto(photo.Id);
       if (result == null)
-        throw new Exception("Problem deleting photo");
+        throw new Exception($"Problem deleting photo from {photoAccessor.Provider}");
 
       user.Photos.Remove(photo);
 

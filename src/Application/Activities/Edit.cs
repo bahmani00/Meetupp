@@ -1,7 +1,7 @@
-using Application.Errors;
 using FluentValidation;
 using MediatR;
 using Persistence;
+using static Application.Errors.RestException;
 
 namespace Application.Activities;
 
@@ -23,9 +23,7 @@ public static class Edit {
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
       var activity = await dbContext.Activities.FindItemAsync(request.Id, ct);
-
-      if (activity == null)
-        RestException.ThrowNotFound(new { Activity = "Not found" });
+      ThrowIfNotFound(activity, new { Activity = "Not found" });
 
       activity = request.ToEntityPartial(activity);
 

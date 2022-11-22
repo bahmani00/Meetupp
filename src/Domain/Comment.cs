@@ -10,6 +10,7 @@ public class Comment {
   public string AuthorId { get; set; }
   public virtual AppUser Author { get; set; }
 
+  public Guid ActivityId { get; set; }
   public virtual Activity Activity { get; set; }
   public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

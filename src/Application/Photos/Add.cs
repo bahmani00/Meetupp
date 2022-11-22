@@ -9,7 +9,7 @@ using Persistence;
 namespace Application.Photos;
 
 public static class Add {
-  public class Command : IRequest<Domain.Photo> {
+  public class Command : IRequest<Photo> {
     public IFormFile File { get; set; }
   }
 
@@ -27,16 +27,11 @@ public static class Add {
     public async Task<Photo> Handle(Command request, CancellationToken ct) {
       var photoUploadResult = photoAccessor.AddPhoto(request.File);
 
-      var user = await dbContext.Users.SingleOrDefaultAsync(x => x.UserName == userAccessor.GetCurrentUsername(), ct);
+      var user = await dbContext.Users
+        .Include(x => x.Photos)
+        .SingleOrDefaultAsync(x => x.UserName == userAccessor.GetCurrUsername(), ct);
 
-      var photo = new Photo {
-        Url = photoUploadResult.Url,
-        Id = photoUploadResult.PublicId
-      };
-
-      if (!user.Photos.Any(x => x.IsMain))
-        photo.IsMain = true;
-
+      var photo = photoUploadResult.ToEntity(user);
       user.Photos.Add(photo);
 
       var success = await dbContext.SaveChangesAsync(ct) > 0;

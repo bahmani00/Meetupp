@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <!-- <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" /> -->
   <PropertyGroup>
+    <ImplicitUsings>disable</ImplicitUsings>
     <AnalysisMode>None</AnalysisMode>
   </PropertyGroup>
 

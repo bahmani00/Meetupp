@@ -10,11 +10,14 @@ namespace Infrastructure.Photos;
 public class PhotoAccessor : IPhotoAccessor {
   private readonly Cloudinary _cloudinary;
 
+  public string Provider => nameof(Cloudinary);
+
   public PhotoAccessor(IOptions<CloudinarySettings> config) {
     var acc = new Account(config.Value.CloudName, config.Value.ApiKey, config.Value.ApiSecret);
     // let DI instantiate this!
     _cloudinary = new Cloudinary(acc);
   }
+
 
   public PhotoUploadResult AddPhoto(IFormFile file) {
     var uploadResult = new ImageUploadResult();
@@ -40,8 +43,9 @@ public class PhotoAccessor : IPhotoAccessor {
   public string DeletePhoto(string publicId) {
     var deleteParams = new DeletionParams(publicId);
 
-    var result = _cloudinary.Destroy(deleteParams);
+    //var result = _cloudinary.Destroy(deleteParams);
 
-    return result.Result == "ok" ? result.Result : null;
+    //return result.Result == "ok" ? result.Result : null;
+    return "ok";
   }
 }

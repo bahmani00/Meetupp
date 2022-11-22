@@ -1,9 +1,9 @@
-using Application.Errors;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using static Application.Errors.RestException;
 
 namespace Application.Profiles;
 
@@ -23,12 +23,8 @@ public static class ListActivities {
     }
 
     public async Task<List<UserActivityDto>> Handle(Query request, CancellationToken ct) {
-      var user = await dbContext.Users
-        .AsNoTracking()
-        .SingleOrDefaultAsync(x => x.UserName == request.Username, ct);
-
-      if (user == null)
-        RestException.ThrowNotFound(new { User = "Not found" });
+      var user = await dbContext.GetUserAsync(request.Username, ct);
+      ThrowIfNotFound(user, new { User = "Not found" });
 
       var queryable = dbContext.UserActivities
         .AsNoTracking()

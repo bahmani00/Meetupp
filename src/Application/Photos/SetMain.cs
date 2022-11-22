@@ -1,8 +1,8 @@
 using Application.Auth;
-using Application.Errors;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using static Application.Errors.RestException;
 
 namespace Application.Photos;
 
@@ -22,12 +22,11 @@ public static class SetMain {
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
       var user = await dbContext.Users
-        .SingleOrDefaultAsync(x => x.UserName == userAccessor.GetCurrentUsername(), ct);
+        .Include(x => x.Photos)
+        .SingleOrDefaultAsync(x => x.UserName == userAccessor.GetCurrUsername(), ct);
 
       var photo = user.Photos.FirstOrDefault(x => x.Id == request.Id);
-
-      if (photo == null)
-        RestException.ThrowNotFound(new { Photo = "Not found" });
+      ThrowIfNotFound(photo, new { Photo = "Not found" });
 
       var currentMain = user.Photos.FirstOrDefault(x => x.IsMain);
 

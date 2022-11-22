@@ -1,8 +1,8 @@
 using Application.Auth;
-using Application.Errors;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using static Application.Errors.RestException;
 
 namespace Application.Followers;
 
@@ -21,17 +21,13 @@ public static class Delete {
     }
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
-      var observer = await dbContext.Users.SingleOrDefaultAsync(x => x.UserName == userAccessor.GetCurrentUsername(), ct);
+      var observer = await userAccessor.GetCurrUserAsync();
 
-      var target = await dbContext.Users.SingleOrDefaultAsync(x => x.UserName == request.Username, ct);
-
-      if (target == null)
-        RestException.ThrowNotFound(new { User = "Not found" });
+      var target = await dbContext.GetUserAsync(request.Username, ct);
+      ThrowIfNotFound(target, new { User = "Not found" });
 
       var following = await dbContext.Followings.SingleOrDefaultAsync(x => x.ObserverId == observer.Id && x.TargetId == target.Id, ct);
-
-      if (following == null)
-        RestException.ThrowBadRequest(new { User = "You are not following this user" });
+      ThrowIfBadRequest(following == null, new { User = "You are not following this user" });
 
       dbContext.Followings.Remove(following);
       var success = await dbContext.SaveChangesAsync(ct) > 0;
