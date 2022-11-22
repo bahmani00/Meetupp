@@ -1,3 +1,4 @@
+using Application.Auth;
 using AutoMapper;
 using Domain;
 using FluentValidation;
@@ -5,6 +6,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using static Application.Errors.RestException;
 
 namespace Application.Comments;
 
@@ -33,13 +35,12 @@ public static class Create {
     }
 
     private bool ExistsInDatabase(Guid activityId) {
-      var activity = dbContext.Activities.Find(activityId);
+      // var activity = dbContext.Activities.Find(activityId);
 
-      if (activity == null)
-        return false;
+      // if (activity == null)
+      //   return false;
 
-      httpContextAccessor.HttpContext.Items[$"Activity_{activityId}"] = activity;
-
+      // httpContextAccessor.HttpContext.Items[$"Activity_{activityId}"] = activity;
 
       return true;
     }
@@ -57,17 +58,20 @@ public static class Create {
     }
 
     public async Task<CommentDto> Handle(Command request, CancellationToken ct) {
-      // var activity = await dbContext.Activities.FindItemAsync(request.ActivityId, ct);
-      // if (activity == null)
-      //     RestException.ThrowIfNotFound(new {Activity = "Not found"});
-      var activity = (Activity)httpContextAccessor.HttpContext.Items[$"Activity_{request.ActivityId}"];
+      var activity = await dbContext.Activities
+        .Include(x => x.Comments)
+        .SingleOrDefaultAsync(x => x.Id == request.ActivityId, ct);
+      ThrowIfNotFound(activity, new { Activity = "Not found"});
 
       //dont have access to IUserAccessor(HttpContext) as using SignalR(webSockets)
-      var user = await dbContext.GetUserAsync(request.Username, ct);
+      var user = await dbContext.Users
+        .Include(x => x.Photos)
+        .SingleOrDefaultAsync(x => x.UserName == request.Username, ct);
 
       var comment = new Comment {
         AuthorId = user.Id,
-        ActivityId = activity.Id,
+        Author = user,
+        ActivityId = request.ActivityId,
         Body = request.Body,
         CreatedAt = DateTime.Now
       };
