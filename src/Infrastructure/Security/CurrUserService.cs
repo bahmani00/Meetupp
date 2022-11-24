@@ -20,7 +20,6 @@ public class CurrUserService : ICurrUserService {
   public async Task<AppUser> GetCurrUserAsync(CancellationToken ct) {
     httpContext.Items["loggedInUser"] ??=
       await dbContext.GetUserProfileAsync(UserId, ct);
-
     return httpContext.Items["loggedInUser"] as AppUser;
   }
 }
