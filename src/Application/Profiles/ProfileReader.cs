@@ -6,18 +6,18 @@ namespace Application.Profiles;
 
 public class ProfileReader : IProfileReader {
   private readonly DataContext dbContext;
-  private readonly IUserAccessor userAccessor;
+  private readonly ICurrUserService currUserService;
 
-  public ProfileReader(DataContext dbContext, IUserAccessor userAccessor) {
+  public ProfileReader(DataContext dbContext, ICurrUserService currUserService) {
     this.dbContext = dbContext;
-    this.userAccessor = userAccessor;
+    this.currUserService = currUserService;
   }
 
   public async Task<Profile> ReadProfileAsync(string username, CancellationToken ct) {
     var user = await dbContext.GetUserProfileAsync(username, ct);
     ThrowIfNotFound(user, new { User = "Not found" });
 
-    var loggedInUser = await userAccessor.GetCurrUserAsync(ct);
+    var loggedInUser = await currUserService.GetCurrUserAsync(ct);
     return Profile.From(user, loggedInUser);
   }
 }

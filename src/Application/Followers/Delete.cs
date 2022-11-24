@@ -13,15 +13,15 @@ public static class Delete {
 
   public class Handler : IRequestHandler<Command> {
     private readonly DataContext dbContext;
-    private readonly IUserAccessor userAccessor;
+    private readonly ICurrUserService currUserService;
 
-    public Handler(DataContext dbContext, IUserAccessor userAccessor) {
+    public Handler(DataContext dbContext, ICurrUserService currUserService) {
       this.dbContext = dbContext;
-      this.userAccessor = userAccessor;
+      this.currUserService = currUserService;
     }
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
-      var observer = await userAccessor.GetCurrUserAsync();
+      var observer = await currUserService.GetCurrUserAsync();
 
       var target = await dbContext.GetUserAsync(request.Username, ct);
       ThrowIfNotFound(target, new { User = "Not found" });

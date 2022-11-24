@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using API.Middleware;
 using Application;
@@ -5,6 +6,7 @@ using Application.Auth;
 using Application.Interfaces;
 using Application.Profiles;
 using Domain;
+using FluentValidation;
 using Infrastructure;
 using Infrastructure.Photos;
 using Infrastructure.Security;
@@ -90,6 +92,7 @@ void ConfigureServices() {
   ));
 
   builder.Services.AddSignalR();
+
   builder.Services.AddMvc(opt => {
     opt.EnableEndpointRouting = false;
     var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
@@ -154,10 +157,12 @@ void ConfigureIdentityServices(IServiceCollection services) {
     });
 
   services.AddScoped<IJwtGenerator, JwtGenerator>();
-  services.AddScoped<IUserAccessor, UserAccessor>();
+  services.AddScoped<ICurrUserService, CurrUserService>();
 }
 
 void Configure() {
+  ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("fr");
+
   app.UseMiddleware<ErrorHandlingMiddleware>();
 
   app.UseSwagger();
@@ -208,25 +213,30 @@ void Configure() {
   //Authentication vs. Authorization
   app.UseAuthentication();
   app.UseAuthorization();
+  app.UseCors("CORSPolicy_React");
 
-
-  app.MapControllers();
-  app.MapHub<API.SignalR.ChatHub>("/chat", options => {
-    //https://scientificprogrammer.net/2022/09/28/advanced-signalr-configuration-fine-tuning-the-server-side-hub-and-all-supported-client-types/
-    //options.Transports =
-    //                HttpTransportType.WebSockets |
-    //                HttpTransportType.LongPolling;
-    //options.CloseOnAuthenticationExpiration = true;
-    //options.ApplicationMaxBufferSize = 65_536;
-    //options.TransportMaxBufferSize = 65_536;
-    //options.MinimumProtocolVersion = 0;
-    //options.TransportSendTimeout = TimeSpan.FromSeconds(10);
-    //options.WebSockets.CloseTimeout = TimeSpan.FromSeconds(3);
-    //options.LongPolling.PollTimeout = TimeSpan.FromSeconds(10);
-    //Console.WriteLine($"Authorization data items: {options.AuthorizationData.Count}");
+  app.UseEndpoints(endpoints => {
+    endpoints.MapControllers();
+    endpoints.MapHub<API.SignalR.ChatHub>("/chat");
   });
 
-  app.UseCors("CORSPolicy_React");
+
+  //app.MapControllers();
+  //app.MapHub<API.SignalR.ChatHub>("/chat", options => {
+  ////https://scientificprogrammer.net/2022/09/28/advanced-signalr-configuration-fine-tuning-the-server-side-hub-and-all-supported-client-types/
+  ////  options.Transports =
+  ////                  HttpTransportType.WebSockets |
+  ////                  HttpTransportType.LongPolling;
+  ////  options.CloseOnAuthenticationExpiration = true;
+  ////  options.ApplicationMaxBufferSize = 65_536;
+  ////  options.TransportMaxBufferSize = 65_536;
+  ////  options.MinimumProtocolVersion = 0;
+  ////  options.TransportSendTimeout = TimeSpan.FromSeconds(10);
+  ////  options.WebSockets.CloseTimeout = TimeSpan.FromSeconds(3);
+  ////  options.LongPolling.PollTimeout = TimeSpan.FromSeconds(10);
+  ////  Console.WriteLine($"Authorization data items: {options.AuthorizationData.Count}");
+  //});
+
 
   app.UseMvc(routes => {
     //when it's not /chat or api endpoints go to:
@@ -239,7 +249,6 @@ void Configure() {
   });
 
   //app.MapSpaFallbackRoute(x => x.);
-
 }
 
 async Task RunMigrationAndSeeder() {

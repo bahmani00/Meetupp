@@ -3,6 +3,10 @@ root = true
 
 # C# files
 [*.cs]
+dotnet_diagnostic.IDE0001.severity = none
+dotnet_diagnostic.IDE0002.severity = none
+dotnet_diagnostic.IDE0049.severity = none   
+
 # Convert all *.cs files to unicode in VisualStudio
 charset = utf-8
 

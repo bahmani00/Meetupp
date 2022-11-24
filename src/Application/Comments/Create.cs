@@ -18,64 +18,62 @@ public static class Create {
 
   public class CommandValidator : AbstractValidator<Command> {
     private readonly DataContext dbContext;
-    private readonly IHttpContextAccessor httpContextAccessor;
+    private readonly HttpContext httpContext;
 
     public CommandValidator(DataContext dbContext, IHttpContextAccessor httpContextAccessor) {
       this.dbContext = dbContext;
-      this.httpContextAccessor = httpContextAccessor;
+      this.httpContext = httpContextAccessor.HttpContext;
 
       RuleFor(x => x.ActivityId).Cascade(CascadeMode.Stop)
-          .NotNull().WithMessage("ActivityId can not be null")
-          .NotEmpty().WithMessage("ActivityId can not be empty")
-          .Must(ExistsInDatabase).WithMessage("The activity does not exists");
-      RuleFor(x => x.Username).NotEmpty();
+          .NotEmpty()
+          .Must(ActivityExistsInDb).WithMessage("Activity not found");
+      RuleFor(x => x.Username).Cascade(CascadeMode.Stop)
+        .NotEmpty()
+        .Must(UserExistsInDb).WithMessage("User not found");
       RuleFor(x => x.Body).NotEmpty();
     }
 
-    private bool ExistsInDatabase(Guid activityId) {
-      var activity = dbContext.Activities.Find(activityId);
+    private bool ActivityExistsInDb(Guid activityId) =>
+      dbContext.Activities.Find(activityId) != null;
 
-      if (activity == null)
-        return false;
+    private bool UserExistsInDb(string username) {
+      //dont have access to ICurrUserService(HttpContext) as using SignalR(webSockets)
+      var user = dbContext.Users
+        .AsNoTracking()
+        .Include(x => x.Photos)
+        .SingleOrDefault(x => x.UserName == username);
 
-      httpContextAccessor.HttpContext.Items[$"Activity_{activityId}"] = activity;
+      httpContext.Items[$"user_{username}"] = user;
 
-
-      return true;
+      return user != null;
     }
   }
 
   public class Handler : IRequestHandler<Command, CommentDto> {
     private readonly DataContext dbContext;
     private readonly IMapper mapper;
-    private readonly IHttpContextAccessor httpContextAccessor;
+    private readonly HttpContext httpContext;
 
     public Handler(DataContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
       this.dbContext = dbContext;
       this.mapper = mapper;
-      this.httpContextAccessor = httpContextAccessor;
+      this.httpContext = httpContextAccessor.HttpContext;
     }
 
     public async Task<CommentDto> Handle(Command request, CancellationToken ct) {
-      // var activity = await dbContext.Activities.FindItemAsync(request.ActivityId, ct);
-      // if (activity == null)
-      //     RestException.ThrowIfNotFound(new {Activity = "Not found"});
-      var activity = (Activity)httpContextAccessor.HttpContext.Items[$"Activity_{request.ActivityId}"];
-
-      //dont have access to IUserAccessor(HttpContext) as using SignalR(webSockets)
-      var user = await dbContext.GetUserAsync(request.Username, ct);
+      var user = (AppUser)httpContext.Items[$"user_{request.Username}"];
 
       var comment = new Comment {
         AuthorId = user.Id,
-        ActivityId = activity.Id,
+        ActivityId = request.ActivityId,
         Body = request.Body,
         CreatedAt = DateTime.Now
       };
 
-      activity.Comments.Add(comment);
+      dbContext.Comments.Add(comment);
 
       var success = await dbContext.SaveChangesAsync(ct) > 0;
-
+      comment.Author = user;
       if (success) return mapper.Map<CommentDto>(comment);
 
       throw new Exception("Problem adding comment");

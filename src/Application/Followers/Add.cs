@@ -14,15 +14,15 @@ public static class Add {
 
   public class Handler : IRequestHandler<Command> {
     private readonly DataContext dbContext;
-    private readonly IUserAccessor userAccessor;
+    private readonly ICurrUserService currUserService;
 
-    public Handler(DataContext dbContext, IUserAccessor userAccessor) {
-      this.userAccessor = userAccessor;
+    public Handler(DataContext dbContext, ICurrUserService currUserService) {
+      this.currUserService = currUserService;
       this.dbContext = dbContext;
     }
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
-      var observer = await userAccessor.GetCurrUserAsync();
+      var observer = await currUserService.GetCurrUserAsync();
 
       var target = await dbContext.GetUserAsync(request.Username, ct);
       ThrowIfNotFound(target, new { User = "Not found" });

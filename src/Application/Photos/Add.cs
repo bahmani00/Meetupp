@@ -15,13 +15,13 @@ public static class Add {
 
   public class Handler : IRequestHandler<Command, Photo> {
     private readonly DataContext dbContext;
-    private readonly IUserAccessor userAccessor;
+    private readonly ICurrUserService currUserService;
     private readonly IPhotoAccessor photoAccessor;
 
-    public Handler(DataContext dbContext, IUserAccessor userAccessor, IPhotoAccessor photoAccessor) {
+    public Handler(DataContext dbContext, ICurrUserService currUserService, IPhotoAccessor photoAccessor) {
       this.dbContext = dbContext;
       this.photoAccessor = photoAccessor;
-      this.userAccessor = userAccessor;
+      this.currUserService = currUserService;
     }
 
     public async Task<Photo> Handle(Command request, CancellationToken ct) {
@@ -29,7 +29,7 @@ public static class Add {
 
       var user = await dbContext.Users
         .Include(x => x.Photos)
-        .SingleOrDefaultAsync(x => x.UserName == userAccessor.GetCurrUsername(), ct);
+        .SingleOrDefaultAsync(x => x.UserName == currUserService.UserId, ct);
 
       var photo = photoUploadResult.ToEntity(user);
       user.Photos.Add(photo);

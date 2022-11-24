@@ -30,7 +30,7 @@ const ProfileDescription = () => {
           {editMode ? (
             <ProfileEditForm updateProfile={updateProfile} profile={profile!} />
           ) : (
-            <span>{profile!.bio}</span>
+            <div dangerouslySetInnerHTML={{ __html: profile!.bio }} />
           )}
         </Grid.Column>
       </Grid>

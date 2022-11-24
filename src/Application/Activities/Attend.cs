@@ -14,24 +14,22 @@ public static class Attend {
 
   public class Handler : IRequestHandler<Command> {
     private readonly DataContext dbContext;
-    private readonly IUserAccessor userAccessor;
+    private readonly ICurrUserService currUserService;
 
-    public Handler(DataContext dbContext, IUserAccessor userAccessor) {
+    public Handler(DataContext dbContext, ICurrUserService currUserService) {
       this.dbContext = dbContext;
-      this.userAccessor = userAccessor;
+      this.currUserService = currUserService;
     }
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
       var activity = await dbContext.Activities.SingleOrDefaultAsync(x => x.Id == request.Id, ct);
       ThrowIfNotFound(activity, new { Activity = "Not found" });
 
-      var user = await userAccessor.GetCurrUserAsync();
-
       var attendance = await dbContext.UserActivities
-        .SingleOrDefaultAsync(x => x.ActivityId == activity.Id && x.AppUserId == user.Id, ct);
+        .SingleOrDefaultAsync(x => x.ActivityId == activity.Id && x.AppUserId == currUserService.UserId, ct);
       ThrowIfBadRequest(attendance != null, new { Attendance = "Already attending this activity" });
 
-      attendance = UserActivity.Create(user, activity);
+      attendance = UserActivity.Create(currUserService.UserId, activity.Id);
 
       dbContext.UserActivities.Add(attendance);
 
