@@ -134,13 +134,13 @@ export default class ActivityStore {
     this.loadingInitial = true;
     try {
       const activitiesEnvelope = await agent.Activities.list(this.axiosParams);
-      const {activities, activityCount} = activitiesEnvelope;
+      const {items, totalCount} = activitiesEnvelope;
       runInAction('loading activities', () => {
-        activities.forEach(activity => {
+        items.forEach(activity => {
           setActivityProps(activity, this.rootStore.userStore.user!);
           this.activityRegistry.set(activity.id, activity);
         });
-        this.activityCount = activityCount;
+        this.activityCount = totalCount;
         this.loadingInitial = false;
       });
     } catch (error) {
@@ -205,7 +205,7 @@ export default class ActivityStore {
         this.submitting = false;
       });
       toast.error('Problem submitting data');
-      console.log(error.response);
+      console.log(error);
     }
   };
 

@@ -1,5 +1,5 @@
-using System.Security.Claims;
 using Application.Comments;
+using Infrastructure.Security;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
 
@@ -14,9 +14,7 @@ public class ChatHub : Hub {
   public async Task SendComment(Create.Command command) {
     //auth token must have been added already to HubContext
     // how do u garantee that?
-    var username = Context.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-
-    command.Username = username;
+    command.Username = Context.User.GetUsername();
 
     var comment = await _mediator.Send(command);
 

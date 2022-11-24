@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text;
 using API.Middleware;
 using Application;
@@ -5,6 +6,7 @@ using Application.Auth;
 using Application.Interfaces;
 using Application.Profiles;
 using Domain;
+using FluentValidation;
 using Infrastructure;
 using Infrastructure.Photos;
 using Infrastructure.Security;
@@ -90,6 +92,7 @@ void ConfigureServices() {
   ));
 
   builder.Services.AddSignalR();
+
   builder.Services.AddMvc(opt => {
     opt.EnableEndpointRouting = false;
     var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
@@ -154,10 +157,12 @@ void ConfigureIdentityServices(IServiceCollection services) {
     });
 
   services.AddScoped<IJwtGenerator, JwtGenerator>();
-  services.AddScoped<IUserAccessor, UserAccessor>();
+  services.AddScoped<ICurrUserService, CurrUserService>();
 }
 
 void Configure() {
+  ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("fr");
+
   app.UseMiddleware<ErrorHandlingMiddleware>();
 
   app.UseSwagger();
@@ -244,7 +249,6 @@ void Configure() {
   });
 
   //app.MapSpaFallbackRoute(x => x.);
-
 }
 
 async Task RunMigrationAndSeeder() {

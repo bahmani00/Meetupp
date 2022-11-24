@@ -1,7 +1,6 @@
 using Application.Auth;
 using FluentValidation;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Profiles;
@@ -20,15 +19,15 @@ public static class Edit {
 
   public class Handler : IRequestHandler<Command> {
     private readonly DataContext dbContext;
-    private readonly IUserAccessor userAccessor;
+    private readonly ICurrUserService currUserService;
 
-    public Handler(DataContext dbContext, IUserAccessor userAccessor) {
+    public Handler(DataContext dbContext, ICurrUserService currUserService) {
       this.dbContext = dbContext;
-      this.userAccessor = userAccessor;
+      this.currUserService = currUserService;
     }
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
-      var user = await dbContext.GetUserAsync(userAccessor.GetCurrUsername(), ct, true);
+      var user = await dbContext.GetUserAsync(currUserService.UserId, ct, true);
 
       user.DisplayName = request.DisplayName ?? user.DisplayName;
       user.Bio = request.Bio ?? user.Bio;

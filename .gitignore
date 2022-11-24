@@ -7,3 +7,4 @@ publish
 appsettings.json
 /.vs
 node_modules
+.eslintcache

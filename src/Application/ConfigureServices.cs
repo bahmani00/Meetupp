@@ -1,6 +1,6 @@
 using System.Reflection;
+using Application.Common.Behaviours;
 using FluentValidation;
-using FluentValidation.AspNetCore;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -35,14 +35,14 @@ public static class ConfigureServices {
       }
       opt.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
     });
+
     services.AddAutoMapper(Assembly.GetExecutingAssembly());
     services.AddMediatR(Assembly.GetExecutingAssembly());
-    services.AddFluentValidationAutoValidation();
     services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
 
     //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
     //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehaviour<,>));
-    //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+    services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
     //services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
 
     return services;

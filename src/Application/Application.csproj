@@ -9,21 +9,31 @@
   </PropertyGroup> -->
 
   <ItemGroup>
+        <Compile Remove="Common\Behaviours\AuthorizationBehaviour.cs" />
+    <Compile Remove="Common\Behaviours\LoggingBehaviour.cs" />
+    <Compile Remove="Common\Behaviours\PerformanceBehaviour.cs" />
+    <Compile Remove="Common\Behaviours\UnhandledExceptionBehaviour.cs" />
+    <Compile Remove="Common\Exceptions\ForbiddenAccessException.cs" />
+    <Compile Remove="Common\Exceptions\NotFoundException.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
     <ProjectReference Include="..\Persistence\Persistence.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.3.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
-    <PackageReference Include="FLuentValidation.AspNetCore" Version="11.2.2" />
-    <PackageReference Include="MediatR" Version="11.0.0" />
+    <PackageReference Include="MediatR" Version="11.1.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.0-preview1.22518.1">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App"/>
   </ItemGroup>
 
 </Project>

@@ -20,5 +20,5 @@ public class Activity {
 
   //use virtial to efcore lazy loading rather eagerly loading
   public virtual ICollection<UserActivity> UserActivities { get; set; }
-  public virtual ICollection<Comment> Comments { get; set; }
+  public virtual ICollection<Comment> Comments { get; set; } = new HashSet<Comment>(0);
 }

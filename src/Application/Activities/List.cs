@@ -1,50 +1,32 @@
 using Application.Auth;
+using Application.Common.Models;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Persistence;
+using Application.Common;
 
 namespace Application.Activities;
 
 public static class List {
-  public class ActivitiesEnvelope {
-    public List<ActivityDto> Activities { get; set; }
-    public int ActivityCount { get; set; }
-  }
 
-  public class Query : IRequest<ActivitiesEnvelope> {
-    public Query(int? limit, int? offset, bool isGoing, bool isHost, DateTime? startDate) {
-      Limit = limit;
-      Offset = offset;
-      IsGoing = isGoing;
-      IsHost = isHost;
-      StartDate = startDate ?? DateTime.Now;
-    }
-
-    public bool IsGoing { get; set; }
-    public bool IsHost { get; set; }
-    public DateTime? StartDate { get; set; }
-
-    public int? Limit { get; set; }
-    public int? Offset { get; set; }
-  }
-
-  public class Handler : IRequestHandler<Query, ActivitiesEnvelope> {
+  internal class Handler : IRequestHandler<Query, PaginatedList<ActivityDto>> {
     private readonly DataContext dbContext;
     private readonly ILogger<Handler> logger;
     private readonly IMapper mapper;
-    private readonly IUserAccessor userAccessor;
+    private readonly ICurrUserService currUserService;
 
-    public Handler(DataContext dbContext, IMapper mapper, IUserAccessor userAccessor, ILogger<Handler> logger) {
+    public Handler(DataContext dbContext, IMapper mapper, ICurrUserService currUserService, ILogger<Handler> logger) {
       this.dbContext = dbContext;
-      this.userAccessor = userAccessor;
+      this.currUserService = currUserService;
       this.mapper = mapper;
       this.logger = logger;
     }
 
-    public async Task<ActivitiesEnvelope> Handle(Query request, CancellationToken ct) {
+    public async Task<PaginatedList<ActivityDto>> Handle(Query request, CancellationToken ct) {
       var queryable = dbContext.Activities
         .AsNoTracking()
         .Include(x => x.Comments).ThenInclude(x => x.Author).ThenInclude(x => x.Photos)
@@ -54,21 +36,18 @@ public static class List {
         .AsQueryable();
 
       if (request.IsGoing && !request.IsHost) {
-        queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.UserName == userAccessor.GetCurrUsername()));
+        queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.UserName == currUserService.UserId));
       }
 
       if (request.IsHost && !request.IsGoing) {
-        queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.UserName == userAccessor.GetCurrUsername() && a.IsHost));
+        queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.UserName == currUserService.UserId && a.IsHost));
       }
 
-      var activities = await queryable
-          .Skip(request.Offset ?? 0)
-          .Take(request.Limit ?? 3).ToListAsync(ct);
+      var loggedInUser = await currUserService.GetCurrUserAsync(ct);
 
-      return new ActivitiesEnvelope {
-        Activities = mapper.Map<List<ActivityDto>>(activities),
-        ActivityCount = queryable.Count()
-      };
+      return await queryable
+        .ProjectTo<ActivityDto>(mapper.ConfigurationProvider, new { currUser = loggedInUser })
+        .PaginatedListAsync(request.Offset, request.Limit);
     }
 
     public async Task<List<ActivityDto>> Handle111(Query request, CancellationToken ct) {
@@ -88,4 +67,12 @@ public static class List {
       return mapper.Map<List<Activity>, List<ActivityDto>>(null);
     }
   }
+
+  public sealed record Query(
+    int Limit,
+    int Offset,
+    bool IsGoing,
+    bool IsHost,
+    DateTime StartDate) : IRequest<PaginatedList<ActivityDto>>;
+
 }
