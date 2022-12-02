@@ -1,4 +1,3 @@
-using Application.Auth;
 using AutoMapper;
 using Domain;
 using FluentValidation;
@@ -6,17 +5,10 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-using static Application.Errors.RestException;
 
 namespace Application.Comments;
 
 public static class Create {
-
-  public class Command : IRequest<CommentDto> {
-    public string Body { get; set; }
-    public Guid ActivityId { get; set; }
-    public string Username { get; set; }
-  }
 
   internal class Handler : IRequestHandler<Command, CommentDto> {
     private readonly DataContext dbContext;
@@ -30,7 +22,7 @@ public static class Create {
     }
 
     public async Task<CommentDto> Handle(Command request, CancellationToken ct) {
-      var user = (AppUser)httpContext.Items[$"user_{request.Username}"];
+      var user = (AppUser)httpContext.Items[$"user_{request.UserId}"];
 
       var comment = new Comment {
         AuthorId = user.Id,
@@ -60,7 +52,7 @@ public static class Create {
       RuleFor(x => x.ActivityId).Cascade(CascadeMode.Stop)
           .NotEmpty()
           .Must(ActivityExistsInDb).WithMessage("Activity not found");
-      RuleFor(x => x.Username).Cascade(CascadeMode.Stop)
+      RuleFor(x => x.UserId).Cascade(CascadeMode.Stop)
         .NotEmpty()
         .Must(UserExistsInDb).WithMessage("User not found");
       RuleFor(x => x.Body).NotEmpty();
@@ -69,16 +61,22 @@ public static class Create {
     private bool ActivityExistsInDb(Guid activityId) =>
       dbContext.Activities.Find(activityId) != null;
 
-    private bool UserExistsInDb(string username) {
+    private bool UserExistsInDb(string userId) {
       //dont have access to ICurrUserService(HttpContext) as using SignalR(webSockets)
       var user = dbContext.Users
         .AsNoTracking()
         .Include(x => x.Photos)
-        .SingleOrDefault(x => x.UserName == username);
+        .SingleOrDefault(x => x.Id == userId);
 
-      httpContext.Items[$"user_{username}"] = user;
+      httpContext.Items[$"user_{userId}"] = user;
 
       return user != null;
     }
+  }
+
+  public sealed record Command(
+    Guid ActivityId,
+    string UserId,
+    string Body) : IRequest<CommentDto> {
   }
 }

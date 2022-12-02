@@ -8,9 +8,6 @@ using static Application.Errors.RestException;
 namespace Application.Followers;
 
 public static class Add {
-  public class Command : IRequest {
-    public string Username { get; set; }
-  }
 
   public class Handler : IRequestHandler<Command> {
     private readonly DataContext dbContext;
@@ -29,6 +26,7 @@ public static class Add {
 
       var following = await dbContext.Followings.SingleOrDefaultAsync(x => x.ObserverId == observer.Id && x.TargetId == target.Id, ct);
       ThrowIfBadRequest(following != null, new { User = "You already follow this user" });
+      ThrowIfBadRequest(observer.Id == target.Id, new { User = "User canot follow itself" });
 
       following = new UserFollowing { ObserverId = observer.Id, TargetId = target.Id };
       dbContext.Followings.Add(following);
@@ -39,4 +37,6 @@ public static class Add {
       throw new Exception("Problem saving followX");
     }
   }
+
+  public record Command(string Username) : IRequest { }
 }

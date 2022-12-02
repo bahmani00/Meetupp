@@ -19,7 +19,7 @@ public class MappingProfile : Profile {
     CreateMap<UserActivity, AttendeeDto>()
         .ForMember(d => d.Username, o => o.MapFrom(s => s.AppUser.UserName))
         .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.AppUser.DisplayName))
-        .ForMember(d => d.Image, o => o.MapFrom(s => s.AppUser.Photos.FirstOrDefault(x => x.IsMain).Url))
+        .ForMember(d => d.Image, o => o.MapFrom(s => s.AppUser.MainPhotoUrl))
         //Value Resolvers aren't supported for queryable extensions.
         //https://stackoverflow.com/a/27567113/336511
         //.ForMember(d => d.Following, o => o.MapFrom<FollowingResolver>())

@@ -3,9 +3,6 @@ using MediatR;
 namespace Application.Profiles;
 
 public static class Details {
-  public class Query : IRequest<Profile> {
-    public string Username { get; set; }
-  }
 
   public class Handler : IRequestHandler<Query, Profile> {
     private readonly IProfileReader profileReader;
@@ -18,4 +15,6 @@ public static class Details {
       return await profileReader.ReadProfileAsync(request.Username, ct);
     }
   }
+
+  public record Query(string Username) : IRequest<Profile> { }
 }

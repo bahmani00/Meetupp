@@ -8,9 +8,6 @@ using static Application.Errors.RestException;
 namespace Application.Activities;
 
 public static class Attend {
-  public class Command : IRequest {
-    public Guid Id { get; set; }
-  }
 
   public class Handler : IRequestHandler<Command> {
     private readonly DataContext dbContext;
@@ -22,7 +19,7 @@ public static class Attend {
     }
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
-      var activity = await dbContext.Activities.SingleOrDefaultAsync(x => x.Id == request.Id, ct);
+      var activity = await dbContext.Activities.SingleOrDefaultAsync(x => x.Id == request.ActivityId, ct);
       ThrowIfNotFound(activity, new { Activity = "Not found" });
 
       var attendance = await dbContext.UserActivities
@@ -40,4 +37,6 @@ public static class Attend {
       throw new Exception("Problem saving attendance");
     }
   }
+
+  public record Command(Guid ActivityId) : IRequest { }
 }

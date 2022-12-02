@@ -17,7 +17,7 @@ public class UserActivity {
   public bool IsHost { get; set; }
 
   public static UserActivity Create(AppUser user, Activity activity, bool isHost = false) =>
-    Create(user.Id, activity.Id);
+    Create(user.Id, activity.Id, isHost);
 
   public static UserActivity Create(string userId, Guid activityId, bool isHost = false) =>
     new() {

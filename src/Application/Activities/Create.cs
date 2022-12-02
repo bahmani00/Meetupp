@@ -34,9 +34,6 @@ public static class Create {
       throw new Exception("Problem Adding changes");
     }
   }
-  
-  public class Command : ActivityDto, IRequest<Guid> {
-  }
 
   public class CommandValidator : AbstractValidator<Command> {
     public CommandValidator() {
@@ -45,4 +42,6 @@ public static class Create {
     }
   }
 
+  public class Command : ActivityBaseDto, IRequest<Guid> {
+  }
 }

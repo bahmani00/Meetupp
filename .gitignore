@@ -5,6 +5,7 @@ obj
 wwwroot
 publish
 appsettings.json
-/.vs
+.vs
 node_modules
 .eslintcache
+*.csproj.user

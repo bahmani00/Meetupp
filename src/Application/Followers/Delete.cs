@@ -7,9 +7,6 @@ using static Application.Errors.RestException;
 namespace Application.Followers;
 
 public static class Delete {
-  public class Command : IRequest {
-    public string Username { get; set; }
-  }
 
   public class Handler : IRequestHandler<Command> {
     private readonly DataContext dbContext;
@@ -37,4 +34,7 @@ public static class Delete {
       throw new Exception("Problem saving changes");
     }
   }
+
+  public record Command(string Username) : IRequest {}
+
 }

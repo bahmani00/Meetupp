@@ -8,10 +8,6 @@ using static Application.Errors.RestException;
 namespace Application.Profiles;
 
 public static class ListActivities {
-  public class Query : IRequest<List<UserActivityDto>> {
-    public string Username { get; set; }
-    public string Predicate { get; set; }
-  }
 
   public class Handler : IRequestHandler<Query, List<UserActivityDto>> {
     private readonly DataContext dbContext;
@@ -45,4 +41,6 @@ public static class ListActivities {
         .ToList();
     }
   }
+
+  public record Query(string Username, string Predicate) : IRequest<List<UserActivityDto>> { }
 }

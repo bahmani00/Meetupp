@@ -1,4 +1,5 @@
 using Application.Auth;
+using Application.Common;
 using Application.Common.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -7,7 +8,6 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Persistence;
-using Application.Common;
 
 namespace Application.Activities;
 
@@ -36,11 +36,11 @@ public static class List {
         .AsQueryable();
 
       if (request.IsGoing && !request.IsHost) {
-        queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.UserName == currUserService.UserId));
+        queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.Id == currUserService.UserId));
       }
 
       if (request.IsHost && !request.IsGoing) {
-        queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.UserName == currUserService.UserId && a.IsHost));
+        queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.Id == currUserService.UserId && a.IsHost));
       }
 
       var loggedInUser = await currUserService.GetCurrUserAsync(ct);

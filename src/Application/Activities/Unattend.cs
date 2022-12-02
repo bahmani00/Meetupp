@@ -39,8 +39,6 @@ public static class Unattend {
       throw new Exception("Problem removing attandance");
     }
   }
-  
-  public class Command : IRequest {
-    public Guid Id { get; set; }
-  }
+
+  public record Command(Guid Id) : IRequest { }
 }

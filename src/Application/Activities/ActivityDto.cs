@@ -4,19 +4,13 @@ using Domain;
 
 namespace Application.Activities;
 
-public class ActivityDto {
-  public Guid Id { get; set; }
+public class ActivityBaseDto {
   public string Title { get; set; }
   public string Description { get; set; }
   public string Category { get; set; }
   public DateTime? Date { get; set; }
   public string City { get; set; }
   public string Venue { get; set; }
-
-  [JsonPropertyName("attendees")]
-  public ICollection<AttendeeDto> UserActivities { get; set; }
-
-  public ICollection<CommentDto> Comments { get; set; }
 
   public Activity ToEntity(Activity entity) {
     entity.Title = Title;
@@ -27,6 +21,7 @@ public class ActivityDto {
     entity.Venue = Venue;
     return entity;
   }
+  public Activity ToEntity() => ToEntity(new Activity());
 
   public Activity ToEntityPartial(Activity entity) {
     entity.Title = Title ?? entity.Title;
@@ -37,5 +32,13 @@ public class ActivityDto {
     entity.Venue = Venue ?? entity.Venue;
     return entity;
   }
-  public Activity ToEntity() => ToEntity(new Activity());
+}
+
+public class ActivityDto : ActivityBaseDto {
+  public Guid Id { get; set; }
+
+  [JsonPropertyName("attendees")]
+  public ICollection<AttendeeDto> UserActivities { get; set; }
+
+  public ICollection<CommentDto> Comments { get; set; }
 }

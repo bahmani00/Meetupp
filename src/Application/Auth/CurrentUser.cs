@@ -19,7 +19,7 @@ public static class CurrentUser {
 
       return new User {
         DisplayName = user.DisplayName,
-        Username = user.UserName,
+        Username = user.Id,
         Token = _jwtGenerator.CreateToken(user),
         Image = user.MainPhotoUrl
       };

@@ -7,7 +7,25 @@ using static Application.Errors.RestException;
 namespace Application.Activities;
 
 public static class EditPartial {
-  public class Command : ActivityDto, IRequest {
+
+  public class Handler : IRequestHandler<Command> {
+    private readonly DataContext dbContext;
+
+    public Handler(DataContext dbContext) {
+      this.dbContext = dbContext;
+    }
+
+    public async Task<Unit> Handle(Command request, CancellationToken ct) {
+      var activity = await dbContext.Activities.FindItemAsync(request.Id, ct);
+      ThrowIfNotFound(activity, new { Activity = "Not found" });
+
+      activity = request.ToEntityPartial(activity);
+
+      var success = await dbContext.SaveChangesAsync(ct) > 0;
+      if (success) return Unit.Value;
+
+      throw new Exception($"Problem saving {nameof(Activity)}");
+    }
   }
 
   public class CommandValidator : AbstractValidator<Command> {
@@ -28,23 +46,12 @@ public static class EditPartial {
     }
   }
 
-  public class Handler : IRequestHandler<Command> {
-    private readonly DataContext dbContext;
+  public class Command : ActivityBaseDto, IRequest {
+    internal Guid Id { get; set; }
 
-    public Handler(DataContext dbContext) {
-      this.dbContext = dbContext;
-    }
-
-    public async Task<Unit> Handle(Command request, CancellationToken ct) {
-      var activity = await dbContext.Activities.FindItemAsync(request.Id, ct);
-      ThrowIfNotFound(activity, new { Activity = "Not found" });
-
-      activity = request.ToEntityPartial(activity);
-
-      var success = await dbContext.SaveChangesAsync(ct) > 0;
-      if (success) return Unit.Value;
-
-      throw new Exception($"Problem saving {nameof(Activity)}");
+    public Command SetId(Guid id) {
+      Id = id;
+      return this;
     }
   }
 }

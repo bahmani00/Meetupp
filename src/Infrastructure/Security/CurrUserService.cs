@@ -10,7 +10,7 @@ public class CurrUserService : ICurrUserService {
   private readonly DataContext dbContext;
   private readonly HttpContext httpContext;
 
-  public string UserId => httpContext.User.GetUsername();
+  public string UserId => httpContext.User.GetUserId();
 
   public CurrUserService(DataContext dbContext, IHttpContextAccessor httpContextAccessor) {
     this.dbContext = dbContext;
@@ -25,6 +25,6 @@ public class CurrUserService : ICurrUserService {
 }
 
 public static class LoggedInUserServiceExt {
-  public static string GetUsername(this ClaimsPrincipal user) =>
+  public static string GetUserId(this ClaimsPrincipal user) =>
     user?.FindFirstValue(ClaimTypes.NameIdentifier);
 }

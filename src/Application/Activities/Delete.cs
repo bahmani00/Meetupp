@@ -5,9 +5,6 @@ using static Application.Errors.RestException;
 namespace Application.Activities;
 
 public static class Delete {
-  public class Command : IRequest {
-    public Guid Id { get; set; }
-  }
 
   public class Handler : IRequestHandler<Command> {
     private readonly DataContext dbContext;
@@ -28,4 +25,6 @@ public static class Delete {
       throw new Exception("Problem Deleting activity");
     }
   }
+
+  public record Command(Guid Id) : IRequest { }
 }
