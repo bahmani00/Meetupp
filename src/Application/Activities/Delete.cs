@@ -26,5 +26,5 @@ public static class Delete {
     }
   }
 
-  public record Command(Guid Id) : IRequest { }
+  public record Command(Guid Id) : IRequest;
 }

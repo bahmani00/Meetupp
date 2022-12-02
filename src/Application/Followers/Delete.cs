@@ -35,6 +35,6 @@ public static class Delete {
     }
   }
 
-  public record Command(string Username) : IRequest {}
+  public record Command(string Username) : IRequest;
 
 }

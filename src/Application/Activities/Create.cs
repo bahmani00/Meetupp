@@ -1,4 +1,5 @@
 using Application.Auth;
+using AutoMapper;
 using Domain;
 using FluentValidation;
 using MediatR;
@@ -11,14 +12,16 @@ public static class Create {
   internal class Handler : IRequestHandler<Command, Guid> {
     private readonly DataContext dbContext;
     private readonly ICurrUserService currUserService;
+    private readonly IMapper mapper;
 
-    public Handler(DataContext dbContext, ICurrUserService currUserService) {
+    public Handler(DataContext dbContext, ICurrUserService currUserService, IMapper mapper) {
       this.dbContext = dbContext;
       this.currUserService = currUserService;
+      this.mapper = mapper;
     }
 
     public async Task<Guid> Handle(Command request, CancellationToken ct) {
-      var activity = request.ToEntity();
+      var activity = mapper.Map<Activity>(request);
 
       //Dont use AddSync
       dbContext.Activities.Add(activity);

@@ -8,7 +8,6 @@ public class DataContext : IdentityDbContext<AppUser> {
   public DataContext(DbContextOptions options) : base(options) {
   }
 
-  public DbSet<WeatherForecast> WeatherForecasts { get; set; }
   public DbSet<Activity> Activities { get; set; }
   public DbSet<UserActivity> UserActivities { get; set; }
   public DbSet<Photo> Photos { get; set; }
@@ -17,18 +16,6 @@ public class DataContext : IdentityDbContext<AppUser> {
 
   protected override void OnModelCreating(ModelBuilder modelBuilder) {
     base.OnModelCreating(modelBuilder);
-
-    //whenever running migration scripts it adds the followings to db => seed db
-    modelBuilder.Entity<WeatherForecast>()
-        .HasData(
-        new { Id = 1, TemperatureC = -15, Date = DateTime.Now, Summary = "Freezing" },
-        new { Id = 2, TemperatureC = 16, Date = DateTime.Now.AddDays(1), Summary = "Chilly" },
-        new { Id = 3, TemperatureC = 20, Date = DateTime.Now.AddDays(2), Summary = "Cool" },
-        new { Id = 4, TemperatureC = 25, Date = DateTime.Now.AddDays(3), Summary = "Mild" },
-        new { Id = 5, TemperatureC = 30, Date = DateTime.Now.AddDays(4), Summary = "Warm" },
-        new { Id = 6, TemperatureC = 40, Date = DateTime.Now.AddDays(5), Summary = "Hot" },
-        new { Id = 7, TemperatureC = 45, Date = DateTime.Now.AddDays(6), Summary = "Scorching" }
-        );
 
     //Define Primary Keys for UserActivity
     modelBuilder.Entity<UserActivity>(entity => {

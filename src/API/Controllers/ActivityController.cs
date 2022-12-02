@@ -9,9 +9,8 @@ using Comments = Application.Comments;
 namespace API.Controllers;
 
 public class ActivitiesController : BaseController {
+
   [HttpGet]
-  [ProducesResponseType(typeof(PaginatedList<ActivityDto>), StatusCodes.Status200OK)]
-  [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
   public async Task<ActionResult<PaginatedList<ActivityDto>>> GetAll(
     int? limit, int? offset, bool isGoing, bool isHost, DateTime? startDate, CancellationToken ct) =>
     Ok(await Mediator.Send(new List.Query(limit ?? 3, offset ?? 0, isGoing, isHost, startDate ?? DateTime.Now), ct));
@@ -32,7 +31,7 @@ public class ActivitiesController : BaseController {
   [HttpPatch("{id}")]
   [Authorize(Policy = IsHostRequirement.PolicyName)]
   public async Task<ActionResult<Unit>> EditPartial(Guid id, EditPartial.Command command, CancellationToken ct) =>
-    Ok(await Mediator.Send(command.SetId(id), ct));
+    Ok(await Mediator.Send(command with { Id = id }, ct));
 
   [HttpDelete("{id}")]
   [Authorize(Policy = IsHostRequirement.PolicyName)]

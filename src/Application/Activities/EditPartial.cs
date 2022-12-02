@@ -1,3 +1,4 @@
+using AutoMapper;
 using Domain;
 using FluentValidation;
 using MediatR;
@@ -10,16 +11,18 @@ public static class EditPartial {
 
   public class Handler : IRequestHandler<Command> {
     private readonly DataContext dbContext;
+    private readonly IMapper mapper;
 
-    public Handler(DataContext dbContext) {
+    public Handler(DataContext dbContext, IMapper mapper) {
       this.dbContext = dbContext;
+      this.mapper = mapper;
     }
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
       var activity = await dbContext.Activities.FindItemAsync(request.Id, ct);
       ThrowIfNotFound(activity, new { Activity = "Not found" });
 
-      activity = request.ToEntityPartial(activity);
+      mapper.Map(request, activity);
 
       var success = await dbContext.SaveChangesAsync(ct) > 0;
       if (success) return Unit.Value;
@@ -46,12 +49,12 @@ public static class EditPartial {
     }
   }
 
-  public class Command : ActivityBaseDto, IRequest {
-    internal Guid Id { get; set; }
-
-    public Command SetId(Guid id) {
-      Id = id;
-      return this;
-    }
-  }
+  public record Command(
+    Guid Id,
+    string Title,
+    string Description,
+    string Category,
+    DateTime? Date,
+    string City,
+    string Venue) : IRequest;
 }

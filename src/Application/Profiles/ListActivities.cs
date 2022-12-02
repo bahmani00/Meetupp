@@ -42,5 +42,5 @@ public static class ListActivities {
     }
   }
 
-  public record Query(string Username, string Predicate) : IRequest<List<UserActivityDto>> { }
+  public record Query(string Username, string Predicate) : IRequest<List<UserActivityDto>>;
 }

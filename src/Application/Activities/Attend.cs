@@ -38,5 +38,5 @@ public static class Attend {
     }
   }
 
-  public record Command(Guid ActivityId) : IRequest { }
+  public record Command(Guid ActivityId) : IRequest;
 }

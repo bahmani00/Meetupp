@@ -38,5 +38,5 @@ public static class Add {
     }
   }
 
-  public record Command(string Username) : IRequest { }
+  public record Command(string Username) : IRequest;
 }

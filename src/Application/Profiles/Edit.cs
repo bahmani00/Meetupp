@@ -6,16 +6,6 @@ using Persistence;
 namespace Application.Profiles;
 
 public static class Edit {
-  public class Command : IRequest {
-    public string DisplayName { get; set; }
-    public string Bio { get; set; }
-  }
-
-  public class CommandValidator : AbstractValidator<Command> {
-    public CommandValidator() {
-      RuleFor(x => x.DisplayName).NotEmpty();
-    }
-  }
 
   public class Handler : IRequestHandler<Command> {
     private readonly DataContext dbContext;
@@ -39,4 +29,12 @@ public static class Edit {
       throw new Exception("Problem editing profile");
     }
   }
+
+  public class CommandValidator : AbstractValidator<Command> {
+    public CommandValidator() {
+      RuleFor(x => x.DisplayName).NotEmpty();
+    }
+  }
+
+  public record Command(string DisplayName, string Bio) : IRequest;
 }

@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.SwaggerUI;
@@ -11,6 +12,11 @@ public static class SwaggerConfigurationExtensions {
 
     //Add services and configuration to use swagger
     services.AddSwaggerGen(options => {
+      // Set the comments path for the Swagger JSON and UI.
+      var xmlDocPath = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+      var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlDocPath);
+      options.IncludeXmlComments(xmlPath);
+
       //var xmlDocPath = Path.Combine(AppContext.BaseDirectory, "Project.xml");
       ////show controller XML comments like summary
       //options.IncludeXmlComments(xmlDocPath, true);
@@ -41,8 +47,12 @@ public static class SwaggerConfigurationExtensions {
       //options.IgnoreObsoleteActions();
       //options.IgnoreObsoleteProperties();
 
-      //options.SwaggerDoc("v1", new OpenApiInfo { Version = "v1", Title = "API V1" });
-      options.SwaggerDoc("v1", new OpenApiInfo { Title = "MeetUppy API", Version = "v1" });
+      options.SwaggerDoc("v1", new OpenApiInfo { 
+        Title = "Meetupp API", 
+        Version = "v1",
+        Description = "An API to perform Meetupp operations"
+      });
+
       options.CustomSchemaIds(x => x.FullName.Replace("+", ".", StringComparison.OrdinalIgnoreCase));
 
       #region Filters
@@ -142,7 +152,7 @@ public static class SwaggerConfigurationExtensions {
 
       //// Other
       //options.DocumentTitle = "CustomUIConfig";
-      //options.InjectStylesheet("/ext/custom-stylesheet.css");
+      options.InjectStylesheet("/swagger/style.css");
       //options.InjectJavascript("/ext/custom-javascript.js");
       //options.RoutePrefix = "api-docs";
       #endregion

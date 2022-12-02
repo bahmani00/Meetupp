@@ -40,5 +40,5 @@ public static class Unattend {
     }
   }
 
-  public record Command(Guid Id) : IRequest { }
+  public record Command(Guid Id) : IRequest;
 }

@@ -22,7 +22,7 @@ public class ApplySummariesOperationFilter : IOperationFilter {
     var summary = "";
 
     if (IsGetAllAction()) {
-      summary = $"Returns all {pluralizeName}";
+      summary = $"Returns the list of all  {pluralizeName}";
     } else if (IsActionName("Post", "Create")) {
       summary = $"Create {singularizeName}";
 
@@ -32,12 +32,12 @@ public class ApplySummariesOperationFilter : IOperationFilter {
       summary = $"Retrieve {singularizeName} by unique id";
 
       if (operation.Parameters.Count > 0 && !operation.Parameters[0].Description.HasValue())
-        operation.Parameters[0].Description = $"a unique id for the {singularizeName}";
+        operation.Parameters[0].Description = $"a unique id for {singularizeName}";
     } else if (IsActionName("Put", "Edit", "Update")) {
       summary = $"Update {singularizeName} by unique id";
 
       //if (!operation.Parameters[0].Description.HasValue())
-      //    operation.Parameters[0].Description = $"A unique id for the {singularizeName}";
+      //    operation.Parameters[0].Description = $"A unique id for {singularizeName}";
 
       if (operation.Parameters.Count > 0 && !operation.Parameters[0].Description.HasValue())
         operation.Parameters[0].Description = $"A {singularizeName} representation";
@@ -45,7 +45,7 @@ public class ApplySummariesOperationFilter : IOperationFilter {
       summary = $"Delete {singularizeName} by unique id";
 
       if (operation.Parameters.Count > 0 && !operation.Parameters[0].Description.HasValue())
-        operation.Parameters[0].Description = $"A unique id for the {singularizeName}";
+        operation.Parameters[0].Description = $"A unique id for {singularizeName}";
     } else {
       summary = $"{actionName} {singularizeName}";
     }

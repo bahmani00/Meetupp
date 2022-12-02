@@ -5,6 +5,17 @@ namespace Application.Activities;
 
 public class MappingProfile : Profile {
   public MappingProfile() {
+    CreateMap<int?, int>().ConvertUsing((src, dest) => src ?? dest);
+
+    //https://stackoverflow.com/a/68012002/336511
+    CreateMap<EditPartial.Command, Activity>()
+      .ForAllMembers(opts => 
+        opts.Condition((src, dest, srcMember) => srcMember != null));
+
+    CreateMap<Edit.Command, Activity>();
+
+    CreateMap<Create.Command, Activity>();
+
     CreateMap<Activity, ActivityDto>();
 
     //CreateMap<ActivityDto, Activity>(MemberList.None);

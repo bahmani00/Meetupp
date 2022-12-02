@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Application.Auth;
 using Application.Interfaces;
 using Domain;
@@ -10,6 +11,7 @@ namespace Application.Photos;
 
 public static class Add {
   public class Command : IRequest<Photo> {
+    [Required]
     public IFormFile File { get; set; }
   }
 

@@ -16,5 +16,5 @@ public static class Details {
     }
   }
 
-  public record Query(string Username) : IRequest<Profile> { }
+  public record Query(string Username) : IRequest<Profile>;
 }

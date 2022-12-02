@@ -1,5 +1,4 @@
 using AutoMapper;
-using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -26,11 +25,9 @@ public static class Details {
 
       ThrowIfNotFound(activity, new { Activity = "Not found" });
 
-      var activityToReturn = mapper.Map<Activity, ActivityDto>(activity);
-
-      return activityToReturn;
+      return mapper.Map<ActivityDto>(activity);
     }
   }
 
-  public record Query(Guid Id): IRequest<ActivityDto> { }
+  public record Query(Guid Id): IRequest<ActivityDto>;
 }
