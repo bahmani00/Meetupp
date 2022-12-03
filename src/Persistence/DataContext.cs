@@ -1,3 +1,4 @@
+using System.Reflection;
 using Domain;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -15,39 +16,9 @@ public class DataContext : IdentityDbContext<AppUser> {
   public DbSet<UserFollowing> Followings { get; set; }
 
   protected override void OnModelCreating(ModelBuilder modelBuilder) {
+    modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+    
     base.OnModelCreating(modelBuilder);
-
-    //Define Primary Keys for UserActivity
-    modelBuilder.Entity<UserActivity>(entity => {
-      entity.HasKey(ua => new { ua.AppUserId, ua.ActivityId });
-
-      //Define relationship btw UserActivity & AppUser tables
-      entity.HasOne(u => u.AppUser)
-        .WithMany(a => a.UserActivities)
-        .HasForeignKey(u => u.AppUserId);
-
-      //Define relationship btw UserActivity & Activity tables
-      entity.HasOne(a => a.Activity)
-          .WithMany(u => u.UserActivities)
-          .HasForeignKey(a => a.ActivityId);
-    });
-
-    //ef fluent configuration
-    modelBuilder.Entity<UserFollowing>(entity => {
-      entity.HasKey(k => new { k.ObserverId, k.TargetId });
-
-      //define many-to-many relationship
-
-      entity.HasOne(o => o.Observer)
-          .WithMany(f => f.Followings)
-          .HasForeignKey(o => o.ObserverId)
-          .OnDelete(DeleteBehavior.Restrict);
-
-      entity.HasOne(o => o.Target)
-          .WithMany(f => f.Followers)
-          .HasForeignKey(o => o.TargetId)
-          .OnDelete(DeleteBehavior.Restrict);
-    });
   }
 
   public async Task<AppUser> GetUserAsync(string userName, CancellationToken ct, bool asTracking = false) =>
