@@ -7,6 +7,7 @@ using Persistence;
 namespace Infrastructure.Security;
 
 public class IsHostRequirement : IAuthorizationRequirement {
+  public const string PolicyName = "IsHostCreatedActivity";
 }
 
 public class IsHostRequirementHandler : AuthorizationHandler<IsHostRequirement> {

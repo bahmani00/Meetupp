@@ -8,10 +8,6 @@ using Microsoft.AspNetCore.Identity;
 namespace Application.Auth;
 
 public static class Login {
-  public class Query : IRequest<User> {
-    public string Email { get; set; }
-    public string Password { get; set; }
-  }
 
   public class QueryValidator : AbstractValidator<Query> {
     public QueryValidator() {
@@ -24,6 +20,7 @@ public static class Login {
     private readonly UserManager<AppUser> _userManager;
     private readonly SignInManager<AppUser> _signInManager;
     private readonly IJwtGenerator _jwtGenerator;
+
     public Handler(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IJwtGenerator jwtGenerator) {
       _jwtGenerator = jwtGenerator;
       _signInManager = signInManager;
@@ -44,12 +41,14 @@ public static class Login {
         return new User {
           DisplayName = user.DisplayName,
           Token = _jwtGenerator.CreateToken(user),
-          Username = user.UserName,
-          Image = user.Photos.FirstOrDefault(x => x.IsMain)?.Url
+          Username = user.Id,
+          Image = user.MainPhotoUrl
         };
       }
 
       throw new RestException(HttpStatusCode.Unauthorized);
     }
   }
+
+  public record Query(string Email, string Password): IRequest<User>;
 }

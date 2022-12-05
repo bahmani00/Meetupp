@@ -5,6 +5,8 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
+#nullable disable
+
 namespace Persistence.SqliteDbMigrations.Migrations
 {
     [DbContext(typeof(DataContext))]
@@ -13,8 +15,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder
-                .HasAnnotation("ProductVersion", "5.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
 
             modelBuilder.Entity("Domain.Activity", b =>
                 {
@@ -23,21 +24,30 @@ namespace Persistence.SqliteDbMigrations.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("City")
+                        .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
+                        .HasMaxLength(500)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Venue")
+                        .IsRequired()
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -61,6 +71,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("DisplayName")
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Email")
@@ -112,7 +123,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("AspNetUsers");
+                    b.ToTable("AspNetUsers", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Comment", b =>
@@ -121,13 +132,15 @@ namespace Persistence.SqliteDbMigrations.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("ActivityId")
+                    b.Property<Guid>("ActivityId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("AuthorId")
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Body")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("CreatedAt")
@@ -137,7 +150,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
 
                     b.HasIndex("ActivityId");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("AuthorId", "ActivityId");
 
                     b.ToTable("Comments");
                 });
@@ -153,7 +166,13 @@ namespace Persistence.SqliteDbMigrations.Migrations
                     b.Property<bool>("IsMain")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("PublicId")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Url")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -166,6 +185,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
             modelBuilder.Entity("Domain.UserActivity", b =>
                 {
                     b.Property<string>("AppUserId")
+                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("ActivityId")
@@ -202,77 +222,6 @@ namespace Persistence.SqliteDbMigrations.Migrations
                     b.ToTable("Followings");
                 });
 
-            modelBuilder.Entity("Domain.WeatherForecast", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Summary")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("TemperatureC")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("WeatherForecasts");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Date = new DateTime(2020, 12, 31, 15, 24, 20, 108, DateTimeKind.Local).AddTicks(8321),
-                            Summary = "Freezing",
-                            TemperatureC = -15
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Date = new DateTime(2021, 1, 1, 15, 24, 20, 112, DateTimeKind.Local).AddTicks(6330),
-                            Summary = "Chilly",
-                            TemperatureC = 16
-                        },
-                        new
-                        {
-                            Id = 3,
-                            Date = new DateTime(2021, 1, 2, 15, 24, 20, 112, DateTimeKind.Local).AddTicks(6464),
-                            Summary = "Cool",
-                            TemperatureC = 20
-                        },
-                        new
-                        {
-                            Id = 4,
-                            Date = new DateTime(2021, 1, 3, 15, 24, 20, 112, DateTimeKind.Local).AddTicks(6478),
-                            Summary = "Mild",
-                            TemperatureC = 25
-                        },
-                        new
-                        {
-                            Id = 5,
-                            Date = new DateTime(2021, 1, 4, 15, 24, 20, 112, DateTimeKind.Local).AddTicks(6486),
-                            Summary = "Warm",
-                            TemperatureC = 30
-                        },
-                        new
-                        {
-                            Id = 6,
-                            Date = new DateTime(2021, 1, 5, 15, 24, 20, 112, DateTimeKind.Local).AddTicks(6497),
-                            Summary = "Hot",
-                            TemperatureC = 40
-                        },
-                        new
-                        {
-                            Id = 7,
-                            Date = new DateTime(2021, 1, 6, 15, 24, 20, 112, DateTimeKind.Local).AddTicks(6506),
-                            Summary = "Scorching",
-                            TemperatureC = 45
-                        });
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -296,7 +245,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
 
-                    b.ToTable("AspNetRoles");
+                    b.ToTable("AspNetRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -319,7 +268,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims");
+                    b.ToTable("AspNetRoleClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -342,7 +291,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims");
+                    b.ToTable("AspNetUserClaims", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -364,7 +313,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins");
+                    b.ToTable("AspNetUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -379,7 +328,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles");
+                    b.ToTable("AspNetUserRoles", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -398,14 +347,16 @@ namespace Persistence.SqliteDbMigrations.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens");
+                    b.ToTable("AspNetUserTokens", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Comment", b =>
                 {
                     b.HasOne("Domain.Activity", "Activity")
                         .WithMany("Comments")
-                        .HasForeignKey("ActivityId");
+                        .HasForeignKey("ActivityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Domain.AppUser", "Author")
                         .WithMany()

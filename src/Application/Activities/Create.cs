@@ -1,40 +1,32 @@
 using Application.Auth;
+using AutoMapper;
 using Domain;
 using FluentValidation;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Persistence;
 
 namespace Application.Activities;
 
 public static class Create {
-  public class Command : ActivityDto, IRequest<Guid> {
-  }
 
-  public class CommandValidator : AbstractValidator<Command> {
-    public CommandValidator() {
-      RuleFor(x => x).SetValidator(new ActivityValidator());
-      RuleFor(x => x.Date).GreaterThan(DateTime.Now)
-       .WithMessage($"{nameof(Activity.Date)} should be greater than current time");
-    }
-  }
-
-  public class Handler : IRequestHandler<Command, Guid> {
+  internal class Handler : IRequestHandler<Command, Guid> {
     private readonly DataContext dbContext;
-    private readonly IUserAccessor userAccessor;
+    private readonly ICurrUserService currUserService;
+    private readonly IMapper mapper;
 
-    public Handler(DataContext dbContext, IUserAccessor userAccessor) {
+    public Handler(DataContext dbContext, ICurrUserService currUserService, IMapper mapper) {
       this.dbContext = dbContext;
-      this.userAccessor = userAccessor;
+      this.currUserService = currUserService;
+      this.mapper = mapper;
     }
 
     public async Task<Guid> Handle(Command request, CancellationToken ct) {
-      var activity = request.ToEntity();
+      var activity = mapper.Map<Activity>(request);
 
       //Dont use AddSync
       dbContext.Activities.Add(activity);
 
-      var user = await userAccessor.GetCurrUserAsync();
+      var user = await currUserService.GetCurrUserAsync();
       var attendee = UserActivity.Create(user, activity, true);
 
       dbContext.UserActivities.Add(attendee);
@@ -44,5 +36,15 @@ public static class Create {
 
       throw new Exception("Problem Adding changes");
     }
+  }
+
+  public class CommandValidator : AbstractValidator<Command> {
+    public CommandValidator() {
+      RuleFor(x => x).SetValidator(new ActivityValidator());
+      RuleFor(x => x.Date).GreaterThan(DateTime.Now);
+    }
+  }
+
+  public class Command : ActivityBaseDto, IRequest<Guid> {
   }
 }

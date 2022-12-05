@@ -17,9 +17,12 @@ public class UserActivity {
   public bool IsHost { get; set; }
 
   public static UserActivity Create(AppUser user, Activity activity, bool isHost = false) =>
+    Create(user.Id, activity.Id, isHost);
+
+  public static UserActivity Create(string userId, Guid activityId, bool isHost = false) =>
     new() {
-      AppUserId = user.Id,
-      ActivityId = activity.Id,
+      AppUserId = userId,
+      ActivityId = activityId,
       IsHost = isHost,
       DateJoined = DateTime.Now
     };

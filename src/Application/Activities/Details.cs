@@ -1,5 +1,4 @@
 using AutoMapper;
-using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -8,9 +7,6 @@ using static Application.Errors.RestException;
 namespace Application.Activities;
 
 public static class Details {
-  public class Query : IRequest<ActivityDto> {
-    public Guid Id { get; set; }
-  }
 
   public class Handler : IRequestHandler<Query, ActivityDto> {
     private readonly DataContext dbContext;
@@ -29,9 +25,9 @@ public static class Details {
 
       ThrowIfNotFound(activity, new { Activity = "Not found" });
 
-      var activityToReturn = mapper.Map<Activity, ActivityDto>(activity);
-
-      return activityToReturn;
+      return mapper.Map<ActivityDto>(activity);
     }
   }
+
+  public record Query(Guid Id): IRequest<ActivityDto>;
 }

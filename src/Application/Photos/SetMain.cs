@@ -13,17 +13,17 @@ public static class SetMain {
 
   public class Handler : IRequestHandler<Command> {
     private readonly DataContext dbContext;
-    private readonly IUserAccessor userAccessor;
+    private readonly ICurrUserService currUserService;
 
-    public Handler(DataContext dbContext, IUserAccessor userAccessor) {
+    public Handler(DataContext dbContext, ICurrUserService currUserService) {
       this.dbContext = dbContext;
-      this.userAccessor = userAccessor;
+      this.currUserService = currUserService;
     }
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
       var user = await dbContext.Users
         .Include(x => x.Photos)
-        .SingleOrDefaultAsync(x => x.UserName == userAccessor.GetCurrUsername(), ct);
+        .SingleOrDefaultAsync(x => x.UserName == currUserService.UserId, ct);
 
       var photo = user.Photos.FirstOrDefault(x => x.Id == request.Id);
       ThrowIfNotFound(photo, new { Photo = "Not found" });

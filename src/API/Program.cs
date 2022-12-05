@@ -1,10 +1,13 @@
+using System.Globalization;
 using System.Text;
 using API.Middleware;
+using API.Swagger;
 using Application;
 using Application.Auth;
 using Application.Interfaces;
 using Application.Profiles;
 using Domain;
+using FluentValidation;
 using Infrastructure;
 using Infrastructure.Photos;
 using Infrastructure.Security;
@@ -16,9 +19,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
 using Persistence;
-
 
 var builder = WebApplication.CreateBuilder(args);
 ConfigureServices();
@@ -50,34 +51,8 @@ void ConfigureServices() {
     options.Filters.Add(new ProducesAttribute("application/json"));
   });
 
-  builder.Services.AddSwaggerGen(options => {
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "MeetUppy API", Version = "v1" });
+  builder.Services.AddSwagger();
 
-    // UseFullTypeNameInSchemaIds replacement for .NET Core
-    options.CustomSchemaIds(x => x.FullName.Replace("+", ".", StringComparison.OrdinalIgnoreCase));
-
-    //https://www.infoworld.com/article/3650668/implement-authorization-for-swagger-in-aspnet-core-6.html
-    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
-      In = ParameterLocation.Header,
-      Description = "Please enter a valid token",
-      Name = "Authorization",
-      Type = SecuritySchemeType.Http,
-      BearerFormat = "JWT",
-      Scheme = "Bearer"
-    });
-
-    options.AddSecurityRequirement(new OpenApiSecurityRequirement {
-        {
-          new OpenApiSecurityScheme {
-            Reference = new OpenApiReference {
-              Type = ReferenceType.SecurityScheme,
-              Id = "Bearer"
-            }
-          },
-          Array.Empty<string>()
-        }
-      });
-  });
 
   builder.Services.AddCors(options =>
     options.AddPolicy("CORSPolicy_React", policyBuilder =>
@@ -90,6 +65,7 @@ void ConfigureServices() {
   ));
 
   builder.Services.AddSignalR();
+
   builder.Services.AddMvc(opt => {
     opt.EnableEndpointRouting = false;
     var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
@@ -121,7 +97,7 @@ void ConfigureIdentityServices(IServiceCollection services) {
   identityBuilder.AddSignInManager<SignInManager<AppUser>>();
 
   services.AddAuthorization(opt => {
-    opt.AddPolicy("IsHostCreatedActivity", policy => {
+    opt.AddPolicy(IsHostRequirement.PolicyName, policy => {
       policy.Requirements.Add(new IsHostRequirement());
     });
   });
@@ -154,15 +130,18 @@ void ConfigureIdentityServices(IServiceCollection services) {
     });
 
   services.AddScoped<IJwtGenerator, JwtGenerator>();
-  services.AddScoped<IUserAccessor, UserAccessor>();
+  services.AddScoped<ICurrUserService, CurrUserService>();
 }
 
 void Configure() {
+  ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("fr");
+
   app.UseMiddleware<ErrorHandlingMiddleware>();
 
-  app.UseSwagger();
-  //https://editor.swagger.io/
-  app.UseSwaggerUI(c => c.SwaggerEndpoint("v1/swagger.yaml", "API v1"));
+  //app.UseSwagger();
+  ////https://editor.swagger.io/
+  //app.UseSwaggerUI(c => c.SwaggerEndpoint("v1/swagger.yaml", "API v1"));
+  app.UseSwaggerAndUI();
 
   if (app.Environment.IsDevelopment()) {
     //app.UseDeveloperExceptionPage();
@@ -244,7 +223,6 @@ void Configure() {
   });
 
   //app.MapSpaFallbackRoute(x => x.);
-
 }
 
 async Task RunMigrationAndSeeder() {

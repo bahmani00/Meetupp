@@ -5,12 +5,12 @@ using Domain;
 namespace Application.Activities;
 
 public class FollowingResolver : IValueResolver<UserActivity, AttendeeDto, bool> {
-  private readonly IUserAccessor userAccessor;
+  private readonly ICurrUserService currUserService;
 
-  public FollowingResolver(IUserAccessor userAccessor) {
-    this.userAccessor = userAccessor;
+  public FollowingResolver(ICurrUserService currUserService) {
+    this.currUserService = currUserService;
   }
 
   public bool Resolve(UserActivity source, AttendeeDto destination, bool destMember, ResolutionContext context) =>
-    userAccessor.GetCurrUserAsync().Result.Followings.Any(x => x.TargetId == source.AppUserId);
+    currUserService.GetCurrUserAsync().Result.IsFollowing(source.AppUserId);
 }
