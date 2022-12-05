@@ -13,8 +13,14 @@ MeetUppy> dotnet user-secrets  set "TokenKey" "super secret key" -p API/
 MeetUppy> dotnet user-secrets
 
 ---------------------------------------------
+Update EF Core Tools 
+MeetUppy> dotnet tool update --global dotnet-ef
+
 MeetUppy> dotnet ef migrations add "addedIdentity" -p Persistence/ -s API/
 MeetUppy\Persistence> dotnet add package Microsoft.AspNetCore.Identity
+
+dotnet ef migrations add "addedEntityMappingConfigs" -p src/Persistence.SqliteDbMigrations/ -s src/API/ 
+
 --------------------------------------
 npm install --save revalidate
 -----------------------------------------

@@ -1,31 +1,27 @@
-using Domain;
 using MediatR;
-using Microsoft.AspNetCore.Identity;
 
 namespace Application.Auth;
 
 public static class CurrentUser {
   public class Query : IRequest<User> { }
 
-  public class Handler : IRequestHandler<Query, User> {
-    private readonly UserManager<AppUser> _userManager;
+  internal class Handler : IRequestHandler<Query, User> {
     private readonly IJwtGenerator _jwtGenerator;
-    private readonly IUserAccessor userAccessor;
+    private readonly ICurrUserService currUserService;
 
-    public Handler(UserManager<AppUser> userManager, IJwtGenerator jwtGenerator, IUserAccessor userAccessor) {
-      this.userAccessor = userAccessor;
+    public Handler(IJwtGenerator jwtGenerator, ICurrUserService currUserService) {
+      this.currUserService = currUserService;
       _jwtGenerator = jwtGenerator;
-      _userManager = userManager;
     }
 
     public async Task<User> Handle(Query request, CancellationToken ct) {
-      var user = await userAccessor.GetCurrUserAsync(ct);
+      var user = await currUserService.GetCurrUserAsync(ct);
 
       return new User {
         DisplayName = user.DisplayName,
-        Username = user.UserName,
+        Username = user.Id,
         Token = _jwtGenerator.CreateToken(user),
-        Image = user.Photos.FirstOrDefault(x => x.IsMain)?.Url
+        Image = user.MainPhotoUrl
       };
     }
   }

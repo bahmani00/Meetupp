@@ -7,28 +7,23 @@ using static Application.Errors.RestException;
 namespace Application.Activities;
 
 public static class Unattend {
-  public class Command : IRequest {
-    public Guid Id { get; set; }
-  }
 
-  public class Handler : IRequestHandler<Command> {
+  internal class Handler : IRequestHandler<Command> {
     private readonly DataContext dbContext;
-    private readonly IUserAccessor userAccessor;
+    private readonly ICurrUserService currUserService;
 
-    public Handler(DataContext dbContext, IUserAccessor userAccessor) {
+    public Handler(DataContext dbContext, ICurrUserService currUserService) {
       this.dbContext = dbContext;
-      this.userAccessor = userAccessor;
+      this.currUserService = currUserService;
     }
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
       var activity = await dbContext.Activities.FindItemAsync(request.Id, ct);
       ThrowIfNotFound(activity, new { Activity = "Not found" });
 
-      var user = await userAccessor.GetCurrUserAsync();
-
       var attendance = await dbContext.UserActivities
           .SingleOrDefaultAsync(x => x.ActivityId == activity.Id &&
-              x.AppUserId == user.Id, ct);
+              x.AppUserId == currUserService.UserId, ct);
 
       if (attendance == null)
         return Unit.Value;
@@ -44,4 +39,6 @@ public static class Unattend {
       throw new Exception("Problem removing attandance");
     }
   }
+
+  public record Command(Guid Id) : IRequest;
 }

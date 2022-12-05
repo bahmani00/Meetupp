@@ -14,19 +14,19 @@ public static class Delete {
 
   public class Handler : IRequestHandler<Command> {
     private readonly DataContext dbContext;
-    private readonly IUserAccessor userAccessor;
+    private readonly ICurrUserService currUserService;
     private readonly IPhotoAccessor photoAccessor;
 
-    public Handler(DataContext dbContext, IUserAccessor userAccessor, IPhotoAccessor photoAccessor) {
+    public Handler(DataContext dbContext, ICurrUserService currUserService, IPhotoAccessor photoAccessor) {
       this.dbContext = dbContext;
       this.photoAccessor = photoAccessor;
-      this.userAccessor = userAccessor;
+      this.currUserService = currUserService;
     }
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
       var user = await dbContext.Users
         .Include(x => x.Photos)
-        .SingleOrDefaultAsync(x => x.UserName == userAccessor.GetCurrUsername(), ct);
+        .SingleOrDefaultAsync(x => x.UserName == currUserService.UserId, ct);
 
       var photo = user.Photos.FirstOrDefault(x => x.Id == request.Id);
       ThrowIfNotFound(photo, new { Photo = "Not found" });

@@ -19,7 +19,7 @@ public class Profile {
     new Profile {
       DisplayName = user.DisplayName,
       Username = user.UserName,
-      Image = user.Photos.FirstOrDefault(x => x.IsMain)?.Url,
+      Image = user.MainPhotoUrl,
       Photos = user.Photos,
       Bio = user.Bio,
       FollowersCount = user.Followers.Count,

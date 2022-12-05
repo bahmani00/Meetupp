@@ -2,9 +2,9 @@ using Domain;
 
 namespace Application.Auth;
 
-public interface IUserAccessor {
+public interface ICurrUserService {
 
-  string GetCurrUsername();
+  string UserId { get; }
 
   Task<AppUser> GetCurrUserAsync(CancellationToken ct = default);
 }

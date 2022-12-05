@@ -54,7 +54,7 @@ public static class Register {
           DisplayName = user.DisplayName,
           Token = jwtGenerator.CreateToken(user),
           Username = user.UserName,
-          Image = user.Photos.FirstOrDefault(x => x.IsMain)?.Url
+          Image = user.MainPhotoUrl
         };
       }
 

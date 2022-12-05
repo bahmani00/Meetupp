@@ -6,24 +6,25 @@ using Persistence;
 
 namespace Infrastructure.Security;
 
-public class UserAccessor : IUserAccessor {
+public class CurrUserService : ICurrUserService {
   private readonly DataContext dbContext;
   private readonly HttpContext httpContext;
 
-  public UserAccessor(DataContext dbContext, IHttpContextAccessor httpContextAccessor) {
+  public string UserId => httpContext.User.GetUserId();
+
+  public CurrUserService(DataContext dbContext, IHttpContextAccessor httpContextAccessor) {
     this.dbContext = dbContext;
     this.httpContext = httpContextAccessor.HttpContext;
   }
 
-  public string GetCurrUsername() {
-    return httpContext.User?.Claims?
-      .FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
-  }
-
   public async Task<AppUser> GetCurrUserAsync(CancellationToken ct) {
     httpContext.Items["loggedInUser"] ??=
-      await dbContext.GetUserProfileAsync(GetCurrUsername(), ct);
-
+      await dbContext.GetUserProfileAsync(UserId, ct);
     return httpContext.Items["loggedInUser"] as AppUser;
   }
+}
+
+public static class LoggedInUserServiceExt {
+  public static string GetUserId(this ClaimsPrincipal user) =>
+    user?.FindFirstValue(ClaimTypes.NameIdentifier);
 }

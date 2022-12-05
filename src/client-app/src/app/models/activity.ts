@@ -1,6 +1,6 @@
 export interface IActivitiesEnvelope {
-  activities: IActivity[];
-  activityCount: number;
+  items: IActivity[];
+  totalCount: number;
 }
 
 export interface IActivity {
@@ -53,7 +53,7 @@ export class ActivityFormValues implements IActivityFormValues {
 export interface IAttendee {
   username: string;
   displayName: string;
-  image: string;
+  image?: string;
   isHost: boolean;
   following?: boolean;
 }

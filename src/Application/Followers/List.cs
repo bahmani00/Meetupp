@@ -6,10 +6,6 @@ using Persistence;
 namespace Application.Followers;
 
 public static class List {
-  public class Query : IRequest<List<Profile>> {
-    public string Username { get; set; }
-    public string Predicate { get; set; }
-  }
 
   public class Handler : IRequestHandler<Query, List<Profile>> {
     private readonly DataContext dbContext;
@@ -32,7 +28,7 @@ public static class List {
       switch (request.Predicate) {
         case "followers": {
             var userFollowings = await queryable.Where(x =>
-                x.Target.UserName == request.Username).ToListAsync(ct);
+                x.Target.Id == request.UserId).ToListAsync(ct);
 
             foreach (var follower in userFollowings) {
               profiles.Add(await profileReader.ReadProfileAsync(follower.Observer.UserName, ct));
@@ -41,7 +37,7 @@ public static class List {
           }
         case "following": {
             var userFollowings = await queryable.Where(x =>
-                x.Observer.UserName == request.Username).ToListAsync(ct);
+                x.Observer.Id == request.UserId).ToListAsync(ct);
 
             foreach (var follower in userFollowings) {
               profiles.Add(await profileReader.ReadProfileAsync(follower.Target.UserName, ct));
@@ -53,4 +49,7 @@ public static class List {
       return profiles;
     }
   }
+
+  public record Query(string UserId, string Predicate) : IRequest<List<Profile>>;
+
 }
