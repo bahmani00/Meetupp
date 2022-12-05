@@ -2,39 +2,12 @@ using System.Reflection;
 using Application.Common.Behaviours;
 using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using Persistence;
 
 namespace Application;
 
 public static class ConfigureServices {
-  public static IServiceCollection AddApplicationServices(
-    this IServiceCollection services,
-    IConfiguration Configuration,
-    IWebHostEnvironment env) {
-
-    services.AddDbContext<DataContext>(opt => {
-      //opt.UseLazyLoadingProxies();
-
-      if (env.IsDevelopment()) {
-        opt.EnableSensitiveDataLogging();
-        opt.UseSqlite(
-          Configuration.GetConnectionString("DefaultConnection"),
-          x => x.MigrationsAssembly("Persistence.SqliteDbMigrations")
-        );
-      } else {
-        opt.UseSqlServer(
-          Configuration.GetConnectionString("DefaultConnection"),
-          x => x.MigrationsAssembly("Persistence.SqlServerDbMigrations")
-        );
-      }
-      opt.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
-    });
+  public static IServiceCollection AddApplicationServices(this IServiceCollection services) {
 
     services.AddAutoMapper(Assembly.GetExecutingAssembly());
     services.AddMediatR(Assembly.GetExecutingAssembly());
