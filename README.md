@@ -24,5 +24,5 @@ Here are some of the things done in this app:
 * Getting an ‘A’ rating for security from a well known security scanning site.
 
 ##### Swagger API: [http://localhost:5000/swagger/index.html](http://localhost:5000/swagger/index.html)
-##### The application: [http://localhost:3000/](http://localhost:3000/)
+##### The application: [http://localhost:3000/](http://localhost:3000/)  node: v16.8.0
 ##### User API calling: [http://localhost:5000/api/user](http://localhost:5000/api/user)
