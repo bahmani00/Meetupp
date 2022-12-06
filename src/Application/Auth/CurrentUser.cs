@@ -1,3 +1,4 @@
+using Application.Common.Interfaces;
 using MediatR;
 
 namespace Application.Auth;
@@ -7,15 +8,15 @@ public static class CurrentUser {
 
   internal class Handler : IRequestHandler<Query, User> {
     private readonly IJwtGenerator _jwtGenerator;
-    private readonly ICurrUserService currUserService;
+    private readonly IIdentityService currUserService;
 
-    public Handler(IJwtGenerator jwtGenerator, ICurrUserService currUserService) {
+    public Handler(IJwtGenerator jwtGenerator, IIdentityService currUserService) {
       this.currUserService = currUserService;
       _jwtGenerator = jwtGenerator;
     }
 
     public async Task<User> Handle(Query request, CancellationToken ct) {
-      var user = await currUserService.GetCurrUserAsync(ct);
+      var user = await currUserService.GetCurrUserProfileAsync(ct);
 
       return new User {
         DisplayName = user.DisplayName,

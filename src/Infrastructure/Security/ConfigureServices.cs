@@ -1,6 +1,8 @@
 using System.Text;
 using Application.Auth;
+using Application.Common.Interfaces;
 using Domain;
+using Infrastructure.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -18,7 +20,6 @@ public static class ConfigureServices {
     IConfiguration Configuration,
     IWebHostEnvironment env) {
 
-
     //services
     //    .AddDefaultIdentity<AppUser>()
     //    .AddRoles<IdentityRole>()
@@ -27,7 +28,7 @@ public static class ConfigureServices {
     //services.AddIdentityServer()
     //    .AddApiAuthorization<AppUser, ApplicationDbContext>();
 
-    //services.AddTransient<IIdentityService, IdentityService>();
+    services.AddTransient<IIdentityService, IdentityService>();
 
     //services.AddAuthentication()
     //    .AddIdentityServerJwt();
@@ -49,7 +50,7 @@ public static class ConfigureServices {
     });
 
     var identityBuilder = new IdentityBuilder(identityCoreBuilder.UserType, identityCoreBuilder.Services);
-    identityBuilder.AddEntityFrameworkStores<DataContext>();
+    identityBuilder.AddEntityFrameworkStores<AppDbContext>();
     identityBuilder.AddSignInManager<SignInManager<AppUser>>();
 
     services.AddAuthorization(opt => {

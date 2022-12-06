@@ -1,21 +1,16 @@
-using System.ComponentModel.DataAnnotations;
+using Domain.Common;
 
 namespace Domain;
 
-public class Activity {
+public class Activity : Entity {
   public Guid Id { get; set; }
 
-  [StringLength(50)]
   public string Title { get; set; }
 
-  [StringLength(500)]
   public string Description { get; set; }
-  [StringLength(50)]
   public string Category { get; set; }
   public DateTime Date { get; set; }
-  [StringLength(50)]
   public string City { get; set; }
-  [StringLength(50)]
   public string Venue { get; set; }
 
   //use virtial to efcore lazy loading rather eagerly loading

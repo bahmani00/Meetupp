@@ -1,7 +1,7 @@
+using Application.Common.Interfaces;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
-using Persistence;
 using static Application.Errors.RestException;
 
 namespace Application.Activities;
@@ -9,10 +9,10 @@ namespace Application.Activities;
 public static class Edit {
 
   public class Handler : IRequestHandler<Command> {
-    private readonly DataContext dbContext;
+    private readonly IAppDbContext dbContext;
     private readonly IMapper mapper;
 
-    public Handler(DataContext dbContext, IMapper mapper) {
+    public Handler(IAppDbContext dbContext, IMapper mapper) {
       this.dbContext = dbContext;
       this.mapper = mapper;
     }
@@ -37,7 +37,7 @@ public static class Edit {
     }
   }
 
-  public class Command: ActivityBaseDto, IRequest {
+  public class Command : ActivityBaseDto, IRequest {
     internal Guid Id { get; set; }
 
     public Command SetId(Guid id) {

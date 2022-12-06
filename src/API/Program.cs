@@ -3,11 +3,9 @@ using API;
 using API.Middleware;
 using API.Swagger;
 using Application;
-using Domain;
 using FluentValidation;
 using Infrastructure;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -23,9 +21,10 @@ builder.WebHost
   .UseKestrel(x => x.AddServerHeader = false);
 
 var app = builder.Build();
-Configure();
 
 await RunMigrationAndSeeder();
+
+Configure();
 
 app.Run();
 
@@ -85,9 +84,10 @@ void Configure() {
     app.UseHsts();
 
     app.UseHttpsRedirection();//Middleware to redirect HTTP requests to HTTPS
-    
-    app.ApplySecurityHeaders();
+
   }
+
+  app.ApplySecurityHeaders();
 
   app.UseDefaultFiles();//enable index.html,default.htm,...
   app.UseStaticFiles();//static files: js, css, img,...
@@ -135,18 +135,19 @@ void Configure() {
 }
 
 async Task RunMigrationAndSeeder() {
-  using (var scope = app.Services.CreateScope()) {
-    var services = scope.ServiceProvider;
-    try {
-      var context = services.GetRequiredService<DataContext>();
-      var userManager = services.GetRequiredService<UserManager<AppUser>>();
-      await context.Database.MigrateAsync();
-      await DbSeeder.SeedAsync(context, userManager);
+  using var scope = app.Services.CreateScope();
+  var services = scope.ServiceProvider;
+  try {
+    var context = services.GetRequiredService<AppDbContext>();
+    await context.Database.MigrateAsync();
 
-    } catch (Exception ex) {
-      ILogger logger = services.GetRequiredService<ILogger<Program>>();
-      logger.Error("Error occured during MeetUppy db migration.", ex);
-      throw;
-    }
-  };
+    var dbSeeder = services.GetRequiredService<DbSeeder>();
+    await dbSeeder.SeedAsync();
+
+  } catch (Exception ex) {
+    ILogger logger = services.GetRequiredService<ILogger<Program>>();
+    logger.Error("Error occured during MeetUppy db migration.", ex);
+    throw;
+  }
+
 }

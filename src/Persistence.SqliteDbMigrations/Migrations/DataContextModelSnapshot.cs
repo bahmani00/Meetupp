@@ -9,7 +9,7 @@ using Persistence;
 
 namespace Persistence.SqliteDbMigrations.Migrations
 {
-    [DbContext(typeof(DataContext))]
+    [DbContext(typeof(AppDbContext))]
     partial class DataContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -33,11 +33,24 @@ namespace Persistence.SqliteDbMigrations.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("CreatedOn")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("Date")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
                         .HasMaxLength(500)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("ModifiedOn")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Title")
@@ -52,7 +65,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Activities");
+                    b.ToTable("Activities", (string)null);
                 });
 
             modelBuilder.Entity("Domain.AppUser", b =>
@@ -152,7 +165,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
 
                     b.HasIndex("AuthorId", "ActivityId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Photo", b =>
@@ -179,7 +192,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.ToTable("Photos");
+                    b.ToTable("Photos", (string)null);
                 });
 
             modelBuilder.Entity("Domain.UserActivity", b =>
@@ -201,7 +214,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
 
                     b.HasIndex("ActivityId");
 
-                    b.ToTable("UserActivities");
+                    b.ToTable("UserActivities", (string)null);
                 });
 
             modelBuilder.Entity("Domain.UserFollowing", b =>
@@ -219,7 +232,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
 
                     b.HasIndex("TargetId");
 
-                    b.ToTable("Followings");
+                    b.ToTable("Followings", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

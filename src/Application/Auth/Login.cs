@@ -50,5 +50,5 @@ public static class Login {
     }
   }
 
-  public record Query(string Email, string Password): IRequest<User>;
+  public record Query(string Email, string Password) : IRequest<User>;
 }

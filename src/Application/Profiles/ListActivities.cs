@@ -1,8 +1,8 @@
+using Application.Common.Interfaces;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Persistence;
 using static Application.Errors.RestException;
 
 namespace Application.Profiles;
@@ -10,10 +10,10 @@ namespace Application.Profiles;
 public static class ListActivities {
 
   public class Handler : IRequestHandler<Query, List<UserActivityDto>> {
-    private readonly DataContext dbContext;
+    private readonly IAppDbContext dbContext;
     private readonly IMapper mapper;
 
-    public Handler(DataContext dbContext, IMapper mapper) {
+    public Handler(IAppDbContext dbContext, IMapper mapper) {
       this.dbContext = dbContext;
       this.mapper = mapper;
     }

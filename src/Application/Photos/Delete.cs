@@ -1,8 +1,8 @@
 using Application.Auth;
+using Application.Common.Interfaces;
 using Application.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Persistence;
 using static Application.Errors.RestException;
 
 namespace Application.Photos;
@@ -13,11 +13,11 @@ public static class Delete {
   }
 
   public class Handler : IRequestHandler<Command> {
-    private readonly DataContext dbContext;
+    private readonly IAppDbContext dbContext;
     private readonly ICurrUserService currUserService;
     private readonly IPhotoAccessor photoAccessor;
 
-    public Handler(DataContext dbContext, ICurrUserService currUserService, IPhotoAccessor photoAccessor) {
+    public Handler(IAppDbContext dbContext, ICurrUserService currUserService, IPhotoAccessor photoAccessor) {
       this.dbContext = dbContext;
       this.photoAccessor = photoAccessor;
       this.currUserService = currUserService;

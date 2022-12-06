@@ -1,8 +1,8 @@
+using Application.Common.Interfaces;
 using AutoMapper;
 using Domain;
 using FluentValidation;
 using MediatR;
-using Persistence;
 using static Application.Errors.RestException;
 
 namespace Application.Activities;
@@ -10,10 +10,10 @@ namespace Application.Activities;
 public static class EditPartial {
 
   public class Handler : IRequestHandler<Command> {
-    private readonly DataContext dbContext;
+    private readonly IAppDbContext dbContext;
     private readonly IMapper mapper;
 
-    public Handler(DataContext dbContext, IMapper mapper) {
+    public Handler(IAppDbContext dbContext, IMapper mapper) {
       this.dbContext = dbContext;
       this.mapper = mapper;
     }

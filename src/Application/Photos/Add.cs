@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using Application.Auth;
+using Application.Common.Interfaces;
 using Application.Interfaces;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Persistence;
 
 namespace Application.Photos;
 
@@ -16,11 +16,11 @@ public static class Add {
   }
 
   public class Handler : IRequestHandler<Command, Photo> {
-    private readonly DataContext dbContext;
+    private readonly IAppDbContext dbContext;
     private readonly ICurrUserService currUserService;
     private readonly IPhotoAccessor photoAccessor;
 
-    public Handler(DataContext dbContext, ICurrUserService currUserService, IPhotoAccessor photoAccessor) {
+    public Handler(IAppDbContext dbContext, ICurrUserService currUserService, IPhotoAccessor photoAccessor) {
       this.dbContext = dbContext;
       this.photoAccessor = photoAccessor;
       this.currUserService = currUserService;

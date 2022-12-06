@@ -47,8 +47,8 @@ public static class SwaggerConfigurationExtensions {
       //options.IgnoreObsoleteActions();
       //options.IgnoreObsoleteProperties();
 
-      options.SwaggerDoc("v1", new OpenApiInfo { 
-        Title = "Meetupp API", 
+      options.SwaggerDoc("v1", new OpenApiInfo {
+        Title = "Meetupp API",
         Version = "v1",
         Description = "An API to perform Meetupp operations"
       });

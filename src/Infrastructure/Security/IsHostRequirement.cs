@@ -1,8 +1,7 @@
-using System.Security.Claims;
+using Application.Common.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Persistence;
 
 namespace Infrastructure.Security;
 
@@ -12,9 +11,9 @@ public class IsHostRequirement : IAuthorizationRequirement {
 
 public class IsHostRequirementHandler : AuthorizationHandler<IsHostRequirement> {
   private readonly IHttpContextAccessor httpContextAccessor;
-  private readonly DataContext dbContext;
+  private readonly IAppDbContext dbContext;
 
-  public IsHostRequirementHandler(IHttpContextAccessor httpContextAccessor, DataContext dbContext) {
+  public IsHostRequirementHandler(IHttpContextAccessor httpContextAccessor, IAppDbContext dbContext) {
     this.dbContext = dbContext;
     this.httpContextAccessor = httpContextAccessor;
   }
@@ -25,17 +24,14 @@ public class IsHostRequirementHandler : AuthorizationHandler<IsHostRequirement> 
       return;
     }
 
-    var currUserName =
-        context.User.Claims.SingleOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value;
-
+    var userId = context.User.GetUserId();
     var activityId = httpContextAccessor.GetId();
+
     var attendance = await dbContext.UserActivities
       .Include(x => x.AppUser)
-      .FirstOrDefaultAsync(x => x.ActivityId == activityId && x.IsHost);
+      .FirstOrDefaultAsync(x => x.ActivityId == activityId && x.IsHost && x.AppUser.Id == userId);
 
-    //var host = activity.UserActivities.FirstOrDefault(x => x.IsHost);
-
-    if (attendance?.AppUser?.UserName == currUserName)
+    if (attendance != null)
       context.Succeed(requirement);
   }
 }

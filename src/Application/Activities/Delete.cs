@@ -1,5 +1,5 @@
+using Application.Common.Interfaces;
 using MediatR;
-using Persistence;
 using static Application.Errors.RestException;
 
 namespace Application.Activities;
@@ -7,8 +7,8 @@ namespace Application.Activities;
 public static class Delete {
 
   public class Handler : IRequestHandler<Command> {
-    private readonly DataContext dbContext;
-    public Handler(DataContext dbContext) {
+    private readonly IAppDbContext dbContext;
+    public Handler(IAppDbContext dbContext) {
       this.dbContext = dbContext;
     }
 

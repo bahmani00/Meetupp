@@ -1,17 +1,17 @@
+using Application.Common.Interfaces;
 using Application.Profiles;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Persistence;
 
 namespace Application.Followers;
 
 public static class List {
 
   public class Handler : IRequestHandler<Query, List<Profile>> {
-    private readonly DataContext dbContext;
+    private readonly IAppDbContext dbContext;
     private readonly IProfileReader profileReader;
 
-    public Handler(DataContext dbContext, IProfileReader profileReader) {
+    public Handler(IAppDbContext dbContext, IProfileReader profileReader) {
       this.dbContext = dbContext;
       this.profileReader = profileReader;
     }

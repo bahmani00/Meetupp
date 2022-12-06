@@ -1,8 +1,8 @@
 using Application.Auth;
+using Application.Common.Interfaces;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Persistence;
 using static Application.Errors.RestException;
 
 namespace Application.Activities;
@@ -10,16 +10,16 @@ namespace Application.Activities;
 public static class Attend {
 
   public class Handler : IRequestHandler<Command> {
-    private readonly DataContext dbContext;
+    private readonly IAppDbContext dbContext;
     private readonly ICurrUserService currUserService;
 
-    public Handler(DataContext dbContext, ICurrUserService currUserService) {
+    public Handler(IAppDbContext dbContext, ICurrUserService currUserService) {
       this.dbContext = dbContext;
       this.currUserService = currUserService;
     }
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
-      var activity = await dbContext.Activities.SingleOrDefaultAsync(x => x.Id == request.ActivityId, ct);
+      var activity = await dbContext.Activities.FindItemAsync(request.ActivityId, ct);
       ThrowIfNotFound(activity, new { Activity = "Not found" });
 
       var attendance = await dbContext.UserActivities

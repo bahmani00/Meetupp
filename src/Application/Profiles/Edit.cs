@@ -1,17 +1,17 @@
 using Application.Auth;
+using Application.Common.Interfaces;
 using FluentValidation;
 using MediatR;
-using Persistence;
 
 namespace Application.Profiles;
 
 public static class Edit {
 
   public class Handler : IRequestHandler<Command> {
-    private readonly DataContext dbContext;
+    private readonly IAppDbContext dbContext;
     private readonly ICurrUserService currUserService;
 
-    public Handler(DataContext dbContext, ICurrUserService currUserService) {
+    public Handler(IAppDbContext dbContext, ICurrUserService currUserService) {
       this.dbContext = dbContext;
       this.currUserService = currUserService;
     }

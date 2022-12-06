@@ -9,7 +9,7 @@
   </PropertyGroup> -->
 
   <ItemGroup>
-        <Compile Remove="Common\Behaviours\AuthorizationBehaviour.cs" />
+    <Compile Remove="Common\Behaviours\AuthorizationBehaviour.cs" />
     <Compile Remove="Common\Behaviours\LoggingBehaviour.cs" />
     <Compile Remove="Common\Behaviours\PerformanceBehaviour.cs" />
     <Compile Remove="Common\Behaviours\UnhandledExceptionBehaviour.cs" />
@@ -19,7 +19,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
-    <ProjectReference Include="..\Persistence\Persistence.csproj" />
   </ItemGroup>
 
   <ItemGroup>
