@@ -1,20 +1,19 @@
-using Application.Auth;
+using Application.Common.Interfaces;
 using AutoMapper;
 using Domain;
 using FluentValidation;
 using MediatR;
-using Persistence;
 
 namespace Application.Activities;
 
 public static class Create {
 
   internal class Handler : IRequestHandler<Command, Guid> {
-    private readonly DataContext dbContext;
-    private readonly ICurrUserService currUserService;
+    private readonly IAppDbContext dbContext;
+    private readonly IIdentityService currUserService;
     private readonly IMapper mapper;
 
-    public Handler(DataContext dbContext, ICurrUserService currUserService, IMapper mapper) {
+    public Handler(IAppDbContext dbContext, IIdentityService currUserService, IMapper mapper) {
       this.dbContext = dbContext;
       this.currUserService = currUserService;
       this.mapper = mapper;
@@ -26,8 +25,8 @@ public static class Create {
       //Dont use AddSync
       dbContext.Activities.Add(activity);
 
-      var user = await currUserService.GetCurrUserAsync();
-      var attendee = UserActivity.Create(user, activity, true);
+      var userId = currUserService.GetCurrUserId();
+      var attendee = UserActivity.Create(userId, activity.Id, true);
 
       dbContext.UserActivities.Add(attendee);
 

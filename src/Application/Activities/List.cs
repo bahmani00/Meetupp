@@ -1,5 +1,5 @@
-using Application.Auth;
 using Application.Common;
+using Application.Common.Interfaces;
 using Application.Common.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
@@ -7,19 +7,18 @@ using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Persistence;
 
 namespace Application.Activities;
 
 public static class List {
 
   internal class Handler : IRequestHandler<Query, PaginatedList<ActivityDto>> {
-    private readonly DataContext dbContext;
+    private readonly IAppDbContext dbContext;
     private readonly ILogger<Handler> logger;
     private readonly IMapper mapper;
-    private readonly ICurrUserService currUserService;
+    private readonly IIdentityService currUserService;
 
-    public Handler(DataContext dbContext, IMapper mapper, ICurrUserService currUserService, ILogger<Handler> logger) {
+    public Handler(IAppDbContext dbContext, IMapper mapper, IIdentityService currUserService, ILogger<Handler> logger) {
       this.dbContext = dbContext;
       this.currUserService = currUserService;
       this.mapper = mapper;
@@ -36,14 +35,14 @@ public static class List {
         .AsQueryable();
 
       if (request.IsGoing && !request.IsHost) {
-        queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.Id == currUserService.UserId));
+        queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.Id == currUserService.GetCurrUserId()));
       }
 
       if (request.IsHost && !request.IsGoing) {
-        queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.Id == currUserService.UserId && a.IsHost));
+        queryable = queryable.Where(x => x.UserActivities.Any(a => a.AppUser.Id == currUserService.GetCurrUserId() && a.IsHost));
       }
 
-      var loggedInUser = await currUserService.GetCurrUserAsync(ct);
+      var loggedInUser = await currUserService.GetCurrUserProfileAsync(ct);
 
       return await queryable
         .ProjectTo<ActivityDto>(mapper.ConfigurationProvider, new { currUser = loggedInUser })

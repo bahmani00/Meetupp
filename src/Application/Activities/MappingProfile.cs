@@ -9,7 +9,7 @@ public class MappingProfile : Profile {
 
     //https://stackoverflow.com/a/68012002/336511
     CreateMap<EditPartial.Command, Activity>()
-      .ForAllMembers(opts => 
+      .ForAllMembers(opts =>
         opts.Condition((src, dest, srcMember) => srcMember != null));
 
     CreateMap<Edit.Command, Activity>();

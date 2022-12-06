@@ -1,7 +1,6 @@
-using Application.Auth;
+using Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Persistence;
 using static Application.Errors.RestException;
 
 namespace Application.Followers;
@@ -9,16 +8,16 @@ namespace Application.Followers;
 public static class Delete {
 
   public class Handler : IRequestHandler<Command> {
-    private readonly DataContext dbContext;
-    private readonly ICurrUserService currUserService;
+    private readonly IAppDbContext dbContext;
+    private readonly IIdentityService currUserService;
 
-    public Handler(DataContext dbContext, ICurrUserService currUserService) {
+    public Handler(IAppDbContext dbContext, IIdentityService currUserService) {
       this.dbContext = dbContext;
       this.currUserService = currUserService;
     }
 
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
-      var observer = await currUserService.GetCurrUserAsync();
+      var observer = await currUserService.GetCurrUserProfileAsync(ct);
 
       var target = await dbContext.GetUserAsync(request.Username, ct);
       ThrowIfNotFound(target, new { User = "Not found" });

@@ -1,18 +1,11 @@
 using System.Globalization;
+using Application.Common.Interfaces;
 using Domain;
 using Microsoft.AspNetCore.Identity;
 
 namespace Persistence;
 
-public static class DbSeeder {
-  public static async Task SeedAsync(DataContext dbContext, UserManager<AppUser> userManager) {
-    await AddUsers(dbContext, userManager);
-
-    await AddFollowers(dbContext, userManager);
-
-    await AddActivities(dbContext, userManager);
-  }
-
+public class DbSeeder {
   static readonly Random rand = new();
   static readonly Dictionary<int, (string cat, string desc)> categories = new() {
     { 1, ("drinks", " Let's drink to humanity & peace") },
@@ -20,7 +13,7 @@ public static class DbSeeder {
     { 3, ("film", "Let's watch a movie and discuss it") },
     { 4, ("food", "Who's hungry to try some exotic food") },
     { 5, ("music", "Lets listen to mucic and maybe dance") },
-    { 6, ("travel", "Travel to gether and share our experience") },
+    { 6, ("travel", "Travel together and share our experience") },
     { 7, ("coding", "Come discuss your side projects") },
     { 8, ("fun", "Go funny! 1, 2, 3 be funny!") }
   };
@@ -37,7 +30,23 @@ public static class DbSeeder {
     { 10, ("Lisbon", "Oceanário de Lisboa") },
   };
 
-  private static async Task AddFollowers(DataContext dbContext, UserManager<AppUser> userManager) {
+  private readonly IAppDbContext dbContext;
+  private readonly UserManager<AppUser> userManager;
+
+  public DbSeeder(IAppDbContext dbContext, UserManager<AppUser> userManager) {
+    this.dbContext = dbContext;
+    this.userManager = userManager;
+  }
+
+  public async Task SeedAsync() {
+    await AddUsers();
+
+    await AddFollowers();
+
+    await AddActivities();
+  }
+
+  private async Task AddFollowers() {
     if (dbContext.Followings.Any()) return;
 
     var users = userManager.Users.ToList();
@@ -64,10 +73,10 @@ public static class DbSeeder {
     await dbContext.SaveChangesAsync();
   }
 
-  private static async Task AddActivities(DataContext dbContext, UserManager<AppUser> userManager) {
+  private async Task AddActivities() {
     if (dbContext.Activities.Any()) return;
 
-    var users = userManager.Users.ToList();
+    var users = userManager.Users.Skip(0).ToList();
 
     for (var i = 10; i <= 100; ++i) {
       var date = DateTime.Now.AddDays(i - 95);
@@ -84,6 +93,8 @@ public static class DbSeeder {
         Category = cat.cat,
         City = city,
         Venue = venue,
+        CreatedBy = "system",
+        CreatedOn = DateTimeOffset.Now,
         UserActivities = new List<UserActivity> {
           new() { AppUser = usrs[0], IsHost = true, DateJoined = date },
           new() { AppUser = usrs[1], IsHost = false, DateJoined = date.AddDays(-1) },
@@ -93,12 +104,12 @@ public static class DbSeeder {
           new() { AppUser = usrs[5], IsHost = false, DateJoined = date.AddDays(-1) },
         },
         Comments = new List<Comment> {
-          new() { Author = usrs[0], Body = "Still on?" },
-          new() { Author = usrs[1], Body = "Of course it's on" },
-          new() { Author = usrs[2], Body = "This is awesome" },
+          new() { Author = usrs[0], Body = "Still on?📃" },
+          new() { Author = usrs[1], Body = "Of course it's on ✅" },
+          new() { Author = usrs[2], Body = "This is awesome 🤯" },
           new() { Author = usrs[3], Body = "I'm in" },
-          new() { Author = usrs[1], Body = "Let's do it" },
-          new() { Author = usrs[2], Body = "J'adore ca" },
+          new() { Author = usrs[1], Body = "Let's do it 🏆" },
+          new() { Author = usrs[2], Body = "J'adore ça" },
           new() { Author = usrs[3], Body = "I'm from USA, btw." },
           new() { Author = usrs[5], Body = "Hello from MTL" },
         }
@@ -108,8 +119,8 @@ public static class DbSeeder {
     await dbContext.SaveChangesAsync();
   }
 
-  private static async Task AddUsers(DataContext dbContext, UserManager<AppUser> userManager) {
-    if (dbContext.Users.Any()) return;
+  private async Task AddUsers() {
+    if (userManager.Users.Any()) return;
 
     var i = 0;
     var Id = () => (++i).ToString(CultureInfo.InvariantCulture);
@@ -117,16 +128,27 @@ public static class DbSeeder {
 
     var users = new List<AppUser> {
       new() {
+        Id = "system",
+        DisplayName = "System",
+        UserName = "system",
+        Email = "system@test.com",
+        Bio = "System user",
+        Photos = new Photo[] {
+          new(Id(), true, $"{baseUrl}/v1669958748/quapuftxaspbzhxgijzl.jpg"),
+        }
+      },
+      new() {
         Id = "admin",
         DisplayName = "Admin",
         UserName = "admin",
         Email = "admin@test.com",
         Bio = "A passionate software engineer | Dad",
         Photos = new Photo[] {
-          new() {Id=Id(), IsMain = true, Url = $"{baseUrl}/v1667788631/lrumy0yoaoa0h9p8zo2y.jpg"},
-          new() {Id=Id(), IsMain = false, Url = $"{baseUrl}/v1609120019/wdxbk5qjkettlxnvzmy5.jpg"},
-          new() {Id=Id(), IsMain = false, Url = $"{baseUrl}/v1667788547/eq2cmgcgonykgabnyfsn.jpg"},
-          new() {Id=Id(), IsMain = false, Url = $"{baseUrl}/v1667787939/nirhhmh1ob7eg7s6qznd.jpg"},
+          new(Id(), true, $"{baseUrl}/v1667788631/lrumy0yoaoa0h9p8zo2y.jpg"),
+          new(Id(), false, $"{baseUrl}/v1609120019/wdxbk5qjkettlxnvzmy5.jpg"),
+          new(Id(), false, $"{baseUrl}/v1667788547/eq2cmgcgonykgabnyfsn.jpg"),
+          new(Id(), false, $"{baseUrl}/v1667787939/nirhhmh1ob7eg7s6qznd.jpg"),
+          new(Id(), false, $"{baseUrl}/v1669958748/quapuftxaspbzhxgijzl.jpg"),
         }
       },
       new() {
@@ -136,8 +158,8 @@ public static class DbSeeder {
         Email = "jane@test.com",
         Bio = "A passionate Photographer | Student",
         Photos = new Photo[] {
-          new() {Id=Id(), IsMain = true, Url = $"{baseUrl}/v1609119965/yglovzkycojx7f0zafgh.jpg"},
-          new() {Id=Id(), IsMain = false, Url = $"{baseUrl}/v1667788951/hqcv71nr4unfyaoefbld.jpg"},
+          new(Id(), true, $"{baseUrl}/v1609119965/yglovzkycojx7f0zafgh.jpg"),
+          new(Id(), false, $"{baseUrl}/v1667788951/hqcv71nr4unfyaoefbld.jpg"),
         }
       },
       new() {
@@ -147,8 +169,8 @@ public static class DbSeeder {
         Email = "nicki@test.com",
         Bio = "A passionate LifeCoach | Student",
         Photos = new Photo[] {
-          new() {Id=Id(), IsMain = true, Url = $"{baseUrl}/v1667789135/w77rweub0je89khwqg02.jpg"},
-          new() {Id=Id(), IsMain = false, Url = $"{baseUrl}/v1667788076/b27beexlxamrmulijxae.jpg"},
+          new(Id(), true, $"{baseUrl}/v1667789135/w77rweub0je89khwqg02.jpg"),
+          new(Id(), false, $"{baseUrl}/v1667788076/b27beexlxamrmulijxae.jpg"),
         }
       },
       new() {
@@ -157,8 +179,8 @@ public static class DbSeeder {
         UserName = "roxane",
         Email = "roxane@test.com",
         Photos = new Photo[] {
-          new() {Id=Id(), IsMain = true, Url = $"{baseUrl}/v1667788474/rwldoiraowj8biyf5h1m.jpg"},
-          new() {Id=Id(), IsMain = false, Url = $"{baseUrl}/v1667788547/eq2cmgcgonykgabnyfsn.jpg"},
+          new(Id(), true, $"{baseUrl}/v1667788474/rwldoiraowj8biyf5h1m.jpg"),
+          new(Id(), false, $"{baseUrl}/v1667788547/eq2cmgcgonykgabnyfsn.jpg"),
         }
       },
       new() {
@@ -167,7 +189,7 @@ public static class DbSeeder {
         UserName = "bob",
         Email = "bob@test.com",
         Photos = new Photo[] {
-          new() {Id=Id(), IsMain = true, Url = $"{baseUrl}/v1609119885/pcykcdlnyjbckrobnzwb.jpg"},
+          new(Id(), true, $"{baseUrl}/v1609119885/pcykcdlnyjbckrobnzwb.jpg"),
         }
       },
       new() {
@@ -176,7 +198,7 @@ public static class DbSeeder {
         UserName = "tom",
         Email = "tom@test.com",
         Photos = new Photo[] {
-          new() {Id=Id(), IsMain = true, Url = $"{baseUrl}/v1609120019/wdxbk5qjkettlxnvzmy5.jpg"},
+          new(Id(), true, $"{baseUrl}/v1609120019/wdxbk5qjkettlxnvzmy5.jpg"),
         }
       },
       new() {
@@ -185,8 +207,8 @@ public static class DbSeeder {
         UserName = "john",
         Email = "john@test.com",
         Photos = new Photo[] {
-          new() {Id=Id(), IsMain = true, Url = $"{baseUrl}/v1667787772/gd5xnpxthhbuy7blw4d4.jpg"},
-          new() {Id=Id(), IsMain = false, Url = $"{baseUrl}/v1609120019/wdxbk5qjkettlxnvzmy5.jpg"},
+          new(Id(), true, $"{baseUrl}/v1667787772/gd5xnpxthhbuy7blw4d4.jpg"),
+          new(Id(), false, $"{baseUrl}/v1609120019/wdxbk5qjkettlxnvzmy5.jpg"),
         }
       },
       new() {
@@ -195,7 +217,7 @@ public static class DbSeeder {
         UserName = "Hardy",
         Email = "hardy@test.com",
         Photos = new Photo[] {
-          new() {Id=Id(), IsMain = true, Url = $"{baseUrl}/v1609120019/wdxbk5qjkettlxnvzmy5.jpg"},
+          new(Id(), true, $"{baseUrl}/v1609120019/wdxbk5qjkettlxnvzmy5.jpg"),
         }
       },
       new() {
@@ -204,7 +226,7 @@ public static class DbSeeder {
         UserName = "dan",
         Email = "dan@test.com",
         Photos = new Photo[] {
-          new() {Id=Id(), IsMain = true, Url = $"{baseUrl}/v1667787862/lowikqunihh8c7iqe57a.jpg"},
+          new(Id(), true, $"{baseUrl}/v1667787862/lowikqunihh8c7iqe57a.jpg"),
         }
       },
       new() {
@@ -213,7 +235,7 @@ public static class DbSeeder {
         UserName = "liam",
         Email = "liam@test.com",
         Photos = new Photo[] {
-          new() {Id=Id(), IsMain = true, Url = $"{baseUrl}/v1667787939/nirhhmh1ob7eg7s6qznd.jpg"},
+          new(Id(), true, $"{baseUrl}/v1667787939/nirhhmh1ob7eg7s6qznd.jpg"),
         }
       },
       new() {

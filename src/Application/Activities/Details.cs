@@ -1,7 +1,7 @@
+using Application.Common.Interfaces;
 using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Persistence;
 using static Application.Errors.RestException;
 
 namespace Application.Activities;
@@ -9,10 +9,10 @@ namespace Application.Activities;
 public static class Details {
 
   public class Handler : IRequestHandler<Query, ActivityDto> {
-    private readonly DataContext dbContext;
+    private readonly IAppDbContext dbContext;
     private readonly IMapper mapper;
 
-    public Handler(DataContext dbContext, IMapper mapper) {
+    public Handler(IAppDbContext dbContext, IMapper mapper) {
       this.dbContext = dbContext;
       this.mapper = mapper;
     }
@@ -29,5 +29,5 @@ public static class Details {
     }
   }
 
-  public record Query(Guid Id): IRequest<ActivityDto>;
+  public record Query(Guid Id) : IRequest<ActivityDto>;
 }

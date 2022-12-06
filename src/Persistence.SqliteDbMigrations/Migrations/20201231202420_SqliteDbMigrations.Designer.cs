@@ -8,7 +8,7 @@ using Persistence;
 
 namespace Persistence.SqliteDbMigrations.Migrations
 {
-    [DbContext(typeof(DataContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20201231202420_SqliteDbMigrations")]
     partial class SqliteDbMigrations
     {

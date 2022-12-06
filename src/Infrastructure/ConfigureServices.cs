@@ -1,3 +1,4 @@
+using Application.Common.Interfaces;
 using Application.Interfaces;
 using Application.Profiles;
 using Infrastructure.Photos;
@@ -19,9 +20,9 @@ public static class ConfigureServices {
     IConfiguration Configuration,
     IWebHostEnvironment env) {
 
-    //services.AddScoped<AuditableEntitySaveChangesInterceptor>();
+    services.AddScoped<AuditEntitySaveChangesInterceptor>();
 
-    services.AddDbContext<DataContext>(opt => {
+    services.AddDbContext<AppDbContext>(opt => {
       //opt.UseLazyLoadingProxies();
 
       if (env.IsDevelopment()) {
@@ -39,9 +40,9 @@ public static class ConfigureServices {
       opt.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
     });
 
-    //services.AddScoped<DbContext>(provider => provider.GetRequiredService<DataContext>());
+    services.AddScoped<IAppDbContext>(provider => provider.GetRequiredService<AppDbContext>());
 
-    ////services.AddScoped<ApplicationDbContextInitialiser>();
+    services.AddScoped<DbSeeder>();
 
 
     services.AddSingleton<ISystemClock, SystemClock>();

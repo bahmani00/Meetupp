@@ -11,8 +11,6 @@ public class ActivityConfiguration : IEntityTypeConfiguration<Activity> {
     builder.Property(t => t.Title)
       .HasMaxLength(50)
       .IsRequired();
-    builder.Property(t => t.Description)
-      .HasMaxLength(500);
     builder.Property(t => t.Category)
       .HasMaxLength(50)
       .IsRequired();

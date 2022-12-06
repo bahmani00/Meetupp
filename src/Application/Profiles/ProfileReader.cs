@@ -1,14 +1,13 @@
-using Application.Auth;
-using Persistence;
+using Application.Common.Interfaces;
 using static Application.Errors.RestException;
 
 namespace Application.Profiles;
 
 public class ProfileReader : IProfileReader {
-  private readonly DataContext dbContext;
-  private readonly ICurrUserService currUserService;
+  private readonly IAppDbContext dbContext;
+  private readonly IIdentityService currUserService;
 
-  public ProfileReader(DataContext dbContext, ICurrUserService currUserService) {
+  public ProfileReader(IAppDbContext dbContext, IIdentityService currUserService) {
     this.dbContext = dbContext;
     this.currUserService = currUserService;
   }
@@ -17,7 +16,7 @@ public class ProfileReader : IProfileReader {
     var user = await dbContext.GetUserProfileAsync(username, ct);
     ThrowIfNotFound(user, new { User = "Not found" });
 
-    var loggedInUser = await currUserService.GetCurrUserAsync(ct);
+    var loggedInUser = await currUserService.GetCurrUserProfileAsync(ct);
     return Profile.From(user, loggedInUser);
   }
 }

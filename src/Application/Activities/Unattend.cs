@@ -1,7 +1,7 @@
 using Application.Auth;
+using Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Persistence;
 using static Application.Errors.RestException;
 
 namespace Application.Activities;
@@ -9,10 +9,10 @@ namespace Application.Activities;
 public static class Unattend {
 
   internal class Handler : IRequestHandler<Command> {
-    private readonly DataContext dbContext;
+    private readonly IAppDbContext dbContext;
     private readonly ICurrUserService currUserService;
 
-    public Handler(DataContext dbContext, ICurrUserService currUserService) {
+    public Handler(IAppDbContext dbContext, ICurrUserService currUserService) {
       this.dbContext = dbContext;
       this.currUserService = currUserService;
     }

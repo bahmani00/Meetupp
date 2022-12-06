@@ -10,7 +10,7 @@ using Persistence;
 
 namespace Persistence.SqliteDbMigrations.Migrations
 {
-    [DbContext(typeof(DataContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20221203002358_addedEntityMappingConfigs")]
     partial class addedEntityMappingConfigs
     {

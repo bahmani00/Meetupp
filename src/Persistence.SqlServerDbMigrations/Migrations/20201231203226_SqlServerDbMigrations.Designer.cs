@@ -9,7 +9,7 @@ using Persistence;
 
 namespace Persistence.SqlServerDbMigrations.Migrations
 {
-    [DbContext(typeof(DataContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20201231203226_SqlServerDbMigrations")]
     partial class SqlServerDbMigrations
     {

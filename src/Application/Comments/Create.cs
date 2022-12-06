@@ -1,21 +1,21 @@
+using Application.Common.Interfaces;
 using AutoMapper;
 using Domain;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using Persistence;
 
 namespace Application.Comments;
 
 public static class Create {
 
   internal class Handler : IRequestHandler<Command, CommentDto> {
-    private readonly DataContext dbContext;
+    private readonly IAppDbContext dbContext;
     private readonly IMapper mapper;
     private readonly HttpContext httpContext;
 
-    public Handler(DataContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
+    public Handler(IAppDbContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
       this.dbContext = dbContext;
       this.mapper = mapper;
       this.httpContext = httpContextAccessor.HttpContext;
@@ -42,10 +42,10 @@ public static class Create {
   }
 
   public class CommandValidator : AbstractValidator<Command> {
-    private readonly DataContext dbContext;
+    private readonly IAppDbContext dbContext;
     private readonly HttpContext httpContext;
 
-    public CommandValidator(DataContext dbContext, IHttpContextAccessor httpContextAccessor) {
+    public CommandValidator(IAppDbContext dbContext, IHttpContextAccessor httpContextAccessor) {
       this.dbContext = dbContext;
       this.httpContext = httpContextAccessor.HttpContext;
 
@@ -74,9 +74,5 @@ public static class Create {
     }
   }
 
-  public sealed record Command(
-    Guid ActivityId,
-    string UserId,
-    string Body) : IRequest<CommentDto> {
-  }
+  public sealed record Command(Guid ActivityId, string UserId, string Body) : IRequest<CommentDto>;
 }

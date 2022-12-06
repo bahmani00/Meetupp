@@ -1,3 +1,4 @@
+using Application.Auth;
 using Application.Common.Interfaces;
 using Application.Common.Models;
 using Domain;
@@ -8,24 +9,34 @@ using Microsoft.EntityFrameworkCore;
 namespace Infrastructure.Identity;
 
 public class IdentityService : IIdentityService {
+  private readonly ICurrUserService currUserService;
   private readonly UserManager<AppUser> _userManager;
   private readonly IUserClaimsPrincipalFactory<AppUser> _userClaimsPrincipalFactory;
   private readonly IAuthorizationService _authorizationService;
 
   public IdentityService(
-      UserManager<AppUser> userManager,
-      IUserClaimsPrincipalFactory<AppUser> userClaimsPrincipalFactory,
-      IAuthorizationService authorizationService) {
+    ICurrUserService currUserService,
+    UserManager<AppUser> userManager,
+    IUserClaimsPrincipalFactory<AppUser> userClaimsPrincipalFactory,
+    IAuthorizationService authorizationService) {
+
+    this.currUserService = currUserService;
     _userManager = userManager;
     _userClaimsPrincipalFactory = userClaimsPrincipalFactory;
     _authorizationService = authorizationService;
   }
 
-  public async Task<string> GetUserNameAsync(string userId) {
-    var user = await _userManager.Users.FirstAsync(u => u.Id == userId);
+  public string GetCurrUserId() => currUserService.UserId;
 
-    return user.UserName;
-  }
+  public async Task<AppUser> GetCurrUserProfileAsync(CancellationToken ct = default) =>
+    await GetUserProfileAsync(currUserService.UserId, ct);
+
+  public async Task<AppUser> GetUserProfileAsync(string userId, CancellationToken ct) =>
+    await _userManager.Users
+      .Include(x => x.Followings)
+      .Include(x => x.Followers)
+      .Include(x => x.Photos)
+      .FirstAsync(u => u.Id == userId, ct);
 
   public async Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password) {
     var user = new AppUser {
@@ -39,7 +50,7 @@ public class IdentityService : IIdentityService {
   }
 
   public async Task<bool> IsInRoleAsync(string userId, string role) {
-    var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
+    var user = _userManager.Users.SingleOrDefault(x => x.Id ==  userId);
 
     return user != null && await _userManager.IsInRoleAsync(user, role);
   }
