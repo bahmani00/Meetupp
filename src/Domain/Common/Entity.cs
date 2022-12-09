@@ -4,10 +4,14 @@ namespace Domain.Common;
 
 public abstract class Entity {
   [Required]
-  public DateTimeOffset CreatedOn { get; set; }
+  public string CreatedById { get; set; }
+  public AppUser CreatedBy { get; set; }
+
   [Required]
-  public string CreatedBy { get; set; }
+  public DateTimeOffset CreatedOn { get; set; }
+
+  public string ModifiedById { get; set; }
+  public AppUser ModifiedBy { get; set; }
 
   public DateTimeOffset ModifiedOn { get; set; }
-  public string ModifiedBy { get; set; }
 }

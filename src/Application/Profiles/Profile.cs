@@ -1,4 +1,5 @@
 using System.Text.Json.Serialization;
+using Application.Photos;
 using Domain;
 
 namespace Application.Profiles;
@@ -13,17 +14,17 @@ public class Profile {
   public bool IsFollowed { get; set; }
   public int FollowersCount { get; set; }
   public int FollowingCount { get; set; }
-  public ICollection<Photo> Photos { get; set; }
+  public ICollection<PhotoDto> Photos { get; set; }
 
-  public static Profile From(AppUser user, AppUser loggedInUser) =>
-    new Profile {
+  public static Profile From(AppUser user, AppUser currUser) =>
+    new() {
       DisplayName = user.DisplayName,
       Username = user.UserName,
       Image = user.MainPhotoUrl,
-      Photos = user.Photos,
+      Photos = user.Photos?.Select(PhotoDto.From)?.ToList(),
       Bio = user.Bio,
       FollowersCount = user.Followers.Count,
       FollowingCount = user.Followings.Count,
-      IsFollowed = loggedInUser.Followings.Any(x => x.TargetId == user.Id)
+      IsFollowed = currUser.IsFollowing(user.Id)
     };
 }
