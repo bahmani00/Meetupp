@@ -14,6 +14,7 @@ public static class List {
     private readonly IIdentityService currUserService;
 
     public Handler(IAppDbContext dbContext, IIdentityService currUserService) {
+
       this.dbContext = dbContext;
       this.currUserService = currUserService;
     }

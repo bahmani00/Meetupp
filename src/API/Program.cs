@@ -88,7 +88,6 @@ void Configure() {
     app.ApplySecurityHeaders();
   }
 
-
   app.UseDefaultFiles();//enable index.html,default.htm,...
   app.UseStaticFiles();//static files: js, css, img,...
 
