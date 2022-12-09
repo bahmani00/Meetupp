@@ -1,5 +1,7 @@
+using System.Linq.Expressions;
 using Application.Common.Interfaces;
 using Application.Profiles;
+using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,47 +11,37 @@ public static class List {
 
   public class Handler : IRequestHandler<Query, List<Profile>> {
     private readonly IAppDbContext dbContext;
-    private readonly IProfileReader profileReader;
+    private readonly IIdentityService currUserService;
 
-    public Handler(IAppDbContext dbContext, IProfileReader profileReader) {
+    public Handler(IAppDbContext dbContext, IIdentityService currUserService) {
       this.dbContext = dbContext;
-      this.profileReader = profileReader;
+      this.currUserService = currUserService;
     }
 
     public async Task<List<Profile>> Handle(Query request, CancellationToken ct) {
       var queryable = dbContext.Followings
-        .AsNoTracking()
-        .Include(x => x.Observer)
-        .Include(x => x.Target)
+        //.AsNoTracking() // to prevent cycling
         .AsQueryable();
 
-      var profiles = new List<Profile>();
-
-      switch (request.Predicate) {
-        case "followers": {
-            var userFollowings = await queryable.Where(x =>
-                x.Target.Id == request.UserId).ToListAsync(ct);
-
-            foreach (var follower in userFollowings) {
-              profiles.Add(await profileReader.ReadProfileAsync(follower.Observer.UserName, ct));
-            }
-            break;
-          }
-        case "following": {
-            var userFollowings = await queryable.Where(x =>
-                x.Observer.Id == request.UserId).ToListAsync(ct);
-
-            foreach (var follower in userFollowings) {
-              profiles.Add(await profileReader.ReadProfileAsync(follower.Target.UserName, ct));
-            }
-            break;
-          }
+      var currUser = await currUserService.GetCurrUserProfileAsync(ct);
+      Expression<Func<UserFollowing, bool>> predicate = (x) => x.TargetId == request.UserId;
+      Expression<Func<UserFollowing, AppUser>> includePerdicate = x => x.Observer;
+      if (request.Predicate == "Following") {
+        predicate = (x) => x.ObserverId == request.UserId;
+        includePerdicate = x => x.Target;
       }
 
-      return profiles;
+      var userFollowings = await queryable
+        .Include(includePerdicate).ThenInclude(x => x.Photos)
+        .Include(includePerdicate).ThenInclude(x => x.Followers)
+        .Include(includePerdicate).ThenInclude(x => x.Followings)
+        .Where(predicate)
+        .ToListAsync(ct);
+
+      var getUser = includePerdicate.Compile();
+      return userFollowings.Select(x => Profile.From(getUser(x), currUser)).ToList();
     }
   }
 
   public record Query(string UserId, string Predicate) : IRequest<List<Profile>>;
-
 }
