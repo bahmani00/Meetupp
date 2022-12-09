@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using Application.Auth;
 using Application.Common.Interfaces;
 using Application.Interfaces;
-using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -10,12 +9,12 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Photos;
 
 public static class Add {
-  public class Command : IRequest<Photo> {
+  public class Command : IRequest<PhotoDto> {
     [Required]
     public IFormFile File { get; set; }
   }
 
-  public class Handler : IRequestHandler<Command, Photo> {
+  public class Handler : IRequestHandler<Command, PhotoDto> {
     private readonly IAppDbContext dbContext;
     private readonly ICurrUserService currUserService;
     private readonly IPhotoAccessor photoAccessor;
@@ -26,7 +25,7 @@ public static class Add {
       this.currUserService = currUserService;
     }
 
-    public async Task<Photo> Handle(Command request, CancellationToken ct) {
+    public async Task<PhotoDto> Handle(Command request, CancellationToken ct) {
       var photoUploadResult = photoAccessor.AddPhoto(request.File);
 
       var user = await dbContext.Users
@@ -38,7 +37,7 @@ public static class Add {
 
       var success = await dbContext.SaveChangesAsync(ct) > 0;
 
-      if (success) return photo;
+      if (success) return PhotoDto.From(photo);
 
       throw new Exception("Problem saving photo");
     }

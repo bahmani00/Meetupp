@@ -1,16 +1,14 @@
 using System.ComponentModel.DataAnnotations;
+using Domain.Common;
 
 namespace Domain;
 
-public class Comment {
+public class Comment : Entity {
   public Guid Id { get; set; }
-  public string Body { get; set; }
 
-  [StringLength(50)]
-  public string AuthorId { get; set; }
-  public virtual AppUser Author { get; set; }
+  [Required]
+  public string Body { get; set; }
 
   public Guid ActivityId { get; set; }
   public virtual Activity Activity { get; set; }
-  public DateTime CreatedAt { get; set; } = DateTime.Now;
 }

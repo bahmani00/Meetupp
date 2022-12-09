@@ -27,10 +27,11 @@ public class IdentityService : IIdentityService {
   }
 
   public string GetCurrUserId() => currUserService.UserId;
+  private AppUser currUser = null;
 
   public async Task<AppUser> GetCurrUserProfileAsync(CancellationToken ct = default) =>
-    await GetUserProfileAsync(currUserService.UserId, ct);
-
+     currUser ??= await GetUserProfileAsync(currUserService.UserId, ct);
+     
   public async Task<AppUser> GetUserProfileAsync(string userId, CancellationToken ct) =>
     await _userManager.Users
       .Include(x => x.Followings)
@@ -50,8 +51,7 @@ public class IdentityService : IIdentityService {
   }
 
   public async Task<bool> IsInRoleAsync(string userId, string role) {
-    var user = _userManager.Users.SingleOrDefault(x => x.Id ==  userId);
-
+    var user = _userManager.Users.SingleOrDefault(x => x.Id == userId);
     return user != null && await _userManager.IsInRoleAsync(user, role);
   }
 

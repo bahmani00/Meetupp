@@ -31,11 +31,13 @@ public class AppDbContext : IdentityDbContext<AppUser>, IAppDbContext {
   }
 
 
+  /// <inheritdoc />
   public async Task<AppUser> GetUserAsync(string userName, CancellationToken ct, bool asTracking = false) =>
     await Users
       .AsMayTracking(asTracking)
       .SingleOrDefaultAsync(x => x.UserName == userName, ct);
 
+  /// <inheritdoc />
   public async Task<AppUser> GetUserProfileAsync(string userName, CancellationToken ct, bool asTracking = false) =>
     await Users
       .AsMayTracking(asTracking)

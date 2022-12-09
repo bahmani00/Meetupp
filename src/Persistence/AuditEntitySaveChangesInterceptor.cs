@@ -33,10 +33,10 @@ public class AuditEntitySaveChangesInterceptor : SaveChangesInterceptor {
 
     foreach (var entry in context.ChangeTracker.Entries<Entity>()) {
       if (entry.State == EntityState.Added) {
-        entry.Entity.CreatedBy = currUserService.UserId;
+        entry.Entity.CreatedById = currUserService.UserId;
         entry.Entity.CreatedOn = systemClock.UtcNow;
       } else if (entry.State == EntityState.Modified || entry.HasChangedOwnedEntities()) {
-        entry.Entity.ModifiedBy = currUserService.UserId;
+        entry.Entity.ModifiedById = currUserService.UserId;
         entry.Entity.ModifiedOn = systemClock.UtcNow;
       }
     }

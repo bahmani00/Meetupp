@@ -25,16 +25,16 @@ public static class Create {
       var user = (AppUser)httpContext.Items[$"user_{request.UserId}"];
 
       var comment = new Comment {
-        AuthorId = user.Id,
+        CreatedById = user.Id,
         ActivityId = request.ActivityId,
         Body = request.Body,
-        CreatedAt = DateTime.Now
+        CreatedOn = DateTime.Now
       };
 
       dbContext.Comments.Add(comment);
 
       var success = await dbContext.SaveChangesAsync(ct) > 0;
-      comment.Author = user;
+      comment.CreatedBy = user;
       if (success) return mapper.Map<CommentDto>(comment);
 
       throw new Exception("Problem adding comment");

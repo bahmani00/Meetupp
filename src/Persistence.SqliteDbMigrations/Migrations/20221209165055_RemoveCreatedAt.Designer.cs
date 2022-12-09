@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Persistence;
 
@@ -10,9 +11,11 @@ using Persistence;
 namespace Persistence.SqliteDbMigrations.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20221209165055_RemoveCreatedAt")]
+    partial class RemoveCreatedAt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.0");
@@ -47,12 +50,6 @@ namespace Persistence.SqliteDbMigrations.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ModifiedById")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTimeOffset>("ModifiedOn")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("ModifiedBy")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTimeOffset>("ModifiedOn")
@@ -182,7 +179,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
 
                     b.HasIndex("CreatedById", "ActivityId");
 
-                    b.ToTable("Comments", (string)null);
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("Domain.Photo", b =>
@@ -209,7 +206,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
 
                     b.HasIndex("AppUserId");
 
-                    b.ToTable("Photos", (string)null);
+                    b.ToTable("Photos");
                 });
 
             modelBuilder.Entity("Domain.UserActivity", b =>
@@ -231,7 +228,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
 
                     b.HasIndex("ActivityId");
 
-                    b.ToTable("UserActivities", (string)null);
+                    b.ToTable("UserActivities");
                 });
 
             modelBuilder.Entity("Domain.UserFollowing", b =>
@@ -249,7 +246,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
 
                     b.HasIndex("TargetId");
 
-                    b.ToTable("Followings", (string)null);
+                    b.ToTable("Followings");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

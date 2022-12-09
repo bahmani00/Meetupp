@@ -2,10 +2,13 @@
 -----------------------------------------
 MeetUppy> dotnet run --project .\src\API\
 
+MeetUppy> dotnet tool install  --global dotnet-watch
+MeetUppy> dotnet watch  -p src/API
 -----------------------------------------
 pass react stores to each others
 
 --------------------------------------
+MeetUppy> dotnet tool install --global dotnet-user-secrets
 MeetUppy> dotnet user-secrets list -p API/
 output:	TokenKey = super secret key
 

@@ -49,7 +49,7 @@ public class DbSeeder {
   private async Task AddFollowers() {
     if (dbContext.Followings.Any()) return;
 
-    var users = userManager.Users.ToList();
+    var users = userManager.Users.Skip(1).ToList();
     var followings = new List<UserFollowing> {
         new() { Observer = users[0], Target = users[2] },
 
@@ -76,14 +76,15 @@ public class DbSeeder {
   private async Task AddActivities() {
     if (dbContext.Activities.Any()) return;
 
-    var users = userManager.Users.Skip(0).ToList();
+    var users = userManager.Users.Skip(1).ToList();
 
     for (var i = 10; i <= 100; ++i) {
-      var date = DateTime.Now.AddDays(i - 95);
+      var date = DateTime.Now.AddDays(i / 3 - 25);
 #pragma warning disable CA5394 // Do not use insecure randomness
       var cat = categories[rand.Next(1, categories.Count)];
       var (city, venue) = cities[rand.Next(1, cities.Count)];
       var usrs = users.OrderBy(x => Guid.NewGuid()).ToList();
+      var now = DateTimeOffset.Now;
 #pragma warning restore CA5394 // Do not use insecure randomness
 
       await dbContext.Activities.AddAsync(new() {
@@ -93,8 +94,8 @@ public class DbSeeder {
         Category = cat.cat,
         City = city,
         Venue = venue,
-        CreatedBy = "system",
-        CreatedOn = DateTimeOffset.Now,
+        CreatedById = "system",
+        CreatedOn = now,
         UserActivities = new List<UserActivity> {
           new() { AppUser = usrs[0], IsHost = true, DateJoined = date },
           new() { AppUser = usrs[1], IsHost = false, DateJoined = date.AddDays(-1) },
@@ -104,14 +105,14 @@ public class DbSeeder {
           new() { AppUser = usrs[5], IsHost = false, DateJoined = date.AddDays(-1) },
         },
         Comments = new List<Comment> {
-          new() { Author = usrs[0], Body = "Still on?📃" },
-          new() { Author = usrs[1], Body = "Of course it's on ✅" },
-          new() { Author = usrs[2], Body = "This is awesome 🤯" },
-          new() { Author = usrs[3], Body = "I'm in" },
-          new() { Author = usrs[1], Body = "Let's do it 🏆" },
-          new() { Author = usrs[2], Body = "J'adore ça" },
-          new() { Author = usrs[3], Body = "I'm from USA, btw." },
-          new() { Author = usrs[5], Body = "Hello from MTL" },
+          new() { CreatedBy = usrs[0], Body = "Still on?📃", CreatedOn = now.AddHours(-7)},
+          new() { CreatedBy = usrs[1], Body = "Of course it's on ✅", CreatedOn = now.AddHours(-6) },
+          new() { CreatedBy = usrs[2], Body = "This is awesome 🤯", CreatedOn = now.AddHours(-5) },
+          new() { CreatedBy = usrs[3], Body = "I'm in", CreatedOn = now.AddHours(-4) },
+          new() { CreatedBy = usrs[1], Body = "Let's do it 🏆", CreatedOn = now.AddHours(-3) },
+          new() { CreatedBy = usrs[2], Body = "J'adore ça", CreatedOn = now.AddHours(-2) },
+          new() { CreatedBy = usrs[3], Body = "I'm from USA, btw.", CreatedOn = now.AddHours(-1) },
+          new() { CreatedBy = usrs[5], Body = "Hello from MTL", CreatedOn = now },
         }
       });
     }
@@ -133,9 +134,6 @@ public class DbSeeder {
         UserName = "system",
         Email = "system@test.com",
         Bio = "System user",
-        Photos = new Photo[] {
-          new(Id(), true, $"{baseUrl}/v1669958748/quapuftxaspbzhxgijzl.jpg"),
-        }
       },
       new() {
         Id = "admin",
@@ -149,6 +147,7 @@ public class DbSeeder {
           new(Id(), false, $"{baseUrl}/v1667788547/eq2cmgcgonykgabnyfsn.jpg"),
           new(Id(), false, $"{baseUrl}/v1667787939/nirhhmh1ob7eg7s6qznd.jpg"),
           new(Id(), false, $"{baseUrl}/v1669958748/quapuftxaspbzhxgijzl.jpg"),
+          new(Id(), true, $"{baseUrl}/v1669958748/quapuftxaspbzhxgijzl.jpg"),
         }
       },
       new() {
