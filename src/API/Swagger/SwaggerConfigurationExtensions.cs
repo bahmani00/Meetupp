@@ -120,17 +120,18 @@ public static class SwaggerConfigurationExtensions {
     });
   }
 
-  public static void UseSwaggerAndUI(this IApplicationBuilder app) {
+  public static void UseSwaggerAndUI(this WebApplication app) {
     //More info : https://github.com/domaindrivendev/Swashbuckle.AspNetCore
 
     //Swagger middleware for generate "Open API Documentation" in swagger.json
-    app.UseSwagger(options => {
-      //options.RouteTemplate = "api-docs/{documentName}/swagger.json";
-    });
+    app.UseSwagger();
 
     //Swagger middleware for generate UI from swagger.json
     app.UseSwaggerUI(options => {
-      options.SwaggerEndpoint("v1/swagger.yaml", "API v1");
+      options.SwaggerEndpoint("v1/swagger.json", "API v1");
+
+      if (app.Environment.IsDevelopment())
+        options.EnablePersistAuthorization();
 
       #region Customizing
       //// Display
@@ -160,7 +161,7 @@ public static class SwaggerConfigurationExtensions {
 
     //ReDoc UI middleware. ReDoc UI is an alternative to swagger-ui
     app.UseReDoc(options => {
-      options.SpecUrl("/swagger/v1/swagger.yaml");
+      options.SpecUrl("/swagger/v1/swagger.json");
       //options.SpecUrl("/swagger/v2/swagger.json");
 
       #region Customizing

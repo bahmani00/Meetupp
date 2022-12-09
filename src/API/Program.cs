@@ -85,9 +85,9 @@ void Configure() {
 
     app.UseHttpsRedirection();//Middleware to redirect HTTP requests to HTTPS
 
+    app.ApplySecurityHeaders();
   }
 
-  app.ApplySecurityHeaders();
 
   app.UseDefaultFiles();//enable index.html,default.htm,...
   app.UseStaticFiles();//static files: js, css, img,...

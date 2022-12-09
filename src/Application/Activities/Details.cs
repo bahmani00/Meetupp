@@ -19,7 +19,7 @@ public static class Details {
 
     public async Task<ActivityDto> Handle(Query request, CancellationToken ct) {
       var activity = await dbContext.Activities
-        .Include(x => x.Comments).ThenInclude(x => x.Author).ThenInclude(x => x.Photos)
+        .Include(x => x.Comments).ThenInclude(x => x.CreatedBy).ThenInclude(x => x.Photos)
         .Include(x => x.UserActivities).ThenInclude(x => x.AppUser).ThenInclude(x => x.Photos)
         .SingleOrDefaultAsync(x => x.Id == request.Id, ct);
 

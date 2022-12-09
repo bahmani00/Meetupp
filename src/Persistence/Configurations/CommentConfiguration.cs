@@ -8,10 +8,10 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comment> {
   public void Configure(EntityTypeBuilder<Comment> builder) {
     builder.HasKey(ua => ua.Id);
 
-    builder.Property(t => t.Body)
-      .IsRequired();
+    //builder.Property(t => t.Body)
+    //  .IsRequired();
 
     builder
-      .HasIndex(ua => new { ua.AuthorId, ua.ActivityId });
+      .HasIndex(ua => new { ua.CreatedById, ua.ActivityId });
   }
 }

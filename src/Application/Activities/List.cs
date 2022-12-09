@@ -28,7 +28,7 @@ public static class List {
     public async Task<PaginatedList<ActivityDto>> Handle(Query request, CancellationToken ct) {
       var queryable = dbContext.Activities
         .AsNoTracking()
-        .Include(x => x.Comments).ThenInclude(x => x.Author).ThenInclude(x => x.Photos)
+        .Include(x => x.Comments).ThenInclude(x => x.CreatedBy).ThenInclude(x => x.Photos)
         .Include(x => x.UserActivities).ThenInclude(x => x.AppUser).ThenInclude(x => x.Photos)
         .Where(x => x.Date >= request.StartDate)
         .OrderBy(x => x.Date)

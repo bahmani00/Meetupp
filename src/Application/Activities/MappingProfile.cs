@@ -6,6 +6,7 @@ namespace Application.Activities;
 public class MappingProfile : Profile {
   public MappingProfile() {
     CreateMap<int?, int>().ConvertUsing((src, dest) => src ?? dest);
+    CreateMap<DateTimeOffset, DateTime>().ConvertUsing((src, dest) => src.UtcDateTime);
 
     //https://stackoverflow.com/a/68012002/336511
     CreateMap<EditPartial.Command, Activity>()
