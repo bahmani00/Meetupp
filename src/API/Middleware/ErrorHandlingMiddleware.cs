@@ -24,7 +24,7 @@ public class ErrorHandlingMiddleware {
   }
 
   private async Task HandleExceptionAsync(HttpContext context, Exception ex) {
-    object errors;
+    object? errors;
     switch (ex) {
       case RestException re:
         _logger.Error("REST ERROR", ex);

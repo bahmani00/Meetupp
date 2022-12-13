@@ -9,7 +9,7 @@ namespace Application.Photos;
 
 public static class Delete {
   public class Command : IRequest {
-    public string Id { get; set; }
+    public string Id { get; set; } = null!;
   }
 
   public class Handler : IRequestHandler<Command> {
@@ -28,11 +28,11 @@ public static class Delete {
         .Include(x => x.Photos)
         .SingleOrDefaultAsync(x => x.UserName == currUserService.UserId, ct);
 
-      var photo = user.Photos.FirstOrDefault(x => x.Id == request.Id);
+      var photo = user!.Photos.FirstOrDefault(x => x.Id == request.Id);
       ThrowIfNotFound(photo, new { Photo = "Not found" });
-      ThrowIfBadRequest(photo.IsMain, new { Photo = "You cannot delete your main photo" });
+      ThrowIfBadRequest(photo!.IsMain, new { Photo = "You cannot delete your main photo" });
 
-      var result = photoAccessor.DeletePhoto(photo.Id);
+      var result = photoAccessor.DeletePhoto(photo!.Id);
       if (result == null)
         throw new Exception($"Problem deleting photo from {photoAccessor.Provider}");
 

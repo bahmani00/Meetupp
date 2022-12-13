@@ -1,4 +1,3 @@
-using Application.Common.Interfaces;
 using Domain;
 using FluentValidation;
 using MediatR;
@@ -10,10 +9,10 @@ namespace Application.Auth;
 
 public static class Register {
   public class Command : IRequest<UserDto> {
-    public string DisplayName { get; set; }
-    public string Username { get; set; }
-    public string Email { get; set; }
-    public string Password { get; set; }
+    public string DisplayName { get; set; } = null!;
+    public string Username { get; set; } = null!;
+    public string Email { get; set; } = null!;
+    public string Password { get; set; } = null!;
   }
 
   public class CommandValidator : AbstractValidator<Command> {
@@ -26,12 +25,10 @@ public static class Register {
   }
 
   public class Handler : IRequestHandler<Command, UserDto> {
-    private readonly IAppDbContext dbContext;
     private readonly UserManager<AppUser> userManager;
     private readonly IJwtGenerator jwtGenerator;
 
-    public Handler(IAppDbContext dbContext, UserManager<AppUser> userManager, IJwtGenerator jwtGenerator) {
-      this.dbContext = dbContext;
+    public Handler(UserManager<AppUser> userManager, IJwtGenerator jwtGenerator) {
       this.jwtGenerator = jwtGenerator;
       this.userManager = userManager;
     }

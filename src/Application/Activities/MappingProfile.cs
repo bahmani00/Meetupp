@@ -27,7 +27,7 @@ public class MappingProfile : Profile {
         .ForMember(d => d.Category, o => o.MapFrom(s => s.Activity.Category))
         .ForMember(d => d.Date, o => o.MapFrom(s => s.Activity.Date));
 
-    AppUser currUser = default;
+    AppUser? currUser = default;
     CreateMap<UserActivity, AttendeeDto>()
         .ForMember(d => d.Username, o => o.MapFrom(s => s.AppUser.UserName))
         .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.AppUser.DisplayName))
@@ -35,6 +35,6 @@ public class MappingProfile : Profile {
         //Value Resolvers aren't supported for queryable extensions.
         //https://stackoverflow.com/a/27567113/336511
         //.ForMember(d => d.Following, o => o.MapFrom<FollowingResolver>())
-        .ForMember(d => d.Following, o => o.MapFrom(src => currUser.IsFollowing(src.AppUserId)));
+        .ForMember(d => d.Following, o => o.MapFrom(src => currUser!.IsFollowing(src.AppUserId)));
   }
 }

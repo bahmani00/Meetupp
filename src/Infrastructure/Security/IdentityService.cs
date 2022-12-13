@@ -27,7 +27,7 @@ public class IdentityService : IIdentityService {
   }
 
   public string GetCurrUserId() => currUserService.UserId;
-  private AppUser currUser = null;
+  private AppUser? currUser;
 
   public async Task<AppUser> GetCurrUserProfileAsync(CancellationToken ct = default) =>
      currUser ??= await GetUserProfileAsync(currUserService.UserId, ct);

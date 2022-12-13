@@ -10,8 +10,8 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comment> {
       .ToTable("Comment")
       .HasKey(ua => ua.Id);
 
-    //builder.Property(t => t.Body)
-    //  .IsRequired();
+    builder.Property(t => t.Body)
+      .IsRequired();
 
     //builder
     //  .HasIndex(ua => new { ua.CreatedById, ua.ActivityId })

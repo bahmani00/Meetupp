@@ -16,7 +16,7 @@ public class ProfileReader : IProfileReader {
     var user = await dbContext.GetUserProfileAsync(username, ct);
     ThrowIfNotFound(user, new { User = "Not found" });
 
-    var loggedInUser = await currUserService.GetCurrUserProfileAsync(ct);
-    return Profile.From(user, loggedInUser);
+    var currUser = await currUserService.GetCurrUserProfileAsync(ct);
+    return Profile.From(user!, currUser);
   }
 }

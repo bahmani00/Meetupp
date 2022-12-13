@@ -20,7 +20,7 @@ public static class Details {
     public async Task<ActivityDto> Handle(Query request, CancellationToken ct) {
       var entity = await dbContext.Activities
         .AsNoTracking()
-        .Include(x => x.Comments.Where(y => y.ActivityId == request.Id).Take(2))
+        .Include(x => x.Comments.Where(y => y.ActivityId == request.Id))
           .ThenInclude(x => x.CreatedBy).ThenInclude(x => x.Photos)
         .Include(x => x.UserActivities.Where(y => y.ActivityId == request.Id))
           .ThenInclude(x => x.AppUser).ThenInclude(x => x.Photos)

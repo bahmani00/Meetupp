@@ -3,7 +3,6 @@ using Application.Common.Interfaces;
 using Application.Common.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -48,20 +47,21 @@ public static class GetAll {
     }
 
     public async Task<List<ActivityDto>> Handle111(Query request, CancellationToken ct) {
-      // try {
-      //   request.ToString();
+      try {
+        dbContext.ToString();
+        request.ToString();
 
-      //   for (var i = 0; i < 5; i++) {
-      //     ct.ThrowIfCancellationRequested();
-      //     await Task.Delay(1000, ct);
-      //     logger.LogInformation($"Task {i} has completed");
-      //   }
-      // } catch (Exception ex) when (ex is TaskCanceledException) {
-      //   logger.LogInformation("Task was cancelled.");
-      // }
+        for (var i = 0; i < 5; i++) {
+          ct.ThrowIfCancellationRequested();
+          await Task.Delay(1000, ct);
+          //logger.LogInformation($"Task {i} has completed");
+        }
+      } catch (Exception ex) when (ex is TaskCanceledException) {
+        //logger.LogInformation("Task was cancelled.");
+      }
       await Task.CompletedTask;
 
-      return mapper.Map<List<Activity>, List<ActivityDto>>(null);
+      return new(0);
     }
   }
 
@@ -71,5 +71,4 @@ public static class GetAll {
     bool IsGoing,
     bool IsHost,
     DateTime StartDate) : IRequest<PaginatedList<ActivityDto>>;
-
 }

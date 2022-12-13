@@ -29,8 +29,8 @@ public static class Add {
         .Include(x => x.Photos)
         .SingleOrDefaultAsync(x => x.UserName == currUserService.UserId, ct);
 
-      var photo = photoUploadResult.ToEntity(user);
-      user.Photos.Add(photo);
+      var photo = photoUploadResult.ToEntity(user!);
+      user!.Photos!.Add(photo);
 
       var success = await dbContext.SaveChangesAsync(ct) > 0;
 
@@ -54,6 +54,6 @@ public static class Add {
     /// Image file
     /// </summary>
     [Required]
-    public IFormFile ImageFile { get; set; }
+    public IFormFile ImageFile { get; set; } = null!;
   }
 }

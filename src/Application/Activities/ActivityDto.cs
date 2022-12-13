@@ -6,27 +6,27 @@ namespace Application.Activities;
 
 public class ActivityBaseDto {
   [Required]
-  public string Title { get; set; }
+  public string Title { get; set; } = null!;
   [Required]
-  public string Description { get; set; }
+  public string Description { get; set; } = null!;
   [Required]
-  public string Category { get; set; }
+  public string Category { get; set; } = null!;
   [Required]
-  public DateTime? Date { get; set; }
+  public DateTime? Date { get; set; } = null!;
   [Required]
-  public string City { get; set; }
+  public string City { get; set; } = null!;
   [Required]
-  public string Venue { get; set; }
+  public string Venue { get; set; } = null!;
 }
 
 public class ActivityDto : ActivityBaseDto {
   public Guid Id { get; set; }
 
   [JsonPropertyName("attendees")]
-  public ICollection<AttendeeDto> UserActivities { get; set; }
+  public ICollection<AttendeeDto> UserActivities { get; set; } = null!;
 
   /// <summary>
   /// All the comments on this activity
   /// </summary>
-  public ICollection<CommentDto> Comments { get; set; }
+  public ICollection<CommentDto> Comments { get; set; } = null!;
 }

@@ -1,18 +1,13 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Domain;
 
 public class UserActivity {
-  [Required]
-  public string AppUserId { get; set; }
-  public virtual AppUser AppUser { get; set; }
+  public string AppUserId { get; set; } = null!;
+  public virtual AppUser AppUser { get; set; } = null!;
 
-  [Required]
   public Guid ActivityId { get; set; }
   //use virtial to efcore lazy loading rather eagerly
-  public virtual Activity Activity { get; set; }
+  public virtual Activity Activity { get; set; } = null!;
 
-  [Required]
   public DateTime DateJoined { get; set; }
 
   public bool IsHost { get; set; }

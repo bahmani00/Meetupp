@@ -17,13 +17,13 @@ public class AuditEntitySaveChangesInterceptor : SaveChangesInterceptor {
   }
 
   public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result) {
-    UpdateEntities(eventData.Context);
+    UpdateEntities(eventData.Context!);
 
     return base.SavingChanges(eventData, result);
   }
 
   public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken ct = default) {
-    UpdateEntities(eventData.Context);
+    UpdateEntities(eventData.Context!);
 
     return base.SavingChangesAsync(eventData, result, ct);
   }

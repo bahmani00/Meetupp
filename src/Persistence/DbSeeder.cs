@@ -83,12 +83,10 @@ public class DbSeeder {
 
     for (var i = 10; i <= 100; ++i) {
       var date = systemClock.UtcNow.UtcDateTime.AddDays(i / 3 - 25);
-#pragma warning disable CA5394 // Do not use insecure randomness
       var cat = categories[rand.Next(1, categories.Count)];
       var (city, venue) = cities[rand.Next(1, cities.Count)];
       var usrs = users.OrderBy(x => Guid.NewGuid()).ToList();
       var now = systemClock.UtcNow.UtcDateTime;
-#pragma warning restore CA5394 // Do not use insecure randomness
 
       await dbContext.Activities.AddAsync(new() {
         Title = $"Activity " + i,
@@ -135,14 +133,14 @@ public class DbSeeder {
         Id = "system",
         DisplayName = "System",
         UserName = "system",
-        Email = "system@test.com",
+        Email = "system@site.com",
         Bio = "System user",
       },
       new() {
         Id = "admin",
         DisplayName = "Admin",
         UserName = "admin",
-        Email = "admin@test.com",
+        Email = "admin@site.com",
         Bio = "A passionate software engineer | Dad",
         Photos = new Photo[] {
           new(Id(), true, $"{baseUrl}/v1667788631/lrumy0yoaoa0h9p8zo2y.jpg"),
@@ -157,7 +155,7 @@ public class DbSeeder {
         Id = "jane",
         DisplayName = "Jane",
         UserName = "jane",
-        Email = "jane@test.com",
+        Email = "jane@site.com",
         Bio = "A passionate Photographer | Student",
         Photos = new Photo[] {
           new(Id(), true, $"{baseUrl}/v1609119965/yglovzkycojx7f0zafgh.jpg"),
@@ -168,7 +166,7 @@ public class DbSeeder {
         Id = "nicki",
         DisplayName = "Nicki",
         UserName = "nicki",
-        Email = "nicki@test.com",
+        Email = "nicki@site.com",
         Bio = "A passionate LifeCoach | Student",
         Photos = new Photo[] {
           new(Id(), true, $"{baseUrl}/v1667789135/w77rweub0je89khwqg02.jpg"),
@@ -179,7 +177,7 @@ public class DbSeeder {
         Id = "roxane",
         DisplayName = "Roxanna Achaemenid Princess",
         UserName = "roxane",
-        Email = "roxane@test.com",
+        Email = "roxane@site.com",
         Photos = new Photo[] {
           new(Id(), true, $"{baseUrl}/v1667788474/rwldoiraowj8biyf5h1m.jpg"),
           new(Id(), false, $"{baseUrl}/v1667788547/eq2cmgcgonykgabnyfsn.jpg"),
@@ -189,7 +187,7 @@ public class DbSeeder {
         Id = "bob",
         DisplayName = "Bob",
         UserName = "bob",
-        Email = "bob@test.com",
+        Email = "bob@site.com",
         Photos = new Photo[] {
           new(Id(), true, $"{baseUrl}/v1609119885/pcykcdlnyjbckrobnzwb.jpg"),
         }
@@ -198,7 +196,7 @@ public class DbSeeder {
         Id = "tom",
         DisplayName = "Tom",
         UserName = "tom",
-        Email = "tom@test.com",
+        Email = "tom@site.com",
         Photos = new Photo[] {
           new(Id(), true, $"{baseUrl}/v1609120019/wdxbk5qjkettlxnvzmy5.jpg"),
         }
@@ -207,7 +205,7 @@ public class DbSeeder {
         Id = "john",
         DisplayName = "John",
         UserName = "john",
-        Email = "john@test.com",
+        Email = "john@site.com",
         Photos = new Photo[] {
           new(Id(), true, $"{baseUrl}/v1667787772/gd5xnpxthhbuy7blw4d4.jpg"),
           new(Id(), false, $"{baseUrl}/v1609120019/wdxbk5qjkettlxnvzmy5.jpg"),
@@ -217,7 +215,7 @@ public class DbSeeder {
         Id = "hardy",
         DisplayName = "Hardy",
         UserName = "Hardy",
-        Email = "hardy@test.com",
+        Email = "hardy@site.com",
         Photos = new Photo[] {
           new(Id(), true, $"{baseUrl}/v1609120019/wdxbk5qjkettlxnvzmy5.jpg"),
         }
@@ -226,7 +224,7 @@ public class DbSeeder {
         Id = "dan",
         DisplayName = "Dan B.",
         UserName = "dan",
-        Email = "dan@test.com",
+        Email = "dan@site.com",
         Photos = new Photo[] {
           new(Id(), true, $"{baseUrl}/v1667787862/lowikqunihh8c7iqe57a.jpg"),
         }
@@ -235,7 +233,7 @@ public class DbSeeder {
         Id = "liam",
         DisplayName = "Liam",
         UserName = "liam",
-        Email = "liam@test.com",
+        Email = "liam@site.com",
         Photos = new Photo[] {
           new(Id(), true, $"{baseUrl}/v1667787939/nirhhmh1ob7eg7s6qznd.jpg"),
         }
@@ -244,12 +242,12 @@ public class DbSeeder {
         Id = "test",
         DisplayName = "Test",
         UserName = "test",
-        Email = "test@test.com",
+        Email = "test@site.com",
       },
     };
 
     foreach (var user in users) {
-      var result = await userManager.CreateAsync(user, user.UserName);//"Pa$$w0rd");
+      var result = await userManager.CreateAsync(user, user.UserName!);//"Pa$$w0rd");
       if (!result.Succeeded) {
         throw new Exception("Faild seeding users");
       }

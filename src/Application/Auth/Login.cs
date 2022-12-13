@@ -13,7 +13,7 @@ public static class Login {
   public class QueryValidator : AbstractValidator<Query> {
     private readonly IAppDbContext dbContext;
     private readonly SignInManager<AppUser> signInManager;
-    private readonly HttpContext httpContext;
+    private readonly IHttpContextAccessor httpContextAccessor;
 
     public QueryValidator(
       IAppDbContext dbContext,
@@ -21,7 +21,7 @@ public static class Login {
       IHttpContextAccessor httpContextAccessor) {
       this.dbContext = dbContext;
       this.signInManager = signInManager;
-      this.httpContext = httpContextAccessor.HttpContext;
+      this.httpContextAccessor = httpContextAccessor;
 
       RuleFor(x => x.Email)
         .NotEmpty();
@@ -39,7 +39,7 @@ public static class Login {
         .Include(x => x.Photos)
         .SingleOrDefault(x => x.Email == request.Email);
 
-      httpContext.Items[$"user_{request.Email}"] = user;
+      httpContextAccessor!.HttpContext!.Items[$"user_{request.Email}"] = user;
 
       if (user == null) return false;
 
@@ -52,24 +52,24 @@ public static class Login {
   }
 
   public class Handler : IRequestHandler<Query, UserDto> {
-    private readonly HttpContext httpContext;
+    private readonly IHttpContextAccessor httpContextAccessor;
     private readonly IJwtGenerator _jwtGenerator;
 
     public Handler(
       IHttpContextAccessor httpContextAccessor,
       IJwtGenerator jwtGenerator) {
-      this.httpContext = httpContextAccessor.HttpContext;
+      this.httpContextAccessor = httpContextAccessor;
       _jwtGenerator = jwtGenerator;
     }
 
     public async Task<UserDto> Handle(Query request, CancellationToken ct) {
-      var user = (AppUser)httpContext.Items[$"user_{request.Email}"];
+      var user = httpContextAccessor!.HttpContext!.Items[$"user_{request.Email}"] as AppUser;
 
       await Task.CompletedTask;
 
       // generate token
       return new UserDto {
-        DisplayName = user.DisplayName,
+        DisplayName = user!.DisplayName,
         Token = _jwtGenerator.CreateToken(user),
         Username = user.Id,
         Image = user.MainPhotoUrl

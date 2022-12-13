@@ -37,13 +37,13 @@ public class UnauthorizedResponsesOperationFilter : IOperationFilter {
     var hasAuthorize = filters.Any(p => p.Filter is AuthorizeFilter) || metadta.Any(p => p is AuthorizeAttribute);
     if (!hasAuthorize) return;
 
-    //if (includeUnauthorizedAndForbiddenResponses) {
-    //  operation.Responses.TryAdd("401", new OpenApiResponse { Description = "Unauthorized" });
+    if (includeUnauthorizedAndForbiddenResponses) {
+      //  operation.Responses.TryAdd("401", new OpenApiResponse { Description = "Unauthorized" });
 
-    //  if (filters.Count(p => (p.Filter as AuthorizeFilter)?.Policy != null) > 1
-    //    || metadta.Count(p => (p as AuthorizeAttribute)?.Policy != null) > 1)
-    //    operation.Responses.TryAdd("403", new OpenApiResponse { Description = "Forbidden" });
-    //}
+      //  if (filters.Count(p => (p.Filter as AuthorizeFilter)?.Policy != null) > 1
+      //    || metadta.Count(p => (p as AuthorizeAttribute)?.Policy != null) > 1)
+      //    operation.Responses.TryAdd("403", new OpenApiResponse { Description = "Forbidden" });
+    }
 
     //Add Lockout icon on top of swagger ui page to authenticate
     operation.Security.Add(new OpenApiSecurityRequirement {

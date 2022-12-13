@@ -46,7 +46,7 @@ public class CommentController : BaseController {
   [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
   [ProducesResponseType(typeof(CommentDto), StatusCodes.Status201Created)]
   public async Task<ActionResult<CommentDto>> Comment(Guid activityId, [FromBody] string body, CancellationToken ct) {
-    var res = await Mediator.Send(new Create.Command(activityId, UserId, body), ct);
+    var res = await Mediator.Send(new Create.Command(activityId, UserId!, body), ct);
     return StatusCode(StatusCodes.Status201Created, res);
   }
 }

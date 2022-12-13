@@ -8,7 +8,7 @@ namespace Application.Photos;
 
 public static class SetMain {
   public class Command : IRequest {
-    public string Id { get; set; }
+    public string Id { get; set; } = null!;
   }
 
   public class Handler : IRequestHandler<Command> {
@@ -25,13 +25,13 @@ public static class SetMain {
         .Include(x => x.Photos)
         .SingleOrDefaultAsync(x => x.UserName == currUserService.UserId, ct);
 
-      var photo = user.Photos.FirstOrDefault(x => x.Id == request.Id);
+      var photo = user!.Photos!.FirstOrDefault(x => x.Id == request.Id);
       ThrowIfNotFound(photo, new { Photo = "Not found" });
 
       var currentMain = user.Photos.FirstOrDefault(x => x.IsMain);
 
-      currentMain.IsMain = false;
-      photo.IsMain = true;
+      currentMain!.IsMain = false;
+      photo!.IsMain = true;
 
       var success = await dbContext.SaveChangesAsync(ct) > 0;
 

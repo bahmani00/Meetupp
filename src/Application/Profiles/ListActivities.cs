@@ -25,7 +25,7 @@ public static class ListActivities {
       var queryable = dbContext.UserActivities
         .AsNoTracking()
         .Include(x => x.Activity)
-        .Where(x => x.AppUserId == user.Id)
+        .Where(x => x.AppUserId == user!.Id!)
         .OrderBy(a => a.Activity.Date)
         .AsQueryable();
 

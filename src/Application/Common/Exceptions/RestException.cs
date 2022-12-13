@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Http;
 namespace Application.Common.Exceptions;
 
 public class RestException : Exception {
-  public RestException(int code, object errors = null) {
+  public RestException(int code, object? errors = null) {
     Code = code;
     Errors = errors;
   }
 
   public int Code { get; }
-  public object Errors { get; }
+  public object? Errors { get; }
 
   public static void ThrowIfBadRequest(bool @throw, object errors) {
     if (@throw)

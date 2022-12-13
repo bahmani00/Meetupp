@@ -13,19 +13,19 @@ public static class Create {
   internal class Handler : IRequestHandler<Command, CommentDto> {
     private readonly IAppDbContext dbContext;
     private readonly IMapper mapper;
-    private readonly HttpContext httpContext;
+    private readonly IHttpContextAccessor httpContextAccessor;
 
     public Handler(IAppDbContext dbContext, IMapper mapper, IHttpContextAccessor httpContextAccessor) {
       this.dbContext = dbContext;
       this.mapper = mapper;
-      this.httpContext = httpContextAccessor.HttpContext;
+      this.httpContextAccessor = httpContextAccessor;
     }
 
     public async Task<CommentDto> Handle(Command request, CancellationToken ct) {
-      var user = (AppUser)httpContext.Items[$"user_{request.UserId}"];
+      var user = httpContextAccessor!.HttpContext!.Items[$"user_{request.UserId}"] as AppUser;
 
       var comment = new Comment {
-        CreatedById = user.Id,
+        CreatedById = user!.Id,
         ActivityId = request.ActivityId,
         Body = request.Body,
         CreatedOn = DateTime.Now
@@ -43,11 +43,11 @@ public static class Create {
 
   public class CommandValidator : AbstractValidator<Command> {
     private readonly IAppDbContext dbContext;
-    private readonly HttpContext httpContext;
+    private readonly IHttpContextAccessor httpContextAccessor;
 
     public CommandValidator(IAppDbContext dbContext, IHttpContextAccessor httpContextAccessor) {
       this.dbContext = dbContext;
-      this.httpContext = httpContextAccessor.HttpContext;
+      this.httpContextAccessor = httpContextAccessor;
 
       RuleFor(x => x.ActivityId).Cascade(CascadeMode.Stop)
           .NotEmpty()
@@ -68,7 +68,7 @@ public static class Create {
         .Include(x => x.Photos)
         .SingleOrDefault(x => x.Id == userId);
 
-      httpContext.Items[$"user_{userId}"] = user;
+      httpContextAccessor!.HttpContext!.Items[$"user_{userId}"] = user;
 
       return user != null;
     }

@@ -19,7 +19,7 @@ public class IsHostRequirementHandler : AuthorizationHandler<IsHostRequirement> 
   }
 
   protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, IsHostRequirement requirement) {
-    if (context.User == null || !context.User.Identity.IsAuthenticated) {
+    if (context.User == null || !context.User.Identity!.IsAuthenticated) {
       context.Fail();
       return;
     }
