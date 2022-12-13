@@ -2,7 +2,7 @@ using Application.Common.Interfaces;
 using AutoMapper;
 using FluentValidation;
 using MediatR;
-using static Application.Errors.RestException;
+using static Application.Common.Exceptions.RestException;
 
 namespace Application.Activities;
 

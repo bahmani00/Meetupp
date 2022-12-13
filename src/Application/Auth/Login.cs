@@ -1,54 +1,81 @@
-using System.Net;
-using Application.Errors;
+using Application.Common.Interfaces;
 using Domain;
 using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Auth;
 
 public static class Login {
 
   public class QueryValidator : AbstractValidator<Query> {
-    public QueryValidator() {
-      RuleFor(x => x.Email).NotEmpty();
-      RuleFor(x => x.Password).NotEmpty();
+    private readonly IAppDbContext dbContext;
+    private readonly SignInManager<AppUser> signInManager;
+    private readonly HttpContext httpContext;
+
+    public QueryValidator(
+      IAppDbContext dbContext,
+      SignInManager<AppUser> signInManager,
+      IHttpContextAccessor httpContextAccessor) {
+      this.dbContext = dbContext;
+      this.signInManager = signInManager;
+      this.httpContext = httpContextAccessor.HttpContext;
+
+      RuleFor(x => x.Email)
+        .NotEmpty();
+      RuleFor(x => x.Password)
+        .NotEmpty();
+
+      RuleFor(x => x)
+        .Must(IsPasswordValid).OverridePropertyName("Credintials").WithMessage("Invalid credintials");
+    }
+
+    private bool IsPasswordValid(Query request) {
+      //dont have access to ICurrUserService(HttpContext) as using SignalR(webSockets)
+      var user = dbContext.Users
+        .AsNoTracking()
+        .Include(x => x.Photos)
+        .SingleOrDefault(x => x.Email == request.Email);
+
+      httpContext.Items[$"user_{request.Email}"] = user;
+
+      if (user == null) return false;
+
+      //dont have access to ICurrUserService(HttpContext) as using SignalR(webSockets)
+      var result = signInManager
+          .CheckPasswordSignInAsync(user, request.Password, false).Result;
+
+      return result.Succeeded;
     }
   }
 
-  public class Handler : IRequestHandler<Query, User> {
-    private readonly UserManager<AppUser> _userManager;
-    private readonly SignInManager<AppUser> _signInManager;
+  public class Handler : IRequestHandler<Query, UserDto> {
+    private readonly HttpContext httpContext;
     private readonly IJwtGenerator _jwtGenerator;
 
-    public Handler(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IJwtGenerator jwtGenerator) {
+    public Handler(
+      IHttpContextAccessor httpContextAccessor,
+      IJwtGenerator jwtGenerator) {
+      this.httpContext = httpContextAccessor.HttpContext;
       _jwtGenerator = jwtGenerator;
-      _signInManager = signInManager;
-      _userManager = userManager;
     }
 
-    public async Task<User> Handle(Query request, CancellationToken ct) {
-      var user = await _userManager.FindByEmailAsync(request.Email);
+    public async Task<UserDto> Handle(Query request, CancellationToken ct) {
+      var user = (AppUser)httpContext.Items[$"user_{request.Email}"];
 
-      if (user == null)
-        throw new RestException(HttpStatusCode.Unauthorized);
+      await Task.CompletedTask;
 
-      var result = await _signInManager
-          .CheckPasswordSignInAsync(user, request.Password, false);
-
-      if (result.Succeeded) {
-        // generate token
-        return new User {
-          DisplayName = user.DisplayName,
-          Token = _jwtGenerator.CreateToken(user),
-          Username = user.Id,
-          Image = user.MainPhotoUrl
-        };
-      }
-
-      throw new RestException(HttpStatusCode.Unauthorized);
+      // generate token
+      return new UserDto {
+        DisplayName = user.DisplayName,
+        Token = _jwtGenerator.CreateToken(user),
+        Username = user.Id,
+        Image = user.MainPhotoUrl
+      };
     }
   }
 
-  public record Query(string Email, string Password) : IRequest<User>;
+  public record Query(string Email, string Password) : IRequest<UserDto>;
 }

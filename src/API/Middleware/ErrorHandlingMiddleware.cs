@@ -1,5 +1,4 @@
-using System.Net;
-using Application.Errors;
+using Application.Common.Exceptions;
 using Infrastructure;
 using Newtonsoft.Json;
 
@@ -25,18 +24,17 @@ public class ErrorHandlingMiddleware {
   }
 
   private async Task HandleExceptionAsync(HttpContext context, Exception ex) {
-    object errors = null;
-
+    object errors;
     switch (ex) {
       case RestException re:
         _logger.Error("REST ERROR", ex);
         errors = re.Errors;
         context.Response.StatusCode = (int)re.Code;
         break;
-      case Exception e:
+      default:
         _logger.Error("SERVER ERROR", ex);
-        errors = string.IsNullOrWhiteSpace(e.Message) ? "Error" : e.Message;
-        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+        errors = string.IsNullOrWhiteSpace(ex.Message) ? "Error" : ex.Message;
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
         break;
     }
 

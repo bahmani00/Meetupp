@@ -2,7 +2,7 @@ using Application.Common.Interfaces;
 using AutoMapper;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using static Application.Errors.RestException;
+using static Application.Common.Exceptions.RestException;
 
 namespace Application.Activities;
 
@@ -18,14 +18,28 @@ public static class Details {
     }
 
     public async Task<ActivityDto> Handle(Query request, CancellationToken ct) {
-      var activity = await dbContext.Activities
-        .Include(x => x.Comments).ThenInclude(x => x.CreatedBy).ThenInclude(x => x.Photos)
-        .Include(x => x.UserActivities).ThenInclude(x => x.AppUser).ThenInclude(x => x.Photos)
+      var entity = await dbContext.Activities
+        .AsNoTracking()
+        .Include(x => x.Comments.Where(y => y.ActivityId == request.Id).Take(2))
+          .ThenInclude(x => x.CreatedBy).ThenInclude(x => x.Photos)
+        .Include(x => x.UserActivities.Where(y => y.ActivityId == request.Id))
+          .ThenInclude(x => x.AppUser).ThenInclude(x => x.Photos)
+        .AsSplitQuery()
         .SingleOrDefaultAsync(x => x.Id == request.Id, ct);
+      //var entity = await (
+      //                    from activity in dbContext.Activities.AsNoTracking()
+      //                    join comment in dbContext.Comments.AsNoTracking()
+      //                        on activity.Id equals comment.Id into comments
+      //                    join userActivity in dbContext.UserActivities.AsNoTracking()
+      //                        on activity.Id equals userActivity.ActivityId into userActivities
+      //                    join user in dbContext.Users.AsNoTracking()
+      //                        on activity.CreatedById equals user.Id into users
+      //                    where activity.Id == request.Id
+      //                    select activity).SingleOrDefaultAsync(ct);
 
-      ThrowIfNotFound(activity, new { Activity = "Not found" });
+      ThrowIfNotFound(entity, new { Activity = "Not found" });
 
-      return mapper.Map<ActivityDto>(activity);
+      return mapper.Map<ActivityDto>(entity);
     }
   }
 

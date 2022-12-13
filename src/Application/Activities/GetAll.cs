@@ -6,30 +6,28 @@ using AutoMapper.QueryableExtensions;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Application.Activities;
 
-public static class List {
+public static class GetAll {
 
   internal class Handler : IRequestHandler<Query, PaginatedList<ActivityDto>> {
     private readonly IAppDbContext dbContext;
-    private readonly ILogger<Handler> logger;
     private readonly IMapper mapper;
     private readonly IIdentityService currUserService;
 
-    public Handler(IAppDbContext dbContext, IMapper mapper, IIdentityService currUserService, ILogger<Handler> logger) {
+    public Handler(IAppDbContext dbContext, IMapper mapper, IIdentityService currUserService) {
       this.dbContext = dbContext;
       this.currUserService = currUserService;
       this.mapper = mapper;
-      this.logger = logger;
     }
 
     public async Task<PaginatedList<ActivityDto>> Handle(Query request, CancellationToken ct) {
       var queryable = dbContext.Activities
         .AsNoTracking()
-        .Include(x => x.Comments).ThenInclude(x => x.CreatedBy).ThenInclude(x => x.Photos)
+        //.Include(x => x.Comments).ThenInclude(x => x.CreatedBy).ThenInclude(x => x.Photos)
         .Include(x => x.UserActivities).ThenInclude(x => x.AppUser).ThenInclude(x => x.Photos)
+        .AsSplitQuery()
         .Where(x => x.Date >= request.StartDate)
         .OrderBy(x => x.Date)
         .AsQueryable();

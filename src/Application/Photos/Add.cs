@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using Application.Auth;
+using Application.Common;
 using Application.Common.Interfaces;
 using Application.Interfaces;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -9,11 +11,6 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Photos;
 
 public static class Add {
-  public class Command : IRequest<PhotoDto> {
-    [Required]
-    public IFormFile File { get; set; }
-  }
-
   public class Handler : IRequestHandler<Command, PhotoDto> {
     private readonly IAppDbContext dbContext;
     private readonly ICurrUserService currUserService;
@@ -26,7 +23,7 @@ public static class Add {
     }
 
     public async Task<PhotoDto> Handle(Command request, CancellationToken ct) {
-      var photoUploadResult = photoAccessor.AddPhoto(request.File);
+      var photoUploadResult = photoAccessor.AddPhoto(request.ImageFile);
 
       var user = await dbContext.Users
         .Include(x => x.Photos)
@@ -41,5 +38,22 @@ public static class Add {
 
       throw new Exception("Problem saving photo");
     }
+  }
+
+  public class CommandValidator : AbstractValidator<Command> {
+
+    public CommandValidator() {
+      RuleFor(x => x.ImageFile)
+        .NotEmpty()
+        .Must(x => x.IsImage()).WithMessage("Invalid image file uploaded");
+    }
+  }
+
+  public class Command : IRequest<PhotoDto> {
+    /// <summary>
+    /// Image file
+    /// </summary>
+    [Required]
+    public IFormFile ImageFile { get; set; }
   }
 }

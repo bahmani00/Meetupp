@@ -8,6 +8,7 @@
     <AspNetCoreModuleName>AspNetCoreModule</AspNetCoreModuleName>
 
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
 
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
@@ -48,8 +49,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\swagger\style.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Update="wwwroot\swagger-ui\dark.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\swagger-ui\style.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 </Project>

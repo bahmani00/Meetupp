@@ -88,7 +88,6 @@ void Configure() {
     app.ApplySecurityHeaders();
   }
 
-
   app.UseDefaultFiles();//enable index.html,default.htm,...
   app.UseStaticFiles();//static files: js, css, img,...
 
@@ -136,18 +135,9 @@ void Configure() {
 
 async Task RunMigrationAndSeeder() {
   using var scope = app.Services.CreateScope();
-  var services = scope.ServiceProvider;
-  try {
-    var context = services.GetRequiredService<AppDbContext>();
-    await context.Database.MigrateAsync();
+  var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+  await context.Database.MigrateAsync();
 
-    var dbSeeder = services.GetRequiredService<DbSeeder>();
-    await dbSeeder.SeedAsync();
-
-  } catch (Exception ex) {
-    ILogger logger = services.GetRequiredService<ILogger<Program>>();
-    logger.Error("Error occured during MeetUppy db migration.", ex);
-    throw;
-  }
-
+  var dbSeeder = scope.ServiceProvider.GetRequiredService<DbSeeder>();
+  await dbSeeder.SeedAsync();
 }

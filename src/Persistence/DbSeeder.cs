@@ -1,6 +1,7 @@
 using System.Globalization;
 using Application.Common.Interfaces;
 using Domain;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 
 namespace Persistence;
@@ -32,10 +33,12 @@ public class DbSeeder {
 
   private readonly IAppDbContext dbContext;
   private readonly UserManager<AppUser> userManager;
+  private readonly ISystemClock systemClock;
 
-  public DbSeeder(IAppDbContext dbContext, UserManager<AppUser> userManager) {
+  public DbSeeder(IAppDbContext dbContext, UserManager<AppUser> userManager, ISystemClock systemClock) {
     this.dbContext = dbContext;
     this.userManager = userManager;
+    this.systemClock = systemClock;
   }
 
   public async Task SeedAsync() {
@@ -79,12 +82,12 @@ public class DbSeeder {
     var users = userManager.Users.Skip(1).ToList();
 
     for (var i = 10; i <= 100; ++i) {
-      var date = DateTime.Now.AddDays(i / 3 - 25);
+      var date = systemClock.UtcNow.UtcDateTime.AddDays(i / 3 - 25);
 #pragma warning disable CA5394 // Do not use insecure randomness
       var cat = categories[rand.Next(1, categories.Count)];
       var (city, venue) = cities[rand.Next(1, cities.Count)];
       var usrs = users.OrderBy(x => Guid.NewGuid()).ToList();
-      var now = DateTimeOffset.Now;
+      var now = systemClock.UtcNow.UtcDateTime;
 #pragma warning restore CA5394 // Do not use insecure randomness
 
       await dbContext.Activities.AddAsync(new() {

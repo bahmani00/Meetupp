@@ -25,5 +25,8 @@ public class ActivityDto : ActivityBaseDto {
   [JsonPropertyName("attendees")]
   public ICollection<AttendeeDto> UserActivities { get; set; }
 
+  /// <summary>
+  /// All the comments on this activity
+  /// </summary>
   public ICollection<CommentDto> Comments { get; set; }
 }

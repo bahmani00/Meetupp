@@ -1,5 +1,5 @@
 using Application.Common.Interfaces;
-using static Application.Errors.RestException;
+using static Application.Common.Exceptions.RestException;
 
 namespace Application.Profiles;
 

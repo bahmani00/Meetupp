@@ -3,17 +3,24 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
+[ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+[ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
 public class ProfilesController : BaseController {
 
-  [HttpGet("{username}")] //username as Route parameter
-  public async Task<ActionResult<Profile>> Get(string username, CancellationToken ct) =>
-    await Mediator.Send(new Details.Query(username), ct);
+  [HttpGet("{userId}")] //userId as Route parameter
+  [ProducesResponseType(typeof(Profile), StatusCodes.Status200OK)]
+  public async Task<ActionResult<Profile>> Get(string userId, CancellationToken ct) =>
+    Ok(await Mediator.Send(new Details.Query(userId), ct));
 
   [HttpPut]
-  public async Task<ActionResult> Edit(Edit.Command command, CancellationToken ct) =>
-    Ok(await Mediator.Send(command, ct));
+  [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
+  public async Task<ActionResult> Edit(Edit.Command command, CancellationToken ct) {
+    await Mediator.Send(command, ct);
+    return Ok();
+  }
 
-  [HttpGet("{username}/activities")]
-  public async Task<ActionResult<List<UserActivityDto>>> GetUserActivities(string username, string predicate, CancellationToken ct) =>
-    await Mediator.Send(new ListActivities.Query(username, predicate), ct);
+  [HttpGet("{userId}/activities")]
+  [ProducesResponseType(typeof(List<UserActivityDto>), StatusCodes.Status200OK)]
+  public async Task<ActionResult<List<UserActivityDto>>> GetUserActivities(string userId, string predicate, CancellationToken ct) =>
+    Ok(await Mediator.Send(new ListActivities.Query(userId, predicate), ct));
 }

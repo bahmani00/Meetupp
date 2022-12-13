@@ -8,10 +8,10 @@ public abstract class Entity {
   public AppUser CreatedBy { get; set; }
 
   [Required]
-  public DateTimeOffset CreatedOn { get; set; }
+  public DateTime CreatedOn { get; set; }
 
   public string ModifiedById { get; set; }
   public AppUser ModifiedBy { get; set; }
 
-  public DateTimeOffset ModifiedOn { get; set; }
+  public DateTime? ModifiedOn { get; set; }
 }
