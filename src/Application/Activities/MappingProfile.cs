@@ -17,6 +17,7 @@ public class MappingProfile : Profile {
 
     CreateMap<Create.Command, Activity>();
 
+    CreateMap<Activity, ActivityDetailDto>();
     CreateMap<Activity, ActivityDto>();
 
     //CreateMap<ActivityDto, Activity>(MemberList.None);

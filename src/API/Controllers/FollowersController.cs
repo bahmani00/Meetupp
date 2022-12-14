@@ -58,5 +58,5 @@ public class FollowersController : BaseController {
   [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
   [ProducesResponseType(typeof(List<Profile>), StatusCodes.Status200OK)]
   public async Task<ActionResult<List<Profile>>> GetFollowings(string userId, [FromQuery] string predicate, CancellationToken ct) =>
-    Ok(await Mediator.Send(new List.Query(userId, predicate), ct));
+    await Mediator.Send(new List.Query(userId, predicate), ct);
 }

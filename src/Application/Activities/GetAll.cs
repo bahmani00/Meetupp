@@ -24,9 +24,8 @@ public static class GetAll {
     public async Task<PaginatedList<ActivityDto>> Handle(Query request, CancellationToken ct) {
       var queryable = dbContext.Activities
         .AsNoTracking()
-        //.Include(x => x.Comments).ThenInclude(x => x.CreatedBy).ThenInclude(x => x.Photos)
         .Include(x => x.UserActivities).ThenInclude(x => x.AppUser).ThenInclude(x => x.Photos)
-        .AsSplitQuery()
+        //.AsSplitQuery()
         .Where(x => x.Date >= request.StartDate)
         .OrderBy(x => x.Date)
         .AsQueryable();
@@ -41,7 +40,7 @@ public static class GetAll {
 
       var loggedInUser = await currUserService.GetCurrUserProfileAsync(ct);
 
-      return await queryable
+      return await queryable.TagWithCallSite()
         .ProjectTo<ActivityDto>(mapper.ConfigurationProvider, new { currUser = loggedInUser })
         .PaginatedListAsync(request.Offset, request.Limit);
     }

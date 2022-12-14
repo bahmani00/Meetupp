@@ -21,7 +21,7 @@ public class CommentController : BaseController {
   [HttpGet("{activityId}/comments")]
   public async Task<ActionResult<PaginatedList<CommentDto>>> GetAll(Guid activityId,
     int? limit, int? offset, CancellationToken ct) =>
-    Ok(await Mediator.Send(new GetAll.Query(activityId, limit ?? 3, offset ?? 0), ct));
+    await Mediator.Send(new GetAll.Query(activityId, limit ?? 3, offset ?? 0), ct);
 
   /// <summary>
   /// Returns a Comment
@@ -30,10 +30,10 @@ public class CommentController : BaseController {
   /// <param name="ct"></param>
   /// <returns></returns>
   [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
-  [ProducesResponseType(typeof(CommentDto), StatusCodes.Status200OK)]
+  [ProducesResponseType(StatusCodes.Status200OK)]
   [HttpGet("{activityId}/comments/{commentId}")]
   public async Task<ActionResult<CommentDto>> Get(Guid commentId, CancellationToken ct) =>
-    Ok(await Mediator.Send(new Get.Query(commentId), ct));
+    await Mediator.Send(new Get.Query(commentId), ct);
 
   /// <summary>
   /// Comment on an activity

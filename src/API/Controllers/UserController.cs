@@ -14,10 +14,9 @@ public class UserController : BaseController {
   [AllowAnonymous]
   [HttpPost("login")]
   [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
-  [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
-  public async Task<ActionResult<UserDto>> Login(Login.Query query, CancellationToken ct) {
-    return Ok(await Mediator.Send(query, ct));
-  }
+  [ProducesResponseType(StatusCodes.Status200OK)]
+  public async Task<ActionResult<UserDto>> Login(Login.Query query, CancellationToken ct) =>
+    await Mediator.Send(query, ct);
 
   /// <summary>
   /// Register yourself using email and a strong password
@@ -41,7 +40,7 @@ public class UserController : BaseController {
   /// <returns></returns>
   [HttpGet]
   [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
-  [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+  [ProducesResponseType(StatusCodes.Status200OK)]
   public async Task<ActionResult<UserDto>> CurrentUser(CancellationToken ct) =>
-    Ok(await Mediator.Send(new CurrentUser.Query(), ct));
+    await Mediator.Send(new CurrentUser.Query(), ct);
 }

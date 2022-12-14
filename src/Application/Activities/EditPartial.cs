@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Application.Common.Interfaces;
 using AutoMapper;
 using Domain;
@@ -38,23 +39,19 @@ public static class EditPartial {
         .Must(x => !string.IsNullOrEmpty(x.Title) |
             !string.IsNullOrEmpty(x.Description) ||
             !string.IsNullOrEmpty(x.Category) ||
-            !x.Date.HasValue ||
+            !x.DateHasValue() ||
             !string.IsNullOrEmpty(x.City) ||
             !string.IsNullOrEmpty(x.Venue)
           )
-          .WithMessage($"Provide at least either {nameof(Activity.Title)}, {nameof(Activity.Description)}, {nameof(Activity.Category)}, {nameof(Activity.Date)}, {nameof(Activity.City)} or {nameof(Activity.Venue)}");
-      RuleFor(command => command)
-        .Must(x => !x.Date.HasValue || (x.Date >= DateTime.Now))
-        .WithMessage($"{nameof(Activity.Date)} should be greater than current time");
+        .WithMessage($"Provide at least either {nameof(Activity.Title)}, {nameof(Activity.Description)}, {nameof(Activity.Category)}, {nameof(Activity.Date)}, {nameof(Activity.City)} or {nameof(Activity.Venue)}");
     }
   }
 
-  public record Command(
-    Guid Id,
-    string Title,
-    string Description,
-    string Category,
-    DateTime? Date,
-    string City,
-    string Venue) : IRequest;
+  /// <summary>
+  /// EditPartial model
+  /// </summary>
+  public class Command : ActivityBaseDto, IRequest {
+    [JsonIgnore]
+    public Guid Id { get; set; }
+  }
 }

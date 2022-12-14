@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Application.Common.Interfaces;
 using AutoMapper;
 using FluentValidation;
@@ -34,15 +35,15 @@ public static class Edit {
   public class CommandValidator : AbstractValidator<Command> {
     public CommandValidator() {
       RuleFor(x => x).SetValidator(new ActivityValidator());
+      RuleFor(x => x.Id).NotEmpty();
     }
   }
 
-  public class Command : ActivityBaseDto, IRequest {
-    internal Guid Id { get; set; }
-
-    public Command SetId(Guid id) {
-      Id = id;
-      return this;
-    }
+  /// <summary>
+  /// EditActivity model
+  /// </summary>
+  public class Command : ActivityBaseRequiredDto, IRequest {
+    [JsonIgnore]
+    public Guid Id { get; set; }
   }
 }

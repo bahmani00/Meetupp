@@ -1,7 +1,6 @@
 using Application.Activities;
 using Application.Common.Models;
 using Infrastructure.Security;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -24,7 +23,7 @@ public class ActivitiesController : BaseController {
   [HttpGet]
   public async Task<ActionResult<PaginatedList<ActivityDto>>> GetAll(
     int? limit, int? offset, bool isGoing, bool isHost, DateTime? startDate, CancellationToken ct) =>
-    Ok(await Mediator.Send(new GetAll.Query(limit ?? 3, offset ?? 0, isGoing, isHost, startDate ?? DateTime.Now), ct));
+    await Mediator.Send(new GetAll.Query(limit ?? 3, offset ?? 0, isGoing, isHost, startDate ?? DateTime.Now), ct);
 
   /// <summary>
   /// Returns an activity
@@ -32,11 +31,11 @@ public class ActivitiesController : BaseController {
   /// <param name="activityId">Activity Id</param>
   /// <param name="ct"></param>
   /// <returns></returns>
-  [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ActivityDto))]
+  [ProducesResponseType(StatusCodes.Status200OK)]
   [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]
   [HttpGet("{activityId}")]
-  public async Task<ActionResult<ActivityDto>> Get(Guid activityId, CancellationToken ct) =>
-    Ok(await Mediator.Send(new Details.Query(activityId), ct));
+  public async Task<ActionResult<ActivityDetailDto>> Get(Guid activityId, CancellationToken ct) =>
+    await Mediator.Send(new Details.Query(activityId), ct);
 
   /// <summary>
   /// Creates a new Activity
@@ -62,8 +61,11 @@ public class ActivitiesController : BaseController {
   [HttpPut("{activityId}")]
   [Authorize(Policy = IsHostRequirement.PolicyName)]
   [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
-  public async Task<ActionResult> Edit(Guid activityId, Edit.Command command, CancellationToken ct) =>
-    Ok(await Mediator.Send(command.SetId(activityId), ct));
+  public async Task<ActionResult> Edit(Guid activityId, Edit.Command command, CancellationToken ct) {
+    command.Id = activityId;
+    await Mediator.Send(command, ct);
+    return Ok();
+  }
 
   /// <summary>
   /// Partially edit an activity 
@@ -75,8 +77,11 @@ public class ActivitiesController : BaseController {
   [HttpPatch("{activityId}")]
   [Authorize(Policy = IsHostRequirement.PolicyName)]
   [ProducesResponseType(typeof(void), StatusCodes.Status200OK)]
-  public async Task<ActionResult<Unit>> EditPartial(Guid activityId, EditPartial.Command command, CancellationToken ct) =>
-    Ok(await Mediator.Send(command with { Id = activityId }, ct));
+  public async Task<ActionResult> EditPartial(Guid activityId, EditPartial.Command command, CancellationToken ct) {
+    command.Id = activityId;
+    await Mediator.Send(command, ct);
+    return Ok();
+  }
 
   /// <summary>
   /// Delete an activity
