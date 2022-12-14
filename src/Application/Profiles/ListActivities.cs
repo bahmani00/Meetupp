@@ -36,7 +36,7 @@ public static class ListActivities {
       };
       await Task.CompletedTask;
 
-      return queryable.ProjectTo<UserActivityDto>(mapper.ConfigurationProvider)
+      return queryable.TagWithCallSite().ProjectTo<UserActivityDto>(mapper.ConfigurationProvider)
         .OrderBy(t => t.Title)
         .ToList();
     }

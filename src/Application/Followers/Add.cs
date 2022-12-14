@@ -23,7 +23,7 @@ public static class Add {
       var target = await dbContext.GetUserAsync(request.Username, ct);
       ThrowIfNotFound(target, new { User = "Not found" });
 
-      var following = await dbContext.Followings.SingleOrDefaultAsync(x => x.ObserverId == observer.Id && x.TargetId == target!.Id, ct);
+      var following = await dbContext.Followings.TagWithCallSite().SingleOrDefaultAsync(x => x.ObserverId == observer.Id && x.TargetId == target!.Id, ct);
       ThrowIfBadRequest(following != null, new { User = "You already follow this user" });
       ThrowIfBadRequest(observer.Id == target!.Id, new { User = "User canot follow itself" });
 

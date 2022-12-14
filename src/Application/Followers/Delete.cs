@@ -22,7 +22,7 @@ public static class Delete {
       var target = await dbContext.GetUserAsync(request.Username, ct);
       ThrowIfNotFound(target, new { User = "Not found" });
 
-      var following = await dbContext.Followings.SingleOrDefaultAsync(x => x.ObserverId == observer.Id && x.TargetId == target!.Id, ct);
+      var following = await dbContext.Followings.TagWithCallSite().SingleOrDefaultAsync(x => x.ObserverId == observer.Id && x.TargetId == target!.Id, ct);
       ThrowIfBadRequest(following == null, new { User = "You are not following this user" });
 
       dbContext.Followings.Remove(following!);

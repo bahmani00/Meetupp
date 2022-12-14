@@ -33,6 +33,7 @@ public static class List {
         .Include(includePerdicate).ThenInclude(x => x.Followers)
         .Include(includePerdicate).ThenInclude(x => x.Followings)
         .Where(predicate)
+        .TagWithCallSite()
         .ToListAsync(ct);
 
       var getUser = includePerdicate.Compile();

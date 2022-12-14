@@ -66,6 +66,7 @@ public static class Create {
       var user = dbContext.Users
         .AsNoTracking()
         .Include(x => x.Photos)
+        .TagWithCallSite()
         .SingleOrDefault(x => x.Id == userId);
 
       httpContextAccessor!.HttpContext!.Items[$"user_{userId}"] = user;

@@ -37,6 +37,7 @@ public class IdentityService : IIdentityService {
       .Include(x => x.Followings)
       .Include(x => x.Followers)
       .Include(x => x.Photos)
+      .TagWithCallSite()
       .FirstAsync(u => u.Id == userId, ct);
 
   public async Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password) {

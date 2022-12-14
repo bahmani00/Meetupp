@@ -26,6 +26,7 @@ public static class GetAll {
         .Include(x => x.CreatedBy).ThenInclude(x => x.Photos)
         .OrderBy(x => x.CreatedOn)
         .AsQueryable()
+        .TagWithCallSite()
         .ProjectTo<CommentDto>(mapper.ConfigurationProvider)
         .PaginatedListAsync(request.Offset, request.Limit);
     }

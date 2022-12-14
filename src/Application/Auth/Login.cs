@@ -37,6 +37,7 @@ public static class Login {
       var user = dbContext.Users
         .AsNoTracking()
         .Include(x => x.Photos)
+        .TagWithCallSite()
         .SingleOrDefault(x => x.Email == request.Email);
 
       httpContextAccessor!.HttpContext!.Items[$"user_{request.Email}"] = user;

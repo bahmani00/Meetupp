@@ -29,6 +29,7 @@ public class IsHostRequirementHandler : AuthorizationHandler<IsHostRequirement> 
 
     var attendance = await dbContext.UserActivities
       .Include(x => x.AppUser)
+      .TagWithCallSite()
       .FirstOrDefaultAsync(x => x.ActivityId == activityId && x.IsHost && x.AppUser.Id == userId);
 
     if (attendance != null)

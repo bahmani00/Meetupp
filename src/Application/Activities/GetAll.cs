@@ -28,6 +28,7 @@ public static class GetAll {
         //.AsSplitQuery()
         .Where(x => x.Date >= request.StartDate)
         .OrderBy(x => x.Date)
+        .TagWithCallSite()
         .AsQueryable();
 
       if (request.IsGoing && !request.IsHost) {

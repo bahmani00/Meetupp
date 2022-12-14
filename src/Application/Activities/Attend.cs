@@ -23,6 +23,7 @@ public static class Attend {
       ThrowIfNotFound(activity, new { Activity = "Not found" });
 
       var attendance = await dbContext.UserActivities
+        .TagWithCallSite()
         .SingleOrDefaultAsync(x => x.ActivityId == activity!.Id && x.AppUserId == currUserService.UserId, ct);
       ThrowIfBadRequest(attendance != null, new { Attendance = "Already attending this activity" });
 

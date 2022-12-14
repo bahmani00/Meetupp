@@ -20,6 +20,7 @@ public static class Get {
     public async Task<CommentDto> Handle(Query request, CancellationToken ct) {
       var entity = await dbContext.Comments
         .Include(x => x.CreatedBy).ThenInclude(x => x.Photos)
+        .TagWithCallSite()
         .SingleOrDefaultAsync(x => x.Id == request.Id, ct);
 
       ThrowIfNotFound(entity, new { Comment = "Not found" });
