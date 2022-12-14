@@ -31,7 +31,6 @@ public class AppDbContext : IdentityDbContext<AppUser>, IAppDbContext {
     optionsBuilder.AddInterceptors(auditEntitySaveChangesInterceptor);
   }
 
-
   /// <inheritdoc />
   public async Task<AppUser?> GetUserAsync(string userName, CancellationToken ct, bool asTracking = false) =>
     await Users

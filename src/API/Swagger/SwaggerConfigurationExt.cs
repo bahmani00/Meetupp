@@ -109,6 +109,11 @@ public static class SwaggerConfigurationExt {
     //Swagger middleware for generate "Open API Documentation" in swagger.json
     app.UseSwagger();
 
+    //Swagger middleware for generate UI from swagger.json
+    app.UseSwaggerUI(options => {
+      //options.RoutePrefix = "api-docs";
+      options.SwaggerEndpoint("v1/swagger.json", "API v1");
+
       if (app.Environment.IsDevelopment())
         options.EnablePersistAuthorization();
 
