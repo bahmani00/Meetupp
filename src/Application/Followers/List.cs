@@ -41,5 +41,7 @@ public static class List {
     }
   }
 
-  public record Query(string UserId, string Predicate) : IRequest<List<Profile>>;
+  public record Query(string UserId, string Predicate) : IRequest<List<Profile>> {
+    public bool IsFollowing() => string.Equals(Predicate, "following", StringComparison.InvariantCultureIgnoreCase);
+  }
 }
