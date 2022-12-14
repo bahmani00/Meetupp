@@ -9,7 +9,6 @@ public class AppUserConfiguration : IEntityTypeConfiguration<AppUser> {
     builder.HasKey(ua => ua.Id);
 
     builder.Property(t => t.DisplayName)
-      .HasMaxLength(50)
-      .IsRequired();
+      .HasMaxLength(50);
   }
 }

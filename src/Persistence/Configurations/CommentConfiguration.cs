@@ -10,13 +10,6 @@ public class CommentConfiguration : IEntityTypeConfiguration<Comment> {
       .ToTable("Comment")
       .HasKey(ua => ua.Id);
 
-    builder.Property(t => t.Body)
-      .IsRequired();
-
-    //builder
-    //  .HasIndex(ua => new { ua.CreatedById, ua.ActivityId })
-    //  .IsUnique();
-
 
     //Define relationship btw UserActivity & AppUser tables
     builder.HasOne(c => c.CreatedBy)

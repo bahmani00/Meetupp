@@ -9,16 +9,15 @@ public class ActivityConfiguration : IEntityTypeConfiguration<Activity> {
     builder.HasKey(ua => ua.Id);
 
     builder.Property(t => t.Title)
-      .HasMaxLength(50)
-      .IsRequired();
+      .HasMaxLength(50);
+
     builder.Property(t => t.Category)
-      .HasMaxLength(50)
-      .IsRequired();
+      .HasMaxLength(50);
+    
     builder.Property(t => t.City)
-      .HasMaxLength(50)
-      .IsRequired();
+      .HasMaxLength(50);
+
     builder.Property(t => t.Venue)
-      .HasMaxLength(50)
-      .IsRequired();
+      .HasMaxLength(50);
   }
 }

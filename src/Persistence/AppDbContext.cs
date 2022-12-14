@@ -14,11 +14,12 @@ public class AppDbContext : IdentityDbContext<AppUser>, IAppDbContext {
     this.auditEntitySaveChangesInterceptor = auditEntitySaveChangesInterceptor;
   }
 
-  public DbSet<Activity> Activities { get; set; }
-  public DbSet<UserActivity> UserActivities { get; set; }
-  public DbSet<Photo> Photos { get; set; }
-  public DbSet<Comment> Comments { get; set; }
-  public DbSet<UserFollowing> Followings { get; set; }
+  //TODO: remove these sets. configurations will add them
+  public DbSet<Activity> Activities => Set<Activity>();
+  public DbSet<UserActivity> UserActivities => Set<UserActivity>();
+  public DbSet<Photo> Photos => Set<Photo>();
+  public DbSet<Comment> Comments => Set<Comment>();
+  public DbSet<UserFollowing> Followings => Set<UserFollowing>();
 
   protected override void OnModelCreating(ModelBuilder modelBuilder) {
     modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());

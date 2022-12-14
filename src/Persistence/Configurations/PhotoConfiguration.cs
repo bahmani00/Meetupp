@@ -9,11 +9,7 @@ public class PhotoConfiguration : IEntityTypeConfiguration<Photo> {
     builder.HasKey(ua => ua.Id);
 
     builder.Property(t => t.PublicId)
-      .HasMaxLength(450)
-      .IsRequired();
-
-    builder.Property(t => t.Url)
-      .IsRequired();
+      .HasMaxLength(450);
 
     builder.Property(t => t.IsMain);
   }
