@@ -45,7 +45,6 @@ void ConfigureServices() {
 
   builder.Services.AddSwagger();
 
-
   builder.Services.AddCors(options =>
     options.AddPolicy("CORSPolicy_React", policyBuilder =>
       policyBuilder
@@ -88,6 +87,8 @@ void Configure() {
     app.ApplySecurityHeaders();
   }
 
+  app.UseCors("CORSPolicy_React");
+
   app.UseDefaultFiles();//enable index.html,default.htm,...
   app.UseStaticFiles();//static files: js, css, img,...
 
@@ -95,30 +96,25 @@ void Configure() {
   //Authentication vs. Authorization
   app.UseAuthentication();
   app.UseAuthorization();
-  app.UseCors("CORSPolicy_React");
 
+  app.MapControllers();
   app.UseEndpoints(endpoints => {
-    endpoints.MapControllers();
-    endpoints.MapHub<API.SignalR.ChatHub>("/chat");
+    endpoints.MapHub<API.SignalR.ChatHub>("/chat", options => {
+      //https://scientificprogrammer.net/2022/09/28/advanced-signalr-configuration-fine-tuning-the-server-side-hub-and-all-supported-client-types/
+      //  options.Transports =
+      //                  HttpTransportType.WebSockets |
+      //                  HttpTransportType.LongPolling;
+      //  options.CloseOnAuthenticationExpiration = true;
+      //  options.ApplicationMaxBufferSize = 65_536;
+      //  options.TransportMaxBufferSize = 65_536;
+      //  options.MinimumProtocolVersion = 0;
+      //  options.TransportSendTimeout = TimeSpan.FromSeconds(10);
+      //  options.WebSockets.CloseTimeout = TimeSpan.FromSeconds(3);
+      //  options.LongPolling.PollTimeout = TimeSpan.FromSeconds(10);
+      //  Console.WriteLine($"Authorization data items: {options.AuthorizationData.Count}");
+      //});
+    });
   });
-
-
-  //app.MapControllers();
-  //app.MapHub<API.SignalR.ChatHub>("/chat", options => {
-  ////https://scientificprogrammer.net/2022/09/28/advanced-signalr-configuration-fine-tuning-the-server-side-hub-and-all-supported-client-types/
-  ////  options.Transports =
-  ////                  HttpTransportType.WebSockets |
-  ////                  HttpTransportType.LongPolling;
-  ////  options.CloseOnAuthenticationExpiration = true;
-  ////  options.ApplicationMaxBufferSize = 65_536;
-  ////  options.TransportMaxBufferSize = 65_536;
-  ////  options.MinimumProtocolVersion = 0;
-  ////  options.TransportSendTimeout = TimeSpan.FromSeconds(10);
-  ////  options.WebSockets.CloseTimeout = TimeSpan.FromSeconds(3);
-  ////  options.LongPolling.PollTimeout = TimeSpan.FromSeconds(10);
-  ////  Console.WriteLine($"Authorization data items: {options.AuthorizationData.Count}");
-  //});
-
 
   app.UseMvc(routes => {
     //when it's not /chat or api endpoints go to:
@@ -135,18 +131,9 @@ void Configure() {
 
 async Task RunMigrationAndSeeder() {
   using var scope = app.Services.CreateScope();
-  var services = scope.ServiceProvider;
-  try {
-    var context = services.GetRequiredService<AppDbContext>();
-    await context.Database.MigrateAsync();
+  var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+  await context.Database.MigrateAsync();
 
-    var dbSeeder = services.GetRequiredService<DbSeeder>();
-    await dbSeeder.SeedAsync();
-
-  } catch (Exception ex) {
-    ILogger logger = services.GetRequiredService<ILogger<Program>>();
-    logger.Error("Error occured during MeetUppy db migration.", ex);
-    throw;
-  }
-
+  var dbSeeder = scope.ServiceProvider.GetRequiredService<DbSeeder>();
+  await dbSeeder.SeedAsync();
 }

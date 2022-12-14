@@ -25,15 +25,15 @@ public static class ConfigureServices {
     services.AddDbContext<AppDbContext>(opt => {
       //opt.UseLazyLoadingProxies();
 
-      if (env.IsDevelopment()) {
+      if (env.IsEnvironment("Test")) {
         opt.EnableSensitiveDataLogging();
         opt.UseSqlite(
-          Configuration.GetConnectionString("DefaultConnection"),
+          Configuration.GetConnectionString("SqliteConnection"),
           x => x.MigrationsAssembly("Persistence.SqliteDbMigrations")
         );
       } else {
         opt.UseSqlServer(
-          Configuration.GetConnectionString("DefaultConnection"),
+          Configuration.GetConnectionString("SqlConnection"),
           x => x.MigrationsAssembly("Persistence.SqlServerDbMigrations")
         );
       }

@@ -14,11 +14,12 @@ public class AppDbContext : IdentityDbContext<AppUser>, IAppDbContext {
     this.auditEntitySaveChangesInterceptor = auditEntitySaveChangesInterceptor;
   }
 
-  public DbSet<Activity> Activities { get; set; }
-  public DbSet<UserActivity> UserActivities { get; set; }
-  public DbSet<Photo> Photos { get; set; }
-  public DbSet<Comment> Comments { get; set; }
-  public DbSet<UserFollowing> Followings { get; set; }
+  //TODO: remove these sets. configurations will add them
+  public DbSet<Activity> Activities => Set<Activity>();
+  public DbSet<UserActivity> UserActivities => Set<UserActivity>();
+  public DbSet<Photo> Photos => Set<Photo>();
+  public DbSet<Comment> Comments => Set<Comment>();
+  public DbSet<UserFollowing> Followings => Set<UserFollowing>();
 
   protected override void OnModelCreating(ModelBuilder modelBuilder) {
     modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
@@ -30,15 +31,14 @@ public class AppDbContext : IdentityDbContext<AppUser>, IAppDbContext {
     optionsBuilder.AddInterceptors(auditEntitySaveChangesInterceptor);
   }
 
-
   /// <inheritdoc />
-  public async Task<AppUser> GetUserAsync(string userName, CancellationToken ct, bool asTracking = false) =>
+  public async Task<AppUser?> GetUserAsync(string userName, CancellationToken ct, bool asTracking = false) =>
     await Users
       .AsMayTracking(asTracking)
       .SingleOrDefaultAsync(x => x.UserName == userName, ct);
 
   /// <inheritdoc />
-  public async Task<AppUser> GetUserProfileAsync(string userName, CancellationToken ct, bool asTracking = false) =>
+  public async Task<AppUser?> GetUserProfileAsync(string userName, CancellationToken ct, bool asTracking = false) =>
     await Users
       .AsMayTracking(asTracking)
       .Include(x => x.Followings)

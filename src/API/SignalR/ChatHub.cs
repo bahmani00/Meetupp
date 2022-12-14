@@ -1,10 +1,12 @@
 using Application.Comments;
 using Infrastructure.Security;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
 namespace API.SignalR;
 
+[Authorize]
 public class ChatHub : Hub {
   private readonly IMediator _mediator;
 
@@ -15,7 +17,7 @@ public class ChatHub : Hub {
   public async Task SendComment(Create.Command command) {
     //auth token must have been added already to HubContext
     // how do u garantee that?
-    command = command with { UserId = Context.User.GetUserId() };
+    command = command with { UserId = Context.User!.GetUserId()! };
 
     var comment = await _mediator.Send(command);
 

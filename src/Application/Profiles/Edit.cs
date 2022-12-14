@@ -19,8 +19,8 @@ public static class Edit {
     public async Task<Unit> Handle(Command request, CancellationToken ct) {
       var user = await dbContext.GetUserAsync(currUserService.UserId, ct, true);
 
-      user.DisplayName = request.DisplayName ?? user.DisplayName;
-      user.Bio = request.Bio ?? user.Bio;
+      user!.DisplayName = request.DisplayName ?? user.DisplayName;
+      user!.Bio = request.Bio ?? user.Bio;
 
       var success = await dbContext.SaveChangesAsync(ct) > 0;
 

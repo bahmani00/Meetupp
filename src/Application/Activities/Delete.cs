@@ -1,6 +1,6 @@
 using Application.Common.Interfaces;
 using MediatR;
-using static Application.Errors.RestException;
+using static Application.Common.Exceptions.RestException;
 
 namespace Application.Activities;
 
@@ -16,7 +16,7 @@ public static class Delete {
       var activity = await dbContext.Activities.FindItemAsync(request.Id, ct);
       ThrowIfNotFound(activity, new { Activity = "Not found" });
 
-      dbContext.Remove(activity);
+      dbContext.Remove(activity!);
 
       var success = await dbContext.SaveChangesAsync(ct) > 0;
 

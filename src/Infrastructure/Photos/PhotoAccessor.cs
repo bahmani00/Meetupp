@@ -41,7 +41,7 @@ public class PhotoAccessor : IPhotoAccessor {
   }
 
   public string DeletePhoto(string publicId) {
-    var deleteParams = new DeletionParams(publicId);
+    //var deleteParams = new DeletionParams(publicId);
 
     //var result = _cloudinary.Destroy(deleteParams);
 

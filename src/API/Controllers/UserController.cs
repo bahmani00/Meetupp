@@ -5,20 +5,42 @@ using Microsoft.AspNetCore.Mvc;
 namespace API.Controllers;
 
 public class UserController : BaseController {
+  /// <summary>
+  /// Loging using email and password
+  /// </summary>
+  /// <param name="query"></param>
+  /// <param name="ct"></param>
+  /// <returns></returns>
   [AllowAnonymous]
   [HttpPost("login")]
-  public async Task<ActionResult<User>> Login(Login.Query query, CancellationToken ct) {
-    return await Mediator.Send(query, ct);
-  }
+  [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
+  [ProducesResponseType(StatusCodes.Status200OK)]
+  public async Task<ActionResult<UserDto>> Login(Login.Query query, CancellationToken ct) =>
+    await Mediator.Send(query, ct);
 
+  /// <summary>
+  /// Register yourself using email and a strong password
+  /// </summary>
+  /// <param name="command"></param>
+  /// <param name="ct"></param>
+  /// <returns></returns>
   [AllowAnonymous]
   [HttpPost("register")]
-  public async Task<ActionResult<User>> Register(Register.Command command, CancellationToken ct) {
-    return await Mediator.Send(command, ct);
+  [ProducesResponseType(StatusCodes.Status201Created)]
+  [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
+  public async Task<ActionResult<UserDto>> Register(Register.Command command, CancellationToken ct) {
+    var res = await Mediator.Send(command, ct);
+    return StatusCode(StatusCodes.Status201Created, res);
   }
 
+  /// <summary>
+  /// Get your profile info
+  /// </summary>
+  /// <param name="ct"></param>
+  /// <returns></returns>
   [HttpGet]
-  public async Task<ActionResult<User>> CurrentUser(CancellationToken ct) {
-    return await Mediator.Send(new CurrentUser.Query(), ct);
-  }
+  [ProducesResponseType(typeof(void), StatusCodes.Status401Unauthorized)]
+  [ProducesResponseType(StatusCodes.Status200OK)]
+  public async Task<ActionResult<UserDto>> CurrentUser(CancellationToken ct) =>
+    await Mediator.Send(new CurrentUser.Query(), ct);
 }
