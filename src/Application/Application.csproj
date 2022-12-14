@@ -1,12 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <!-- <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" /> -->
   
-  <!-- <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-
-    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-    <TreatWarningAsError>true</TreatWarningAsError>
-  </PropertyGroup> -->
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1701;1702,1591</NoWarn>
+  </PropertyGroup> 
 
   <ItemGroup>
     <Compile Remove="Common\Behaviours\AuthorizationBehaviour.cs" />

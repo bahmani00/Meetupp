@@ -19,8 +19,13 @@ public static class SwaggerConfigurationExt {
       });
 
       // Set the comments path for the Swagger JSON and UI.
+      //Add endpoint's comment
       var xmlDocPath = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
       var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlDocPath);
+      options.IncludeXmlComments(xmlPath);
+      //Add model's comment
+      xmlDocPath = $"{typeof(Application.Activities.ActivityDto).Assembly.GetName().Name}.xml";
+      xmlPath = Path.Combine(AppContext.BaseDirectory, xmlDocPath);
       options.IncludeXmlComments(xmlPath);
 
       options.EnableAnnotations();
