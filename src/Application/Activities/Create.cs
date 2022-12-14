@@ -44,6 +44,8 @@ public static class Create {
     }
   }
 
-  public class Command : ActivityBaseDto, IRequest<Guid> {
-  }
+  /// <summary>
+  /// Create Activity model
+  /// </summary>
+  public class Command : ActivityBaseRequiredDto, IRequest<Guid> { }
 }

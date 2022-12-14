@@ -10,11 +10,12 @@ public class Photo {
     Url = url;
   }
 
-  public string Id { get; set; }
+  public string Id { get; set; } = null!;
 
-  public string PublicId { get; set; }
+  public string PublicId { get; set; } = null!;
 
-  public string Url { get; set; }
+  public string Url { get; set; } = null!;
+
   //is main photo for the user?
   public bool IsMain { get; set; }
 }

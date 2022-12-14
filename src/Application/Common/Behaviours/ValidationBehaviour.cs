@@ -1,6 +1,6 @@
+using Application.Common.Exceptions;
 using FluentValidation;
 using MediatR;
-using ValidationException = Application.Common.Exceptions.ValidationException;
 
 namespace Application.Common.Behaviours;
 
@@ -35,9 +35,7 @@ public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TReque
         })
       .ToDictionary(x => x.Key, x => x.Values);
 
-    if (failures.Any()) {
-      throw new ValidationException(failures);
-    }
+    RestException.ThrowIfBadRequest(failures.Any(), failures);
 
     return await next();
   }

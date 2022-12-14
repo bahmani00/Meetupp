@@ -5,55 +5,37 @@ using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace API.Swagger;
 
-public static class SwaggerConfigurationExtensions {
+public static class SwaggerConfigurationExt {
   public static void AddSwagger(this IServiceCollection services) {
     //More info : https://github.com/mattfrear/Swashbuckle.AspNetCore.Filters
 
 
     //Add services and configuration to use swagger
     services.AddSwaggerGen(options => {
-      // Set the comments path for the Swagger JSON and UI.
-      var xmlDocPath = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-      var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlDocPath);
-      options.IncludeXmlComments(xmlPath);
-
-      //var xmlDocPath = Path.Combine(AppContext.BaseDirectory, "Project.xml");
-      ////show controller XML comments like summary
-      //options.IncludeXmlComments(xmlDocPath, true);
-
-      options.EnableAnnotations();
-
-      #region DescribeAllEnumsAsStrings
-      //This method was Deprecated. 
-
-      //You can specify an enum to convert to/from string, uisng :
-      //[JsonConverter(typeof(StringEnumConverter))]
-      //public virtual MyEnums MyEnum { get; set; }
-
-      //Or can apply the StringEnumConverter to all enums globaly, using :
-      //SerializerSettings.Converters.Add(new StringEnumConverter { CamelCaseText = true });
-      //OR
-      //JsonConvert.DefaultSettings = () =>
-      //{
-      //    var settings = new JsonSerializerSettings();
-      //    settings.Converters.Add(new StringEnumConverter { CamelCaseText = true });
-      //    return settings;
-      //};
-      #endregion
-
-      //options.DescribeAllParametersInCamelCase();
-      //options.DescribeStringEnumsInCamelCase()
-      //options.UseReferencedDefinitionsForEnums()
-      //options.IgnoreObsoleteActions();
-      //options.IgnoreObsoleteProperties();
-
       options.SwaggerDoc("v1", new OpenApiInfo {
         Title = "Meetupp API",
         Version = "v1",
         Description = "An API to perform Meetupp operations"
       });
 
-      options.CustomSchemaIds(x => x.FullName.Replace("+", ".", StringComparison.OrdinalIgnoreCase));
+      // Set the comments path for the Swagger JSON and UI.
+      //Add endpoint's comment
+      var xmlDocPath = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+      var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlDocPath);
+      options.IncludeXmlComments(xmlPath);
+      //Add model's comment
+      xmlDocPath = $"{typeof(Application.Activities.ActivityDto).Assembly.GetName().Name}.xml";
+      xmlPath = Path.Combine(AppContext.BaseDirectory, xmlDocPath);
+      options.IncludeXmlComments(xmlPath);
+
+      options.EnableAnnotations();
+      options.UseInlineDefinitionsForEnums();
+
+      //options.DescribeAllParametersInCamelCase();
+      //options.IgnoreObsoleteActions();
+      //options.IgnoreObsoleteProperties();
+
+      options.CustomSchemaIds(x => x.ToString().Replace("+", ".", StringComparison.OrdinalIgnoreCase));
 
       #region Filters
       //Enable to use [SwaggerRequestExample] & [SwaggerResponseExample]
@@ -64,12 +46,13 @@ public static class SwaggerConfigurationExtensions {
       //options.OperationFilter<AddFileParamTypesOperationFilter>();
 
       //Set summary of action if not already set
-      options.OperationFilter<ApplySummariesOperationFilter>();
+      //options.OperationFilter<ApplySummariesOperationFilter>();
 
       #region Add UnAuthorized to Response
       //Add 401 response and security requirements (Lock icon) to actions that need authorization
       options.OperationFilter<UnauthorizedResponsesOperationFilter>(true, "Bearer");// "OAuth2");
       #endregion
+      options.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
 
       #region Add Jwt Authentication
       //options.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme {
@@ -126,24 +109,22 @@ public static class SwaggerConfigurationExtensions {
     //Swagger middleware for generate "Open API Documentation" in swagger.json
     app.UseSwagger();
 
-    //Swagger middleware for generate UI from swagger.json
-    app.UseSwaggerUI(options => {
-      options.SwaggerEndpoint("v1/swagger.json", "API v1");
-
       if (app.Environment.IsDevelopment())
         options.EnablePersistAuthorization();
 
       #region Customizing
       //// Display
-      //options.DefaultModelExpandDepth(2);
-      //options.DefaultModelRendering(ModelRendering.Model);
+      options.DefaultModelExpandDepth(2);
+      options.DefaultModelRendering(ModelRendering.Model);
       //options.DefaultModelsExpandDepth(-1);
-      //options.DisplayOperationId();
       //options.DisplayRequestDuration();
       options.DocExpansion(DocExpansion.None);
       options.EnableTryItOutByDefault();
-      //options.EnableDeepLinking();
-      //options.EnableFilter();
+
+      options.DisplayOperationId();
+      options.EnableDeepLinking();
+
+      options.EnableFilter();
       //options.MaxDisplayedTags(5);
       //options.ShowExtensions();
 
@@ -153,9 +134,9 @@ public static class SwaggerConfigurationExtensions {
 
       //// Other
       //options.DocumentTitle = "CustomUIConfig";
-      options.InjectStylesheet("/swagger/style.css");
+      options.InjectStylesheet("/swagger-ui/style.css");
+      options.InjectStylesheet("/swagger-ui/dark.css");
       //options.InjectJavascript("/ext/custom-javascript.js");
-      //options.RoutePrefix = "api-docs";
       #endregion
     });
 

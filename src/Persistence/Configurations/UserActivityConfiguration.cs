@@ -12,15 +12,16 @@ public class UserActivityConfiguration : IEntityTypeConfiguration<UserActivity> 
 
     builder.HasKey(ua => new { ua.AppUserId, ua.ActivityId });
 
-
     //Define relationship btw UserActivity & AppUser tables
     builder.HasOne(u => u.AppUser)
       .WithMany(a => a.UserActivities)
-      .HasForeignKey(u => u.AppUserId);
+      .HasForeignKey(u => u.AppUserId)
+      .OnDelete(DeleteBehavior.Restrict);
 
     //Define relationship btw UserActivity & Activity tables
     builder.HasOne(a => a.Activity)
-          .WithMany(u => u.UserActivities)
-          .HasForeignKey(a => a.ActivityId);
+      .WithMany(u => u.UserActivities)
+      .HasForeignKey(a => a.ActivityId)
+      .OnDelete(DeleteBehavior.Restrict);
   }
 }

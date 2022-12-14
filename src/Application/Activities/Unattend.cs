@@ -2,7 +2,7 @@ using Application.Auth;
 using Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using static Application.Errors.RestException;
+using static Application.Common.Exceptions.RestException;
 
 namespace Application.Activities;
 
@@ -22,7 +22,8 @@ public static class Unattend {
       ThrowIfNotFound(activity, new { Activity = "Not found" });
 
       var attendance = await dbContext.UserActivities
-          .SingleOrDefaultAsync(x => x.ActivityId == activity.Id &&
+        .TagWithCallSite()
+        .SingleOrDefaultAsync(x => x.ActivityId == activity!.Id &&
               x.AppUserId == currUserService.UserId, ct);
 
       if (attendance == null)

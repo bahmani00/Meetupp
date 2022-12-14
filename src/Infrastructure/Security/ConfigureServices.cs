@@ -64,7 +64,7 @@ public static class ConfigureServices {
       .AddJwtBearer(opt => {
         opt.TokenValidationParameters = new TokenValidationParameters {
           ValidateIssuerSigningKey = true,
-          IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"])),
+          IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"]!)),
           ValidateAudience = false,
           ValidateIssuer = false,
           ValidateLifetime = true, //validate expired tokens: user get 401 unauthorized status

@@ -1,12 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <!-- <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" /> -->
   
-  <!-- <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
-
-    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-    <TreatWarningAsError>true</TreatWarningAsError>
-  </PropertyGroup> -->
+  <PropertyGroup>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1701;1702,1591</NoWarn>
+  </PropertyGroup> 
 
   <ItemGroup>
     <Compile Remove="Common\Behaviours\AuthorizationBehaviour.cs" />
@@ -32,7 +30,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0" />
-    <FrameworkReference Include="Microsoft.AspNetCore.App"/>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 
 </Project>
