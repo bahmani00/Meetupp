@@ -9,8 +9,7 @@ namespace API.Swagger;
 public class ApplySummariesOperationFilter : IOperationFilter {
 
   public void Apply(OpenApiOperation operation, OperationFilterContext context) {
-    var controllerActionDescriptor = context.ApiDescription.ActionDescriptor as ControllerActionDescriptor;
-    if (controllerActionDescriptor == null) return;
+    if (context.ApiDescription.ActionDescriptor is not ControllerActionDescriptor controllerActionDescriptor) return;
 
     var pluralizer = new Pluralizer();
 

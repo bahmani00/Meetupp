@@ -9,10 +9,10 @@ namespace API.Controllers;
 [ApiController]
 [Authorize]
 public class BaseController : ControllerBase {
-  private IMediator mediator;
+  private IMediator? mediator;
   protected IMediator Mediator =>
-    mediator ??= HttpContext.RequestServices.GetService<IMediator>();
+    mediator ??= HttpContext.RequestServices.GetService<IMediator>()!;
 
-  protected string UserName => User.Identity?.Name;
-  protected string UserId => this.HttpContext.User.GetUserId();
+  protected string? UserName => User.Identity?.Name;
+  protected string? UserId => User.GetUserId();
 }

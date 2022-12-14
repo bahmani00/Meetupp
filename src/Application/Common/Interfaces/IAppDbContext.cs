@@ -16,12 +16,12 @@ public interface IAppDbContext {
   Task<int> SaveChangesAsync(CancellationToken ct = default);
   EntityEntry Remove(object entity);
 
-  Task<AppUser> GetUserAsync(string userId, CancellationToken ct, bool asTracking = false);
-  Task<AppUser> GetUserProfileAsync(string userId, CancellationToken ct, bool asTracking = false);
+  Task<AppUser?> GetUserAsync(string userId, CancellationToken ct, bool asTracking = false);
+  Task<AppUser?> GetUserProfileAsync(string userId, CancellationToken ct, bool asTracking = false);
 }
 
 public static class DbSetExtensions {
-  public static async ValueTask<T> FindItemAsync<T>(this DbSet<T> set, params object[] keyValues) where T : class =>
+  public static async ValueTask<T?> FindItemAsync<T>(this DbSet<T> set, params object[] keyValues) where T : class =>
     keyValues[^1] is CancellationToken ct ? await set.FindAsync(keyValues[0..^1], ct) : await set.FindAsync(keyValues);
 
   public static IQueryable<T> AsMayTracking<T>(this IQueryable<T> query, bool isTracked = false) where T : class =>

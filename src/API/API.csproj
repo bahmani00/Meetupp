@@ -8,15 +8,9 @@
     <AspNetCoreModuleName>AspNetCoreModule</AspNetCoreModuleName>
 
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
 
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702,1591</NoWarn>
-  </PropertyGroup>
-  
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <NoWarn>1701;1702,1591</NoWarn>
   </PropertyGroup>
 
@@ -48,8 +42,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\swagger\style.css">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Update="wwwroot\swagger-ui\dark.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\swagger-ui\style.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 </Project>

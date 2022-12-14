@@ -1,29 +1,16 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
+#nullable disable
+
 namespace Persistence.SqlServerDbMigrations.Migrations
 {
-    public partial class SqlServerDbMigrations : Migration
+    /// <inheritdoc />
+    public partial class AddSqlServerMigrations : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Activities",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Category = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    City = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Venue = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Activities", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -43,7 +30,7 @@ namespace Persistence.SqlServerDbMigrations.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    DisplayName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DisplayName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Bio = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -66,21 +53,6 @@ namespace Persistence.SqlServerDbMigrations.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "WeatherForecasts",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TemperatureC = table.Column<int>(type: "int", nullable: false),
-                    Summary = table.Column<string>(type: "nvarchar(max)", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WeatherForecasts", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -99,6 +71,38 @@ namespace Persistence.SqlServerDbMigrations.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Activities",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Category = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    City = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Venue = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    CreatedById = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Activities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Activities_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Activities_AspNetUsers_ModifiedById",
+                        column: x => x.ModifiedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -187,39 +191,12 @@ namespace Persistence.SqlServerDbMigrations.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Comments",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Body = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    AuthorId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    ActivityId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Comments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Comments_Activities_ActivityId",
-                        column: x => x.ActivityId,
-                        principalTable: "Activities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Comments_AspNetUsers_AuthorId",
-                        column: x => x.AuthorId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Followings",
                 columns: table => new
                 {
                     ObserverId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     TargetId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -243,7 +220,8 @@ namespace Persistence.SqlServerDbMigrations.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PublicId = table.Column<string>(type: "nvarchar(450)", maxLength: 450, nullable: false),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsMain = table.Column<bool>(type: "bit", nullable: false),
                     AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
@@ -254,8 +232,41 @@ namespace Persistence.SqlServerDbMigrations.Migrations
                         name: "FK_Photos_AspNetUsers_AppUserId",
                         column: x => x.AppUserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Comment",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Body = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ActivityId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CreatedById = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedById = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comment", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comment_Activities_ActivityId",
+                        column: x => x.ActivityId,
+                        principalTable: "Activities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Comment_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Comment_AspNetUsers_ModifiedById",
+                        column: x => x.ModifiedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -275,28 +286,24 @@ namespace Persistence.SqlServerDbMigrations.Migrations
                         column: x => x.ActivityId,
                         principalTable: "Activities",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_UserActivities_AspNetUsers_AppUserId",
                         column: x => x.AppUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.InsertData(
-                table: "WeatherForecasts",
-                columns: new[] { "Id", "Date", "Summary", "TemperatureC" },
-                values: new object[,]
-                {
-                    { 1, new DateTime(2020, 12, 31, 15, 32, 25, 133, DateTimeKind.Local).AddTicks(7263), "Freezing", -15 },
-                    { 2, new DateTime(2021, 1, 1, 15, 32, 25, 141, DateTimeKind.Local).AddTicks(4778), "Chilly", 16 },
-                    { 3, new DateTime(2021, 1, 2, 15, 32, 25, 141, DateTimeKind.Local).AddTicks(4959), "Cool", 20 },
-                    { 4, new DateTime(2021, 1, 3, 15, 32, 25, 141, DateTimeKind.Local).AddTicks(4975), "Mild", 25 },
-                    { 5, new DateTime(2021, 1, 4, 15, 32, 25, 141, DateTimeKind.Local).AddTicks(4983), "Warm", 30 },
-                    { 6, new DateTime(2021, 1, 5, 15, 32, 25, 141, DateTimeKind.Local).AddTicks(4990), "Hot", 40 },
-                    { 7, new DateTime(2021, 1, 6, 15, 32, 25, 141, DateTimeKind.Local).AddTicks(4998), "Scorching", 45 }
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_Activities_CreatedById",
+                table: "Activities",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Activities_ModifiedById",
+                table: "Activities",
+                column: "ModifiedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -338,14 +345,19 @@ namespace Persistence.SqlServerDbMigrations.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_ActivityId",
-                table: "Comments",
+                name: "IX_Comment_ActivityId",
+                table: "Comment",
                 column: "ActivityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_AuthorId",
-                table: "Comments",
-                column: "AuthorId");
+                name: "IX_Comment_CreatedById",
+                table: "Comment",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comment_ModifiedById",
+                table: "Comment",
+                column: "ModifiedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Followings_TargetId",
@@ -363,6 +375,7 @@ namespace Persistence.SqlServerDbMigrations.Migrations
                 column: "ActivityId");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
@@ -381,7 +394,7 @@ namespace Persistence.SqlServerDbMigrations.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Comments");
+                name: "Comment");
 
             migrationBuilder.DropTable(
                 name: "Followings");
@@ -391,9 +404,6 @@ namespace Persistence.SqlServerDbMigrations.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserActivities");
-
-            migrationBuilder.DropTable(
-                name: "WeatherForecasts");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

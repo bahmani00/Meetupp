@@ -2,7 +2,7 @@
   <!-- <Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" /> -->
   <PropertyGroup>
     <ImplicitUsings>disable</ImplicitUsings>
-    <AnalysisMode>None</AnalysisMode>
+    <AnalysisMode>Minimum</AnalysisMode>
   </PropertyGroup>
 
   <ItemGroup>

@@ -13,7 +13,7 @@ public static class Log {
   public static void Error(this ILogger logger, string message, Exception exc) =>
     error(logger, message, exc);
 
-  private static readonly Action<ILogger, string, Exception> info =
+  private static readonly Action<ILogger, string, Exception?> info =
     LoggerMessage.Define<string>(
       LogLevel.Information,
       Events.Started,

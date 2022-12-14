@@ -5,21 +5,21 @@ using Domain;
 namespace Application.Profiles;
 
 public class Profile {
-  public string DisplayName { get; set; }
-  public string Username { get; set; }
-  public string Image { get; set; }
-  public string Bio { get; set; }
+  public string DisplayName { get; set; } = null!;
+  public string Username { get; set; } = null!;
+  public string? Image { get; set; }
+  public string? Bio { get; set; }
 
   [JsonPropertyNameAttribute("following")]
   public bool IsFollowed { get; set; }
   public int FollowersCount { get; set; }
   public int FollowingCount { get; set; }
-  public ICollection<PhotoDto> Photos { get; set; }
+  public ICollection<PhotoDto>? Photos { get; set; }
 
   public static Profile From(AppUser user, AppUser currUser) =>
     new() {
-      DisplayName = user.DisplayName,
-      Username = user.UserName,
+      DisplayName = user!.DisplayName,
+      Username = user!.UserName!,
       Image = user.MainPhotoUrl,
       Photos = user.Photos?.Select(PhotoDto.From)?.ToList(),
       Bio = user.Bio,

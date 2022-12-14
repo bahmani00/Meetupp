@@ -19,7 +19,7 @@ public class IsHostRequirementHandler : AuthorizationHandler<IsHostRequirement> 
   }
 
   protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, IsHostRequirement requirement) {
-    if (context.User == null || !context.User.Identity.IsAuthenticated) {
+    if (context.User == null || !context.User.Identity!.IsAuthenticated) {
       context.Fail();
       return;
     }
@@ -29,6 +29,7 @@ public class IsHostRequirementHandler : AuthorizationHandler<IsHostRequirement> 
 
     var attendance = await dbContext.UserActivities
       .Include(x => x.AppUser)
+      .TagWithCallSite()
       .FirstOrDefaultAsync(x => x.ActivityId == activityId && x.IsHost && x.AppUser.Id == userId);
 
     if (attendance != null)

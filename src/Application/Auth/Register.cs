@@ -1,19 +1,18 @@
-using Application.Common.Interfaces;
 using Domain;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using static Application.Errors.RestException;
+using static Application.Common.Exceptions.RestException;
 
 namespace Application.Auth;
 
 public static class Register {
-  public class Command : IRequest<User> {
-    public string DisplayName { get; set; }
-    public string Username { get; set; }
-    public string Email { get; set; }
-    public string Password { get; set; }
+  public class Command : IRequest<UserDto> {
+    public string DisplayName { get; set; } = null!;
+    public string Username { get; set; } = null!;
+    public string Email { get; set; } = null!;
+    public string Password { get; set; } = null!;
   }
 
   public class CommandValidator : AbstractValidator<Command> {
@@ -25,18 +24,16 @@ public static class Register {
     }
   }
 
-  public class Handler : IRequestHandler<Command, User> {
-    private readonly IAppDbContext dbContext;
+  public class Handler : IRequestHandler<Command, UserDto> {
     private readonly UserManager<AppUser> userManager;
     private readonly IJwtGenerator jwtGenerator;
 
-    public Handler(IAppDbContext dbContext, UserManager<AppUser> userManager, IJwtGenerator jwtGenerator) {
-      this.dbContext = dbContext;
+    public Handler(UserManager<AppUser> userManager, IJwtGenerator jwtGenerator) {
       this.jwtGenerator = jwtGenerator;
       this.userManager = userManager;
     }
 
-    public async Task<User> Handle(Command request, CancellationToken ct) {
+    public async Task<UserDto> Handle(Command request, CancellationToken ct) {
       var exists = await userManager.Users
         .AnyAsync(x => x.Email == request.Email || x.UserName == request.Username, ct);
       ThrowIfBadRequest(exists, new { Email = "Email or Username already exists" });
@@ -50,7 +47,7 @@ public static class Register {
       var result = await userManager.CreateAsync(user, request.Password);
 
       if (result.Succeeded) {
-        return new User {
+        return new UserDto {
           DisplayName = user.DisplayName,
           Token = jwtGenerator.CreateToken(user),
           Username = user.UserName,

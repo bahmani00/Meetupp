@@ -17,13 +17,13 @@ public class AuditEntitySaveChangesInterceptor : SaveChangesInterceptor {
   }
 
   public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result) {
-    UpdateEntities(eventData.Context);
+    UpdateEntities(eventData.Context!);
 
     return base.SavingChanges(eventData, result);
   }
 
   public override ValueTask<InterceptionResult<int>> SavingChangesAsync(DbContextEventData eventData, InterceptionResult<int> result, CancellationToken ct = default) {
-    UpdateEntities(eventData.Context);
+    UpdateEntities(eventData.Context!);
 
     return base.SavingChangesAsync(eventData, result, ct);
   }
@@ -34,10 +34,10 @@ public class AuditEntitySaveChangesInterceptor : SaveChangesInterceptor {
     foreach (var entry in context.ChangeTracker.Entries<Entity>()) {
       if (entry.State == EntityState.Added) {
         entry.Entity.CreatedById = currUserService.UserId;
-        entry.Entity.CreatedOn = systemClock.UtcNow;
+        entry.Entity.CreatedOn = systemClock.UtcNow.UtcDateTime;
       } else if (entry.State == EntityState.Modified || entry.HasChangedOwnedEntities()) {
         entry.Entity.ModifiedById = currUserService.UserId;
-        entry.Entity.ModifiedOn = systemClock.UtcNow;
+        entry.Entity.ModifiedOn = systemClock.UtcNow.UtcDateTime;
       }
     }
   }

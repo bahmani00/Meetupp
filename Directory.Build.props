@@ -2,7 +2,8 @@
   
   <PropertyGroup>
     <Title>MeetUppy App</Title>
-    <Authors>Gary Woodfine</Authors>
+    <Version>1.0.0</Version>
+    <Authors>Neil Cummings, Dan B.</Authors>
     <Description>Light version of Meetup.com</Description>
     <RepositoryType>git</RepositoryType>
     <PackageTags>api project, api endpoints, response</PackageTags>
@@ -11,8 +12,9 @@
     
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
 
-    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <AnalysisMode>All</AnalysisMode>
     <TreatWarningAsError>true</TreatWarningAsError>
     <!-- <WarningsNotAsErrors>618,1030,1701,1702</WarningsNotAsErrors> -->
   </PropertyGroup>
