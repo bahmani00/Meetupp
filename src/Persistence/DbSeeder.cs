@@ -110,7 +110,7 @@ public class DbSeeder {
       var now = systemClock.UtcNow.UtcDateTime;
       var commentCnt = rand.Next(4, 100);
       var comments = new List<Comment>();
-      for(var c = 0; c < commentCnt; c++) {
+      for (var c = 0; c < commentCnt; c++) {
         var user = usrs[rand.Next(usrs.Count)];
         var idx = rand.Next(texts.Count);
         comments.Add(new() { CreatedBy = user, Body = string.Format(texts[idx], cat.cat), CreatedOn = now.AddDays(-idx) });

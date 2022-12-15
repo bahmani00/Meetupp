@@ -13,7 +13,7 @@ public class ActivityConfiguration : IEntityTypeConfiguration<Activity> {
 
     builder.Property(t => t.Category)
       .HasMaxLength(50);
-    
+
     builder.Property(t => t.City)
       .HasMaxLength(50);
 

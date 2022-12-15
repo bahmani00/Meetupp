@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Routing;
 
 namespace Infrastructure.Security;
 
-public class CurrUserService : ICurrUserService {
+internal class CurrUserService : ICurrUserService {
   public string UserId { get; private set; }
 
   public CurrUserService(IHttpContextAccessor httpContextAccessor) {

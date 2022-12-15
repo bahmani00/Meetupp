@@ -1,6 +1,5 @@
 using Application.Common.Interfaces;
 using AutoMapper;
-using Domain.Common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using static Application.Common.Exceptions.RestException;
@@ -29,7 +28,7 @@ public static class Details {
         //.ProjectTo<ActivityDetailDto>(mapper.ConfigurationProvider)
         .TagWithCallSite()
         .SingleOrDefaultAsync(x => x.Id == request.Id, ct);
-      
+
       ThrowIfNotFound(entity, new { Activity = "Not found" });
 
       return mapper.Map<ActivityDetailDto>(entity);

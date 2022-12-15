@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 
 namespace Infrastructure.Photos;
 
-public class PhotoAccessor : IPhotoAccessor {
+internal class PhotoAccessor : IPhotoAccessor {
   private readonly Cloudinary _cloudinary;
 
   public string Provider => nameof(Cloudinary);

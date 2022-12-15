@@ -28,7 +28,7 @@ public static class Create {
       var attendee = UserActivity.Create(currUserService.GetCurrUserId(), activity.Id, true);
 
       dbContext.UserActivities.Add(attendee);
-      if(await dbContext.SaveChangesAsync(ct) > 0) {
+      if (await dbContext.SaveChangesAsync(ct) > 0) {
         return mapper.Map<ActivityDto>(activity);
       }
 
@@ -36,7 +36,7 @@ public static class Create {
     }
   }
 
-  public class CommandValidator : AbstractValidator<Command> {
+  internal class CommandValidator : AbstractValidator<Command> {
     public CommandValidator() {
       RuleFor(x => x).SetValidator(new ActivityValidator());
       RuleFor(x => x.Date).GreaterThan(DateTime.Now);
