@@ -8,11 +8,11 @@ using Persistence;
 
 #nullable disable
 
-namespace Persistence.SqliteDbMigrations.Migrations
+namespace Persistence.Migrations.SqliteDbMigrations
 {
-    [DbContext(typeof(AppDbContext))]
-    [Migration("20221210200207_ModifiedOnCanBeNull")]
-    partial class ModifiedOnCanBeNull
+    [DbContext(typeof(SqliteDbContext))]
+    [Migration("20221215170228_InitialDbCreate")]
+    partial class InitialDbCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,6 +47,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Description")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ModifiedById")
@@ -90,6 +91,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("DisplayName")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
@@ -175,11 +177,11 @@ namespace Persistence.SqliteDbMigrations.Migrations
 
                     b.HasIndex("ActivityId");
 
+                    b.HasIndex("CreatedById");
+
                     b.HasIndex("ModifiedById");
 
-                    b.HasIndex("CreatedById", "ActivityId");
-
-                    b.ToTable("Comments");
+                    b.ToTable("Comment", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Photo", b =>
@@ -195,7 +197,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
 
                     b.Property<string>("PublicId")
                         .IsRequired()
-                        .HasMaxLength(500)
+                        .HasMaxLength(450)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Url")
@@ -212,7 +214,6 @@ namespace Persistence.SqliteDbMigrations.Migrations
             modelBuilder.Entity("Domain.UserActivity", b =>
                 {
                     b.Property<string>("AppUserId")
-                        .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
                     b.Property<Guid>("ActivityId")
@@ -399,13 +400,13 @@ namespace Persistence.SqliteDbMigrations.Migrations
                     b.HasOne("Domain.Activity", "Activity")
                         .WithMany("Comments")
                         .HasForeignKey("ActivityId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.AppUser", "CreatedBy")
                         .WithMany()
                         .HasForeignKey("CreatedById")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.AppUser", "ModifiedBy")
@@ -431,13 +432,13 @@ namespace Persistence.SqliteDbMigrations.Migrations
                     b.HasOne("Domain.Activity", "Activity")
                         .WithMany("UserActivities")
                         .HasForeignKey("ActivityId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.AppUser", "AppUser")
                         .WithMany("UserActivities")
                         .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Activity");

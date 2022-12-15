@@ -8,7 +8,7 @@ namespace Application.Comments;
 
 public static class Get {
 
-  public class Handler : IRequestHandler<Query, CommentDto> {
+  internal class Handler : IRequestHandler<Query, CommentDto> {
     private readonly IAppDbContext dbContext;
     private readonly IMapper mapper;
 

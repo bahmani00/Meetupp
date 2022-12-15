@@ -6,7 +6,7 @@ namespace Application.Activities;
 
 public static class Delete {
 
-  public class Handler : IRequestHandler<Command> {
+  internal class Handler : IRequestHandler<Command> {
     private readonly IAppDbContext dbContext;
     public Handler(IAppDbContext dbContext) {
       this.dbContext = dbContext;

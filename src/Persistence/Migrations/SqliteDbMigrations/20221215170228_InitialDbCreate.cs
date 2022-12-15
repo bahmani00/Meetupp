@@ -1,29 +1,16 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Persistence.SqliteDbMigrations.Migrations
+#nullable disable
+
+namespace Persistence.Migrations.SqliteDbMigrations
 {
-    public partial class SqliteDbMigrations : Migration
+    /// <inheritdoc />
+    public partial class InitialDbCreate : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Activities",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Title = table.Column<string>(type: "TEXT", nullable: true),
-                    Description = table.Column<string>(type: "TEXT", nullable: true),
-                    Category = table.Column<string>(type: "TEXT", nullable: true),
-                    Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    City = table.Column<string>(type: "TEXT", nullable: true),
-                    Venue = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Activities", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
                 columns: table => new
@@ -43,7 +30,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
-                    DisplayName = table.Column<string>(type: "TEXT", nullable: true),
+                    DisplayName = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
                     Bio = table.Column<string>(type: "TEXT", nullable: true),
                     UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
@@ -66,21 +53,6 @@ namespace Persistence.SqliteDbMigrations.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "WeatherForecasts",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    TemperatureC = table.Column<int>(type: "INTEGER", nullable: false),
-                    Summary = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WeatherForecasts", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -99,6 +71,38 @@ namespace Persistence.SqliteDbMigrations.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Activities",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Title = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    Category = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    Date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    City = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    Venue = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    CreatedById = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ModifiedById = table.Column<string>(type: "TEXT", nullable: true),
+                    ModifiedOn = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Activities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Activities_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Activities_AspNetUsers_ModifiedById",
+                        column: x => x.ModifiedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -187,39 +191,12 @@ namespace Persistence.SqliteDbMigrations.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Comments",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Body = table.Column<string>(type: "TEXT", nullable: true),
-                    AuthorId = table.Column<string>(type: "TEXT", nullable: true),
-                    ActivityId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Comments", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Comments_Activities_ActivityId",
-                        column: x => x.ActivityId,
-                        principalTable: "Activities",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Comments_AspNetUsers_AuthorId",
-                        column: x => x.AuthorId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Followings",
                 columns: table => new
                 {
                     ObserverId = table.Column<string>(type: "TEXT", nullable: false),
                     TargetId = table.Column<string>(type: "TEXT", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -243,7 +220,8 @@ namespace Persistence.SqliteDbMigrations.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "TEXT", nullable: false),
-                    Url = table.Column<string>(type: "TEXT", nullable: true),
+                    PublicId = table.Column<string>(type: "TEXT", maxLength: 450, nullable: false),
+                    Url = table.Column<string>(type: "TEXT", nullable: false),
                     IsMain = table.Column<bool>(type: "INTEGER", nullable: false),
                     AppUserId = table.Column<string>(type: "TEXT", nullable: true)
                 },
@@ -254,8 +232,41 @@ namespace Persistence.SqliteDbMigrations.Migrations
                         name: "FK_Photos_AspNetUsers_AppUserId",
                         column: x => x.AppUserId,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Comment",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Body = table.Column<string>(type: "TEXT", nullable: false),
+                    ActivityId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CreatedById = table.Column<string>(type: "TEXT", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    ModifiedById = table.Column<string>(type: "TEXT", nullable: true),
+                    ModifiedOn = table.Column<DateTime>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comment", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Comment_Activities_ActivityId",
+                        column: x => x.ActivityId,
+                        principalTable: "Activities",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Comment_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Comment_AspNetUsers_ModifiedById",
+                        column: x => x.ModifiedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -275,49 +286,24 @@ namespace Persistence.SqliteDbMigrations.Migrations
                         column: x => x.ActivityId,
                         principalTable: "Activities",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_UserActivities_AspNetUsers_AppUserId",
                         column: x => x.AppUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
-            migrationBuilder.InsertData(
-                table: "WeatherForecasts",
-                columns: new[] { "Id", "Date", "Summary", "TemperatureC" },
-                values: new object[] { 1, new DateTime(2020, 12, 31, 15, 24, 20, 108, DateTimeKind.Local).AddTicks(8321), "Freezing", -15 });
+            migrationBuilder.CreateIndex(
+                name: "IX_Activities_CreatedById",
+                table: "Activities",
+                column: "CreatedById");
 
-            migrationBuilder.InsertData(
-                table: "WeatherForecasts",
-                columns: new[] { "Id", "Date", "Summary", "TemperatureC" },
-                values: new object[] { 2, new DateTime(2021, 1, 1, 15, 24, 20, 112, DateTimeKind.Local).AddTicks(6330), "Chilly", 16 });
-
-            migrationBuilder.InsertData(
-                table: "WeatherForecasts",
-                columns: new[] { "Id", "Date", "Summary", "TemperatureC" },
-                values: new object[] { 3, new DateTime(2021, 1, 2, 15, 24, 20, 112, DateTimeKind.Local).AddTicks(6464), "Cool", 20 });
-
-            migrationBuilder.InsertData(
-                table: "WeatherForecasts",
-                columns: new[] { "Id", "Date", "Summary", "TemperatureC" },
-                values: new object[] { 4, new DateTime(2021, 1, 3, 15, 24, 20, 112, DateTimeKind.Local).AddTicks(6478), "Mild", 25 });
-
-            migrationBuilder.InsertData(
-                table: "WeatherForecasts",
-                columns: new[] { "Id", "Date", "Summary", "TemperatureC" },
-                values: new object[] { 5, new DateTime(2021, 1, 4, 15, 24, 20, 112, DateTimeKind.Local).AddTicks(6486), "Warm", 30 });
-
-            migrationBuilder.InsertData(
-                table: "WeatherForecasts",
-                columns: new[] { "Id", "Date", "Summary", "TemperatureC" },
-                values: new object[] { 6, new DateTime(2021, 1, 5, 15, 24, 20, 112, DateTimeKind.Local).AddTicks(6497), "Hot", 40 });
-
-            migrationBuilder.InsertData(
-                table: "WeatherForecasts",
-                columns: new[] { "Id", "Date", "Summary", "TemperatureC" },
-                values: new object[] { 7, new DateTime(2021, 1, 6, 15, 24, 20, 112, DateTimeKind.Local).AddTicks(6506), "Scorching", 45 });
+            migrationBuilder.CreateIndex(
+                name: "IX_Activities_ModifiedById",
+                table: "Activities",
+                column: "ModifiedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -357,14 +343,19 @@ namespace Persistence.SqliteDbMigrations.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_ActivityId",
-                table: "Comments",
+                name: "IX_Comment_ActivityId",
+                table: "Comment",
                 column: "ActivityId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_AuthorId",
-                table: "Comments",
-                column: "AuthorId");
+                name: "IX_Comment_CreatedById",
+                table: "Comment",
+                column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Comment_ModifiedById",
+                table: "Comment",
+                column: "ModifiedById");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Followings_TargetId",
@@ -382,6 +373,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
                 column: "ActivityId");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
@@ -400,7 +392,7 @@ namespace Persistence.SqliteDbMigrations.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Comments");
+                name: "Comment");
 
             migrationBuilder.DropTable(
                 name: "Followings");
@@ -410,9 +402,6 @@ namespace Persistence.SqliteDbMigrations.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserActivities");
-
-            migrationBuilder.DropTable(
-                name: "WeatherForecasts");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

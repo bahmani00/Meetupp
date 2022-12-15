@@ -30,6 +30,7 @@ public class MappingProfile : Profile {
 
     AppUser? currUser = default;
     CreateMap<UserActivity, AttendeeDto>()
+        .ForMember(d => d.UserId, o => o.MapFrom(s => s.AppUserId))
         .ForMember(d => d.Username, o => o.MapFrom(s => s.AppUser.UserName))
         .ForMember(d => d.DisplayName, o => o.MapFrom(s => s.AppUser.DisplayName))
         .ForMember(d => d.Image, o => o.MapFrom(s => s.AppUser.MainPhotoUrl))

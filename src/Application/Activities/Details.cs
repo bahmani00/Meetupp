@@ -1,6 +1,5 @@
 using Application.Common.Interfaces;
 using AutoMapper;
-using Domain.Common;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using static Application.Common.Exceptions.RestException;
@@ -9,7 +8,7 @@ namespace Application.Activities;
 
 public static class Details {
 
-  public class Handler : IRequestHandler<Query, ActivityDetailDto> {
+  internal class Handler : IRequestHandler<Query, ActivityDetailDto> {
     private readonly IAppDbContext dbContext;
     private readonly IMapper mapper;
 

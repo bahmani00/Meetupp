@@ -52,7 +52,7 @@ public static class Login {
     }
   }
 
-  public class Handler : IRequestHandler<Query, UserDto> {
+  internal class Handler : IRequestHandler<Query, UserDto> {
     private readonly IHttpContextAccessor httpContextAccessor;
     private readonly IJwtGenerator _jwtGenerator;
 

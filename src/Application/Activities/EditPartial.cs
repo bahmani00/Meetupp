@@ -10,7 +10,7 @@ namespace Application.Activities;
 
 public static class EditPartial {
 
-  public class Handler : IRequestHandler<Command> {
+  internal class Handler : IRequestHandler<Command, ActivityDetailDto> {
     private readonly IAppDbContext dbContext;
     private readonly IMapper mapper;
 
@@ -19,14 +19,14 @@ public static class EditPartial {
       this.mapper = mapper;
     }
 
-    public async Task<Unit> Handle(Command request, CancellationToken ct) {
+    public async Task<ActivityDetailDto> Handle(Command request, CancellationToken ct) {
       var activity = await dbContext.Activities.FindItemAsync(request.Id, ct);
       ThrowIfNotFound(activity, new { Activity = "Not found" });
 
       mapper.Map(request, activity);
 
       var success = await dbContext.SaveChangesAsync(ct) > 0;
-      if (success) return Unit.Value;
+      if (success) return mapper.Map<ActivityDetailDto>(activity);
 
       throw new Exception($"Problem saving {nameof(Activity)}");
     }
@@ -50,7 +50,7 @@ public static class EditPartial {
   /// <summary>
   /// EditPartial model
   /// </summary>
-  public class Command : ActivityBaseDto, IRequest {
+  public class Command : ActivityBaseDto, IRequest<ActivityDetailDto> {
     [JsonIgnore]
     public Guid Id { get; set; }
   }

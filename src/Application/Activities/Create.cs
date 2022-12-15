@@ -8,7 +8,7 @@ namespace Application.Activities;
 
 public static class Create {
 
-  internal class Handler : IRequestHandler<Command, Guid> {
+  internal class Handler : IRequestHandler<Command, ActivityDto> {
     private readonly IAppDbContext dbContext;
     private readonly IIdentityService currUserService;
     private readonly IMapper mapper;
@@ -19,21 +19,20 @@ public static class Create {
       this.mapper = mapper;
     }
 
-    public async Task<Guid> Handle(Command request, CancellationToken ct) {
+    public async Task<ActivityDto> Handle(Command request, CancellationToken ct) {
       var activity = mapper.Map<Activity>(request);
 
       //Dont use AddSync
       dbContext.Activities.Add(activity);
 
-      var userId = currUserService.GetCurrUserId();
-      var attendee = UserActivity.Create(userId, activity.Id, true);
+      var attendee = UserActivity.Create(currUserService.GetCurrUserId(), activity.Id, true);
 
       dbContext.UserActivities.Add(attendee);
+      if(await dbContext.SaveChangesAsync(ct) > 0) {
+        return mapper.Map<ActivityDto>(activity);
+      }
 
-      var success = await dbContext.SaveChangesAsync(ct) > 0;
-      if (success) return activity.Id;
-
-      throw new Exception("Problem Adding changes");
+      throw new Exception("Problem adding Activity to db");
     }
   }
 
@@ -47,5 +46,5 @@ public static class Create {
   /// <summary>
   /// Create Activity model
   /// </summary>
-  public class Command : ActivityBaseRequiredDto, IRequest<Guid> { }
+  public class Command : ActivityBaseRequiredDto, IRequest<ActivityDto> { }
 }

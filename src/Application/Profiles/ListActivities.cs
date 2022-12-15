@@ -9,7 +9,7 @@ namespace Application.Profiles;
 
 public static class ListActivities {
 
-  public class Handler : IRequestHandler<Query, List<UserActivityDto>> {
+  internal class Handler : IRequestHandler<Query, List<UserActivityDto>> {
     private readonly IAppDbContext dbContext;
     private readonly IMapper mapper;
 

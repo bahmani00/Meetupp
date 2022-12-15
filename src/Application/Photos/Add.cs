@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore;
 namespace Application.Photos;
 
 public static class Add {
-  public class Handler : IRequestHandler<Command, PhotoDto> {
+  internal class Handler : IRequestHandler<Command, PhotoDto> {
     private readonly IAppDbContext dbContext;
     private readonly ICurrUserService currUserService;
     private readonly IPhotoAccessor photoAccessor;

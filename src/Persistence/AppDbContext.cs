@@ -3,15 +3,21 @@ using Application.Common.Interfaces;
 using Domain;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Persistence;
 
 
 public class AppDbContext : IdentityDbContext<AppUser>, IAppDbContext {
-  private readonly AuditEntitySaveChangesInterceptor auditEntitySaveChangesInterceptor;
+  protected readonly AuditEntitySaveChangesInterceptor auditEntitySaveChangesInterceptor;
+  protected readonly IConfiguration configuration;
 
-  public AppDbContext(DbContextOptions options, AuditEntitySaveChangesInterceptor auditEntitySaveChangesInterceptor) : base(options) {
-    this.auditEntitySaveChangesInterceptor = auditEntitySaveChangesInterceptor;
+  public AppDbContext(
+    DbContextOptions options,
+    AuditEntitySaveChangesInterceptor auditInterceptor,
+    IConfiguration configuration) : base(options) {
+    this.auditEntitySaveChangesInterceptor = auditInterceptor;
+    this.configuration = configuration;
   }
 
   //TODO: remove these sets. configurations will add them
@@ -28,6 +34,10 @@ public class AppDbContext : IdentityDbContext<AppUser>, IAppDbContext {
   }
 
   protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+    optionsBuilder.UseSqlServer(
+      configuration.GetConnectionString("SqlServerConnection"),
+      x => x.MigrationsAssembly(typeof(AppDbContext).Assembly.FullName));
+
     optionsBuilder.AddInterceptors(auditEntitySaveChangesInterceptor);
   }
 

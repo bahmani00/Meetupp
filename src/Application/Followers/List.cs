@@ -9,7 +9,7 @@ namespace Application.Followers;
 
 public static class List {
 
-  public class Handler : IRequestHandler<Query, List<Profile>> {
+  internal class Handler : IRequestHandler<Query, List<Profile>> {
     private readonly IAppDbContext dbContext;
     private readonly IIdentityService currUserService;
 
@@ -41,5 +41,7 @@ public static class List {
     }
   }
 
-  public record Query(string UserId, string Predicate) : IRequest<List<Profile>>;
+  public record Query(string UserId, string Predicate) : IRequest<List<Profile>> {
+    public bool IsFollowing() => string.Equals(Predicate, "following", StringComparison.InvariantCultureIgnoreCase);
+  }
 }

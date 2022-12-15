@@ -9,11 +9,11 @@ using Persistence;
 
 #nullable disable
 
-namespace Persistence.SqlServerDbMigrations.Migrations
+namespace Persistence.Migrations.SqlServerMigrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20221214183739_AddedNullableRefTypes2")]
-    partial class AddedNullableRefTypes2
+    [Migration("20221215170422_InitialDbCreate")]
+    partial class InitialDbCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
