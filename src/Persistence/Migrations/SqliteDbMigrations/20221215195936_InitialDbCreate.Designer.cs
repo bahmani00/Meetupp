@@ -11,11 +11,7 @@ using Persistence;
 namespace Persistence.Migrations.SqliteDbMigrations
 {
     [DbContext(typeof(SqliteDbContext))]
-<<<<<<< HEAD:src/Persistence/Migrations/SqliteDbMigrations/20221215195936_InitialDbCreate.Designer.cs
     [Migration("20221215195936_InitialDbCreate")]
-=======
-    [Migration("20221215170228_InitialDbCreate")]
->>>>>>> 7220b20d8a5178110e61714b60f4ea2c358ec0ee:src/Persistence/Migrations/SqliteDbMigrations/20221215170228_InitialDbCreate.Designer.cs
     partial class InitialDbCreate
     {
         /// <inheritdoc />
