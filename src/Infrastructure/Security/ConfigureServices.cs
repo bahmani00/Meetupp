@@ -17,7 +17,7 @@ namespace Infrastructure.Security;
 public static class ConfigureServices {
   public static IServiceCollection AddAppIdentity(
     this IServiceCollection services,
-    IConfiguration Configuration,
+    IConfiguration configuration,
     IWebHostEnvironment env) {
 
     //services
@@ -50,7 +50,11 @@ public static class ConfigureServices {
     });
 
     var identityBuilder = new IdentityBuilder(identityCoreBuilder.UserType, identityCoreBuilder.Services);
-    identityBuilder.AddEntityFrameworkStores<AppDbContext>();
+    if (configuration.Is("Provider", "Sqlite", "SqlServer")) {
+      identityBuilder.AddEntityFrameworkStores<SqliteDbContext>();
+    } else {
+      identityBuilder.AddEntityFrameworkStores<AppDbContext>();
+    }
     identityBuilder.AddSignInManager<SignInManager<AppUser>>();
 
     services.AddAuthorization(opt => {
@@ -64,7 +68,7 @@ public static class ConfigureServices {
       .AddJwtBearer(opt => {
         opt.TokenValidationParameters = new TokenValidationParameters {
           ValidateIssuerSigningKey = true,
-          IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"]!)),
+          IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["TokenKey"]!)),
           ValidateAudience = false,
           ValidateIssuer = false,
           ValidateLifetime = true, //validate expired tokens: user get 401 unauthorized status

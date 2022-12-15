@@ -3,6 +3,7 @@ using Application.Common.Interfaces;
 using Domain;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Persistence;
 
@@ -32,7 +33,7 @@ public class DbSeeder {
     { 9, ("Paris", "The Louvre") },
     { 10, ("Lisbon", "Oceanário de Lisboa") },
   };
-  List<string> comments = new() {
+  static readonly List<string> texts = new() {
     "Very excited for this ☝",
     "Is it sunny ☀?",
     "Sunny 😎😜",
@@ -72,7 +73,7 @@ public class DbSeeder {
   private async Task AddFollowers() {
     if (dbContext.Followings.Any()) return;
 
-    var users = userManager.Users.Skip(1).ToList();
+    var users = userManager.Users.Where(x => x.UserName != "system").ToList();
     var followings = new List<UserFollowing> {
         new() { Observer = users[0], Target = users[2] },
 
@@ -97,9 +98,9 @@ public class DbSeeder {
   }
 
   private async Task AddActivities() {
-    if (dbContext.Activities.Any()) return;
+    if (dbContext.Activities.TagWithCallSite().Any()) return;
 
-    var users = userManager.Users.Skip(1).ToList();
+    var users = userManager.Users.TagWithCallSite().Where(x => x.UserName != "system").ToList();
 
     for (var i = 10; i <= 100; ++i) {
       var date = systemClock.UtcNow.UtcDateTime.AddDays(i / 3 - 25);
@@ -108,11 +109,11 @@ public class DbSeeder {
       var usrs = users.OrderBy(x => Guid.NewGuid()).ToList();
       var now = systemClock.UtcNow.UtcDateTime;
       var commentCnt = rand.Next(4, 100);
-      var comments2 = new List<Comment>();
+      var comments = new List<Comment>();
       for(var c = 0; c < commentCnt; c++) {
-        var user = usrs[rand.Next(1, usrs.Count)];
-        var idx = rand.Next(comments.Count);
-        comments2.Add(new() { CreatedBy = user, Body = string.Format(comments[idx], cat.cat), CreatedOn = now.AddDays(-idx) });
+        var user = usrs[rand.Next(usrs.Count)];
+        var idx = rand.Next(texts.Count);
+        comments.Add(new() { CreatedBy = user, Body = string.Format(texts[idx], cat.cat), CreatedOn = now.AddDays(-idx) });
       }
 
       await dbContext.Activities.AddAsync(new() {
@@ -132,7 +133,7 @@ public class DbSeeder {
           new() { AppUser = usrs[4], IsHost = false, DateJoined = date.AddDays(-1) },
           new() { AppUser = usrs[5], IsHost = false, DateJoined = date.AddDays(-1) },
         },
-        Comments = comments2
+        Comments = comments
       });
     }
 
@@ -140,7 +141,7 @@ public class DbSeeder {
   }
 
   private async Task AddUsers() {
-    if (userManager.Users.Any()) return;
+    if (userManager.Users.TagWithCallSite().Any()) return;
 
     var i = 0;
     var Id = () => (++i).ToString(CultureInfo.InvariantCulture);
@@ -166,7 +167,6 @@ public class DbSeeder {
           new(Id(), false, $"{baseUrl}/v1667788547/eq2cmgcgonykgabnyfsn.jpg"),
           new(Id(), false, $"{baseUrl}/v1667787939/nirhhmh1ob7eg7s6qznd.jpg"),
           new(Id(), false, $"{baseUrl}/v1669958748/quapuftxaspbzhxgijzl.jpg"),
-          new(Id(), true, $"{baseUrl}/v1669958748/quapuftxaspbzhxgijzl.jpg"),
         }
       },
       new() {
@@ -207,7 +207,7 @@ public class DbSeeder {
         UserName = "bob",
         Email = "bob@site.com",
         Photos = new Photo[] {
-          new(Id(), true, $"{baseUrl}/v1609119885/pcykcdlnyjbckrobnzwb.jpg"),
+          new(Id(), true, $"{baseUrl}/v1669958748/quapuftxaspbzhxgijzl.jpg"),
         }
       },
       new() {

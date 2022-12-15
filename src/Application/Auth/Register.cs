@@ -24,7 +24,7 @@ public static class Register {
     }
   }
 
-  public class Handler : IRequestHandler<Command, UserDto> {
+  internal class Handler : IRequestHandler<Command, UserDto> {
     private readonly UserManager<AppUser> userManager;
     private readonly IJwtGenerator jwtGenerator;
 

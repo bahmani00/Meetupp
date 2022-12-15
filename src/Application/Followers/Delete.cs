@@ -7,7 +7,7 @@ namespace Application.Followers;
 
 public static class Delete {
 
-  public class Handler : IRequestHandler<Command> {
+  internal class Handler : IRequestHandler<Command> {
     private readonly IAppDbContext dbContext;
     private readonly IIdentityService currUserService;
 

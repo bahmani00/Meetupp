@@ -47,8 +47,8 @@ public class ActivitiesController : BaseController {
   [ProducesResponseType(StatusCodes.Status201Created)]
   [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
   public async Task<ActionResult<Guid>> Create([FromBody] Create.Command command, CancellationToken ct) {
-    var id = await Mediator.Send(command, ct);
-    return Created(nameof(ActivitiesController.Get), new { Id = id });
+    var model = await Mediator.Send(command, ct);
+    return Created(nameof(ActivitiesController.Get), new { Id = model.Id });
   }
 
   /// <summary>

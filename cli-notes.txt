@@ -1,4 +1,11 @@
-
+-----------------------------------------
+-----------------------------------------
+-----------------------------------------
+src>API> dotnet ef migrations add "InitialDbCreate" --context AppDbContext --output-dir Migrations/SqlServerMigrations -p ..\Persistence\
+src>API> dotnet ef migrations add "InitialDbCreate" --context SqliteDbContext --output-dir Migrations/SqliteDbMigrations -p ..\Persistence\
+-----------------------------------------
+run using custom profile:
+ dotnet run --launch-profile API_Test --project .\src\API
 -----------------------------------------
 MeetUppy> dotnet run --project .\src\API\
 

@@ -18,8 +18,6 @@
     <ProjectReference Include="..\Domain\Domain.csproj" />
     <ProjectReference Include="..\Application\Application.csproj" />
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
-    <ProjectReference Include="..\Persistence.SqlServerDbMigrations\Persistence.SqlServerDbMigrations.csproj" />
-    <ProjectReference Include="..\Persistence.SqliteDbMigrations\Persistence.SqliteDbMigrations.csproj" />
   </ItemGroup>
 
   <ItemGroup>

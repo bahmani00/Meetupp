@@ -9,7 +9,7 @@ namespace Application.Activities;
 
 public static class Details {
 
-  public class Handler : IRequestHandler<Query, ActivityDetailDto> {
+  internal class Handler : IRequestHandler<Query, ActivityDetailDto> {
     private readonly IAppDbContext dbContext;
     private readonly IMapper mapper;
 

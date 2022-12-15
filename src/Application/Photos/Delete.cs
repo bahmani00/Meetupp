@@ -12,7 +12,7 @@ public static class Delete {
     public string Id { get; set; } = null!;
   }
 
-  public class Handler : IRequestHandler<Command> {
+  internal class Handler : IRequestHandler<Command> {
     private readonly IAppDbContext dbContext;
     private readonly ICurrUserService currUserService;
     private readonly IPhotoAccessor photoAccessor;

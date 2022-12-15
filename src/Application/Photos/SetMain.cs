@@ -11,7 +11,7 @@ public static class SetMain {
     public string Id { get; set; } = null!;
   }
 
-  public class Handler : IRequestHandler<Command> {
+  internal class Handler : IRequestHandler<Command> {
     private readonly IAppDbContext dbContext;
     private readonly ICurrUserService currUserService;
 

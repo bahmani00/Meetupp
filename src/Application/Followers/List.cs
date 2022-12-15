@@ -9,7 +9,7 @@ namespace Application.Followers;
 
 public static class List {
 
-  public class Handler : IRequestHandler<Query, List<Profile>> {
+  internal class Handler : IRequestHandler<Query, List<Profile>> {
     private readonly IAppDbContext dbContext;
     private readonly IIdentityService currUserService;
 

@@ -3,6 +3,7 @@ using API;
 using API.Middleware;
 using API.Swagger;
 using Application;
+using Application.Common.Interfaces;
 using FluentValidation;
 using Infrastructure;
 using Microsoft.AspNetCore.Authorization;
@@ -131,8 +132,8 @@ void Configure() {
 
 async Task RunMigrationAndSeeder() {
   using var scope = app.Services.CreateScope();
-  var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-  await context.Database.MigrateAsync();
+  var dbContext = scope.ServiceProvider.GetRequiredService<IAppDbContext>();
+  await (dbContext as DbContext)!.Database.MigrateAsync();
 
   var dbSeeder = scope.ServiceProvider.GetRequiredService<DbSeeder>();
   await dbSeeder.SeedAsync();
