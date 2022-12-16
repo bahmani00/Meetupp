@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Reflection;
 using Application.Common.Behaviours;
 using FluentValidation;
@@ -8,6 +9,8 @@ namespace Application;
 
 public static class ConfigureServices {
   public static IServiceCollection AddApplicationServices(this IServiceCollection services) {
+
+    ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("fr");
 
     services.AddAutoMapper(Assembly.GetExecutingAssembly());
     services.AddMediatR(Assembly.GetExecutingAssembly());

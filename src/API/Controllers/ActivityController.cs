@@ -48,7 +48,9 @@ public class ActivitiesController : BaseController {
   [ProducesResponseType(typeof(void), StatusCodes.Status400BadRequest)]
   public async Task<ActionResult<Guid>> Create([FromBody] Create.Command command, CancellationToken ct) {
     var model = await Mediator.Send(command, ct);
+#pragma warning disable IDE0037 // Use inferred member name
     return Created(nameof(ActivitiesController.Get), new { Id = model.Id });
+#pragma warning restore IDE0037 // Use inferred member name
   }
 
   /// <summary>

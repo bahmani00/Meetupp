@@ -36,7 +36,7 @@ public static class Create {
     }
   }
 
-  internal class CommandValidator : AbstractValidator<Command> {
+  public class CommandValidator : AbstractValidator<Command> {
     public CommandValidator() {
       RuleFor(x => x).SetValidator(new ActivityValidator());
       RuleFor(x => x.Date).GreaterThan(DateTime.Now);
