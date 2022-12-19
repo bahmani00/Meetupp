@@ -28,5 +28,5 @@ jobs:
       
     - name: Build
       run: dotnet build --configuration Release --no-restore
-    - name: Test
-      run: dotnet test --no-restore --logger "console;verbosity=detailed"
+    # - name: Test
+    #   run: dotnet test --no-restore --logger "console;verbosity=detailed"
