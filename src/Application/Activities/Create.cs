@@ -28,7 +28,7 @@ public static class Create {
       var attendee = UserActivity.Create(currUserService.GetCurrUserId(), activity.Id, true);
 
       dbContext.UserActivities.Add(attendee);
-      if(await dbContext.SaveChangesAsync(ct) > 0) {
+      if (await dbContext.SaveChangesAsync(ct) > 0) {
         return mapper.Map<ActivityDto>(activity);
       }
 

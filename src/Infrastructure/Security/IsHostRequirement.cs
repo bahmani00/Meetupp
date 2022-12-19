@@ -9,7 +9,7 @@ public class IsHostRequirement : IAuthorizationRequirement {
   public const string PolicyName = "IsHostCreatedActivity";
 }
 
-public class IsHostRequirementHandler : AuthorizationHandler<IsHostRequirement> {
+internal class IsHostRequirementHandler : AuthorizationHandler<IsHostRequirement> {
   private readonly IHttpContextAccessor httpContextAccessor;
   private readonly IAppDbContext dbContext;
 

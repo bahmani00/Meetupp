@@ -1,10 +1,8 @@
-using System.Globalization;
 using API;
 using API.Middleware;
 using API.Swagger;
 using Application;
 using Application.Common.Interfaces;
-using FluentValidation;
 using Infrastructure;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -66,7 +64,6 @@ void ConfigureServices() {
 }
 
 void Configure() {
-  ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("fr");
 
   app.UseMiddleware<ErrorHandlingMiddleware>();
 
@@ -99,6 +96,7 @@ void Configure() {
   app.UseAuthorization();
 
   app.MapControllers();
+#pragma warning disable ASP0014 // Suggest using top level route registrations
   app.UseEndpoints(endpoints => {
     endpoints.MapHub<API.SignalR.ChatHub>("/chat", options => {
       //https://scientificprogrammer.net/2022/09/28/advanced-signalr-configuration-fine-tuning-the-server-side-hub-and-all-supported-client-types/
@@ -116,6 +114,7 @@ void Configure() {
       //});
     });
   });
+#pragma warning restore ASP0014 // Suggest using top level route registrations
 
   app.UseMvc(routes => {
     //when it's not /chat or api endpoints go to:

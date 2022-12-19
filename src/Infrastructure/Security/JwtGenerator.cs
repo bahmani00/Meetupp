@@ -8,7 +8,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Infrastructure.Security;
 
-public class JwtGenerator : IJwtGenerator {
+internal class JwtGenerator : IJwtGenerator {
   private readonly SymmetricSecurityKey _key;
   public JwtGenerator(IConfiguration config) {
     _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]!));

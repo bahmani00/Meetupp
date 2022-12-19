@@ -47,4 +47,8 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
+  
+  <ItemGroup>
+    <InternalsVisibleTo Include="Application.IntegrationTests" />
+  </ItemGroup>  
 </Project>

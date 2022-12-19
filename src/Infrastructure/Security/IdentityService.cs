@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Identity;
 
-public class IdentityService : IIdentityService {
+internal class IdentityService : IIdentityService {
   private readonly ICurrUserService currUserService;
   private readonly UserManager<AppUser> _userManager;
   private readonly IUserClaimsPrincipalFactory<AppUser> _userClaimsPrincipalFactory;
@@ -31,7 +31,7 @@ public class IdentityService : IIdentityService {
 
   public async Task<AppUser> GetCurrUserProfileAsync(CancellationToken ct = default) =>
      currUser ??= await GetUserProfileAsync(currUserService.UserId, ct);
-     
+
   public async Task<AppUser> GetUserProfileAsync(string userId, CancellationToken ct) =>
     await _userManager.Users
       .Include(x => x.Followings)

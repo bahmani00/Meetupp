@@ -38,7 +38,7 @@ public class ActivityBaseDto {
   public bool DateHasValue() => Date > DateTime.Now;
 }
 
-public class ActivityBaseRequiredDto: ActivityBaseDto {
+public class ActivityBaseRequiredDto : ActivityBaseDto {
   /// <inheritdoc />
   [Required]
   public required override string Title { get; set; }
